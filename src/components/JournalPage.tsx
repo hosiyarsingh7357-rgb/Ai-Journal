@@ -17,6 +17,7 @@ import {
   MoreVertical,
   ChevronLeft,
   Trash2,
+  BookOpen,
   Calendar as CalendarIcon
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -286,39 +287,64 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
 
         <div className="flex-1 overflow-y-auto custom-scrollbar">
           {activeTab === 'JOURNAL' ? (
-            filteredEntries.map((entry) => (
-              <div 
-                key={entry.id}
-                onClick={() => handleSelectEntry(entry.id)}
-                className={`p-4 lg:p-5 cursor-pointer transition-all border-b border-white/10 hover:bg-white/10 ${
-                  selectedId === entry.id ? 'bg-white/10 shadow-md border-l-4 border-l-blue-500' : ''
-                }`}
-              >
-                <div className="flex justify-between items-start mb-1">
-                  <span className={`text-sm font-bold font-headline ${selectedId === entry.id ? 'text-blue-400' : 'text-white'}`}>
-                    {entry.instrument}
-                  </span>
-                  <span className={`text-xs font-bold ${
-                    entry.status === 'won' ? 'text-emerald-400' : 
-                    entry.status === 'lost' ? 'text-red-400' : 'text-slate-400'
-                  }`}>
-                    {entry.pnl || 'N/A'}
-                  </span>
+            filteredEntries.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4">
+                <div className="w-16 h-16 rounded-3xl bg-white/5 flex items-center justify-center mb-2">
+                  <BookOpen className="w-8 h-8 text-slate-600" />
                 </div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-[11px] text-slate-400 font-medium">{entry.date} • {entry.time}</span>
-                  <span className={`px-1.5 py-0.5 text-[9px] font-bold rounded uppercase ${
-                    entry.status === 'won' ? 'bg-emerald-500/10 text-emerald-400' : 
-                    entry.status === 'lost' ? 'bg-red-500/10 text-red-400' : 'bg-white/10 text-slate-400'
-                  }`}>
-                    {entry.status === 'won' ? 'Trade Won' : entry.status === 'lost' ? 'Trade Lost' : 'No Trade'}
-                  </span>
-                </div>
-                <p className="text-[11px] text-slate-400 line-clamp-1 italic">"{entry.tradeNotes || 'No notes provided.'}"</p>
+                <h3 className="text-sm font-bold text-slate-300">Your journal is waiting...</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">"The first step to mastery is awareness. Start writing your first thought about the markets today."</p>
+                <button 
+                  onClick={() => { setEditingEntry(null); setIsModalOpen(true); }}
+                  className="text-xs font-black text-blue-500 uppercase tracking-widest hover:text-blue-400 transition-colors"
+                >
+                  + Create First Entry
+                </button>
               </div>
-            ))
+            ) : (
+              filteredEntries.map((entry) => (
+                <div 
+                  key={entry.id}
+                  onClick={() => handleSelectEntry(entry.id)}
+                  className={`p-4 lg:p-5 cursor-pointer transition-all border-b border-white/10 hover:bg-white/10 ${
+                    selectedId === entry.id ? 'bg-white/10 shadow-md border-l-4 border-l-blue-500' : ''
+                  }`}
+                >
+                  <div className="flex justify-between items-start mb-1">
+                    <span className={`text-sm font-bold font-headline ${selectedId === entry.id ? 'text-blue-400' : 'text-white'}`}>
+                      {entry.instrument}
+                    </span>
+                    <span className={`text-xs font-bold ${
+                      entry.status === 'won' ? 'text-emerald-400' : 
+                      entry.status === 'lost' ? 'text-red-400' : 'text-slate-400'
+                    }`}>
+                      {entry.pnl || 'N/A'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-[11px] text-slate-400 font-medium">{entry.date} • {entry.time}</span>
+                    <span className={`px-1.5 py-0.5 text-[9px] font-bold rounded uppercase ${
+                      entry.status === 'won' ? 'bg-emerald-500/10 text-emerald-400' : 
+                      entry.status === 'lost' ? 'bg-red-500/10 text-red-400' : 'bg-white/10 text-slate-400'
+                    }`}>
+                      {entry.status === 'won' ? 'Trade Won' : entry.status === 'lost' ? 'Trade Lost' : 'No Trade'}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 line-clamp-1 italic">"{entry.tradeNotes || 'No notes provided.'}"</p>
+                </div>
+              ))
+            )
           ) : (
-            filteredTrades.map((trade, index) => (
+            filteredTrades.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4">
+                <div className="w-16 h-16 rounded-3xl bg-white/5 flex items-center justify-center mb-2">
+                  <TrendingUp className="w-8 h-8 text-slate-600" />
+                </div>
+                <h3 className="text-sm font-bold text-slate-300">No trades recorded yet</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">Sync your account or manually add your first trade to see the analysis.</p>
+              </div>
+            ) : (
+              filteredTrades.map((trade, index) => (
               <div 
                 key={trade.id || index}
                 onClick={() => handleSelectEntry(trade.id)}
@@ -351,7 +377,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                 </div>
               </div>
             ))
-          )}
+          ))}
         </div>
       </aside>
 
@@ -479,6 +505,55 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                   </div>
                 </div>
               </div>
+
+              {/* AI Analysis Section */}
+              <section className="relative overflow-hidden rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-500/10 via-transparent to-purple-500/10 p-6 lg:p-8">
+                <div className="absolute top-0 right-0 p-4 opacity-10">
+                  <Brain className="w-24 h-24 text-blue-400" />
+                </div>
+                <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center border border-blue-500/30">
+                      <Brain className="w-5 h-5 text-blue-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-black text-white uppercase tracking-widest">AI Psychological Analysis</h3>
+                      <p className="text-[10px] text-blue-400/60 font-bold uppercase tracking-tighter">Powered by Gemini Pro</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Emotional State</p>
+                        <div className="flex items-center gap-2">
+                          <span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 text-[10px] font-bold rounded-lg border border-emerald-500/30">
+                            Disciplined
+                          </span>
+                          <span className="px-2 py-1 bg-blue-500/20 text-blue-400 text-[10px] font-bold rounded-lg border border-blue-500/30">
+                            Rational
+                          </span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Risk Assessment</p>
+                        <p className="text-xs text-slate-300 font-medium leading-relaxed">
+                          Your execution was precise. However, notice the slight hesitation before entry. This suggests a minor lack of confidence in your setup.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-white/5">
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">AI Recommendation</p>
+                      <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
+                        <p className="text-xs text-slate-300 italic leading-relaxed">
+                          "You're performing well under pressure. To improve, try reducing your position size by 20% on the next trade to eliminate that entry hesitation."
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
 
               {/* Notes Section */}
               <section>
