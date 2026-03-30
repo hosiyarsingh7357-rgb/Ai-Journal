@@ -10,11 +10,11 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, children, disabled, ...props }, ref) => {
     const variants = {
-      primary: 'bg-brand-primary text-white hover:bg-brand-primary/90 shadow-glow',
-      secondary: 'bg-surface-muted dark:bg-surface-muted-dark text-text-primary dark:text-text-primary-dark hover:bg-surface-muted/80 dark:hover:bg-surface-muted-dark/80',
-      outline: 'border border-border dark:border-border-dark bg-transparent hover:bg-surface-muted dark:hover:bg-surface-muted-dark text-text-primary dark:text-text-primary-dark',
-      ghost: 'bg-transparent hover:bg-surface-muted dark:hover:bg-surface-muted-dark text-text-primary dark:text-text-primary-dark',
-      danger: 'bg-danger text-white hover:bg-danger/90 shadow-sm',
+      primary: 'bg-brand-primary text-white hover:bg-indigo-600 shadow-premium',
+      secondary: 'bg-surface dark:bg-surface-dark text-text-primary dark:text-text-primary-dark hover:bg-surface-muted dark:hover:bg-surface-muted-dark border border-border dark:border-border-dark',
+      outline: 'border border-border dark:border-border-dark bg-transparent hover:bg-surface dark:hover:bg-surface-dark text-text-primary dark:text-text-primary-dark',
+      ghost: 'bg-transparent hover:bg-surface dark:hover:bg-surface-dark text-text-primary dark:text-text-primary-dark',
+      danger: 'bg-danger text-white hover:bg-danger/90 shadow-premium',
     };
 
     const sizes = {

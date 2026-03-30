@@ -94,14 +94,14 @@ export const SettingsPage = () => {
         {/* Section 1: Profile & Identity */}
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           <div className="lg:col-span-1">
-            <h3 className="text-lg font-bold text-white mb-1">Profile Identity</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">Manage your public information and architectural workspace presence.</p>
+            <h3 className="heading-3 mb-1">Profile Identity</h3>
+            <p className="body-text leading-relaxed">Manage your public information and architectural workspace presence.</p>
           </div>
           <div className="lg:col-span-2 space-y-6">
-            <div className="glass rounded-2xl p-4 lg:p-6 shadow-2xl">
+            <div className="glass rounded-2xl p-4 lg:p-6 shadow-premium">
               <div className="flex flex-col sm:flex-row items-center gap-6 mb-8">
                 <div className="relative group">
-                  <div className="w-24 h-24 rounded-2xl bg-slate-800 flex items-center justify-center overflow-hidden border-2 border-blue-500/30">
+                  <div className="w-24 h-24 rounded-2xl bg-surface-muted dark:bg-surface-muted-dark flex items-center justify-center overflow-hidden border-2 border-brand-primary/30">
                     <img 
                       alt="Profile" 
                       className="w-full h-full object-cover" 
@@ -109,7 +109,7 @@ export const SettingsPage = () => {
                       referrerPolicy="no-referrer"
                     />
                   </div>
-                  <button className="absolute -bottom-2 -right-2 bg-blue-600 text-white p-2 rounded-lg shadow-lg hover:scale-105 transition-transform">
+                  <button className="absolute -bottom-2 -right-2 bg-brand-primary text-white p-2 rounded-lg shadow-premium hover:scale-105 transition-transform">
                     <Camera className="w-4 h-4" />
                   </button>
                 </div>
@@ -117,35 +117,36 @@ export const SettingsPage = () => {
                   <div className="flex items-center gap-2">
                     {isEditingName ? (
                       <input
-                        className="text-xl font-bold text-white bg-white/5 border border-white/10 rounded-lg px-2 py-1"
+                        className="heading-2 bg-surface-muted dark:bg-surface-muted-dark border border-border dark:border-border-dark rounded-lg px-2 py-1 outline-none focus:border-brand-primary/50"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
+                        autoFocus
                       />
                     ) : (
-                      <h4 className="text-xl font-bold text-white">{fullName}</h4>
+                      <h4 className="heading-2">{fullName}</h4>
                     )}
-                    <button onClick={() => setIsEditingName(!isEditingName)} className="text-slate-400 hover:text-white">
+                    <button onClick={() => setIsEditingName(!isEditingName)} className="text-text-muted hover:text-text-primary dark:hover:text-text-primary-dark transition-colors">
                       <Edit2 className="w-4 h-4" />
                     </button>
                   </div>
-                  <p className="text-sm text-slate-400">{user?.email}</p>
-                  <div className="mt-2 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase tracking-widest">Premium Tier</div>
+                  <p className="text-sm font-medium text-text-secondary dark:text-text-secondary-dark">{user?.email}</p>
+                  <div className="mt-2 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-success/20 text-success border border-success/30 uppercase tracking-widest">Premium Tier</div>
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Full Name</label>
+                  <label className="label-text block ml-1">Full Name</label>
                   <input 
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/50 outline-none transition-all text-white placeholder-slate-500" 
+                    className="w-full bg-surface-muted dark:bg-surface-muted-dark border border-border dark:border-border-dark rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-primary/50 outline-none transition-all text-text-primary dark:text-text-primary-dark placeholder-text-muted" 
                     type="text" 
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Email Address</label>
+                  <label className="label-text block ml-1">Email Address</label>
                   <input 
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/50 outline-none transition-all text-white placeholder-slate-500" 
+                    className="w-full bg-surface-muted dark:bg-surface-muted-dark border border-border dark:border-border-dark rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-primary/50 outline-none transition-all text-text-primary dark:text-text-primary-dark placeholder-text-muted opacity-70 cursor-not-allowed" 
                     type="email" 
                     readOnly
                     value={user?.email || ''}
@@ -159,25 +160,25 @@ export const SettingsPage = () => {
         {/* Section 2: Broker Connection */}
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           <div className="lg:col-span-1">
-            <h3 className="text-lg font-bold text-white mb-1">Broker Integration</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">Direct API bridges to your MT4/MT5 trading terminals for real-time journal synchronization.</p>
+            <h3 className="heading-3 mb-1">Broker Integration</h3>
+            <p className="body-text leading-relaxed">Direct API bridges to your MT4/MT5 trading terminals for real-time journal synchronization.</p>
           </div>
           <div className="lg:col-span-2">
-            <div className="glass rounded-2xl shadow-2xl overflow-hidden">
-              <div className="p-4 lg:p-6 bg-white/5 border-b border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="glass rounded-2xl shadow-premium overflow-hidden">
+              <div className="p-4 lg:p-6 bg-surface-muted dark:bg-surface-muted-dark border-b border-border dark:border-border-dark flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-500/20 rounded-lg border border-blue-500/30">
-                    <Network className="w-5 h-5 text-blue-400" />
+                  <div className="p-2 bg-brand-primary/10 rounded-lg border border-brand-primary/20">
+                    <Network className="w-5 h-5 text-brand-primary" />
                   </div>
-                  <span className="font-bold text-white">MetaTrader Bridge</span>
+                  <span className="font-bold text-text-primary dark:text-text-primary-dark">MetaTrader Bridge</span>
                 </div>
                 {userData?.mt5Credentials ? (
-                  <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold border border-emerald-500/30">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-success/10 text-success text-xs font-bold border border-success/20">
+                    <span className="w-2 h-2 rounded-full bg-success animate-pulse"></span>
                     Connected
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-xs font-bold border border-red-500/30">
+                  <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-danger/10 text-danger text-xs font-bold border border-danger/20">
                     Disconnected
                   </div>
                 )}
@@ -185,20 +186,20 @@ export const SettingsPage = () => {
               <div className="p-4 lg:p-6 grid grid-cols-1 sm:grid-cols-2 gap-8">
                 <div className="space-y-4">
                   <div className="space-y-1">
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Account ID</p>
-                    <p className="font-mono text-sm font-medium text-white">{userData?.mt5Credentials?.account || 'Not Connected'}</p>
+                    <p className="label-text">Account ID</p>
+                    <p className="font-mono text-sm font-medium text-text-primary dark:text-text-primary-dark">{userData?.mt5Credentials?.account || 'Not Connected'}</p>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Server</p>
-                    <p className="text-sm font-medium text-white">{userData?.mt5Credentials?.broker || 'N/A'}</p>
+                    <p className="label-text">Server</p>
+                    <p className="text-sm font-medium text-text-primary dark:text-text-primary-dark">{userData?.mt5Credentials?.broker || 'N/A'}</p>
                   </div>
                 </div>
                 <div className="flex flex-col justify-end gap-3">
-                  <button className="w-full bg-white/10 hover:bg-white/20 text-white py-2.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 border border-white/10">
+                  <button className="w-full bg-surface-muted dark:bg-surface-muted-dark hover:bg-surface dark:hover:bg-surface-dark text-text-primary dark:text-text-primary-dark py-2.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 border border-border dark:border-border-dark shadow-sm">
                     <RefreshCw className="w-4 h-4" />
                     Synchronize Data
                   </button>
-                  <button className="w-full border border-red-500/30 text-red-400 hover:bg-red-500/10 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2">
+                  <button className="w-full border border-danger/30 text-danger hover:bg-danger/10 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2">
                     <XCircle className="w-4 h-4" />
                     Disconnect Broker
                   </button>
@@ -211,69 +212,69 @@ export const SettingsPage = () => {
         {/* Section 3: Interface & Experience */}
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           <div className="lg:col-span-1">
-            <h3 className="text-lg font-bold text-white mb-1">Visual Architecture</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">Customize your workspace environment for optimal deep work focus.</p>
+            <h3 className="heading-3 mb-1">Visual Architecture</h3>
+            <p className="body-text leading-relaxed">Customize your workspace environment for optimal deep work focus.</p>
           </div>
           <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="glass rounded-2xl p-4 lg:p-6 shadow-2xl space-y-4">
+            <div className="glass rounded-2xl p-4 lg:p-6 shadow-premium space-y-4">
               <div className="flex items-center gap-3 mb-2">
-                <Monitor className="w-5 h-5 text-slate-400" />
-                <span className="font-bold text-sm text-white">Theme Engine</span>
+                <Monitor className="w-5 h-5 text-text-muted" />
+                <span className="font-bold text-sm text-text-primary dark:text-text-primary-dark">Theme Engine</span>
               </div>
               <div className="grid grid-cols-1 gap-3">
                 <button 
                   onClick={() => handleToggleTheme('light')}
-                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-colors ${theme === 'light' ? 'bg-blue-500/20 border-blue-500/50' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-colors ${theme === 'light' ? 'bg-brand-primary/10 border-brand-primary/50 text-brand-primary' : 'bg-surface dark:bg-surface-dark border-border dark:border-border-dark hover:bg-surface-muted dark:hover:bg-surface-muted-dark text-text-secondary dark:text-text-secondary-dark'}`}
                 >
-                  <Sun className="w-6 h-6 text-slate-500" />
-                  <span className="text-xs font-bold text-slate-900 dark:text-slate-300">Light Mode</span>
+                  <Sun className="w-6 h-6" />
+                  <span className="text-xs font-bold uppercase tracking-widest">Light Mode</span>
                 </button>
                 <button 
                   onClick={() => handleToggleTheme('dark')}
-                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-colors ${theme === 'dark' ? 'bg-blue-500/20 border-blue-500/50' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-colors ${theme === 'dark' ? 'bg-brand-primary/10 border-brand-primary/50 text-brand-primary' : 'bg-surface dark:bg-surface-dark border-border dark:border-border-dark hover:bg-surface-muted dark:hover:bg-surface-muted-dark text-text-secondary dark:text-text-secondary-dark'}`}
                 >
-                  <Moon className="w-6 h-6 text-slate-500" />
-                  <span className="text-xs font-bold text-slate-900 dark:text-slate-300">Dark Mode</span>
+                  <Moon className="w-6 h-6" />
+                  <span className="text-xs font-bold uppercase tracking-widest">Dark Mode</span>
                 </button>
               </div>
             </div>
-            <div className="glass rounded-2xl p-4 lg:p-6 shadow-2xl space-y-6">
+            <div className="glass rounded-2xl p-4 lg:p-6 shadow-premium space-y-6">
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <Globe className="w-5 h-5 text-slate-400" />
-                  <span className="font-bold text-sm text-white">Regional Defaults</span>
+                  <Globe className="w-5 h-5 text-text-muted" />
+                  <span className="font-bold text-sm text-text-primary dark:text-text-primary-dark">Regional Defaults</span>
                 </div>
                 <div className="space-y-4">
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Base Currency</label>
+                    <label className="label-text block ml-1">Base Currency</label>
                     <div className="relative">
                       <select 
                         value={currency}
                         onChange={(e) => setCurrency(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/50 outline-none appearance-none text-white"
+                        className="w-full bg-surface-muted dark:bg-surface-muted-dark border border-border dark:border-border-dark rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-primary/50 outline-none appearance-none text-text-primary dark:text-text-primary-dark cursor-pointer"
                       >
-                        <option className="bg-slate-900">USD ($)</option>
-                        <option className="bg-slate-900">EUR (€)</option>
-                        <option className="bg-slate-900">GBP (£)</option>
-                        <option className="bg-slate-900">JPY (¥)</option>
+                        <option className="bg-surface dark:bg-surface-dark">USD ($)</option>
+                        <option className="bg-surface dark:bg-surface-dark">EUR (€)</option>
+                        <option className="bg-surface dark:bg-surface-dark">GBP (£)</option>
+                        <option className="bg-surface dark:bg-surface-dark">JPY (¥)</option>
                       </select>
-                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Language</label>
+                    <label className="label-text block ml-1">Language</label>
                     <div className="relative">
                       <select 
                         value={language}
                         onChange={(e) => setLanguage(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/50 outline-none appearance-none text-white"
+                        className="w-full bg-surface-muted dark:bg-surface-muted-dark border border-border dark:border-border-dark rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-primary/50 outline-none appearance-none text-text-primary dark:text-text-primary-dark cursor-pointer"
                       >
-                        <option className="bg-slate-900">English (US)</option>
-                        <option className="bg-slate-900">German</option>
-                        <option className="bg-slate-900">French</option>
-                        <option className="bg-slate-900">Mandarin</option>
+                        <option className="bg-surface dark:bg-surface-dark">English (US)</option>
+                        <option className="bg-surface dark:bg-surface-dark">German</option>
+                        <option className="bg-surface dark:bg-surface-dark">French</option>
+                        <option className="bg-surface dark:bg-surface-dark">Mandarin</option>
                       </select>
-                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
                     </div>
                   </div>
                 </div>
@@ -285,42 +286,42 @@ export const SettingsPage = () => {
         {/* Section 4: Security Protocols */}
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           <div className="lg:col-span-1">
-            <h3 className="text-lg font-bold text-white mb-1">Security Vault</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">Advanced protection for your trading strategies and financial data.</p>
+            <h3 className="heading-3 mb-1">Security Vault</h3>
+            <p className="body-text leading-relaxed">Advanced protection for your trading strategies and financial data.</p>
           </div>
-          <div className="lg:col-span-2 glass rounded-2xl shadow-2xl overflow-hidden">
-            <div className="divide-y divide-white/10">
+          <div className="lg:col-span-2 glass rounded-2xl shadow-premium overflow-hidden">
+            <div className="divide-y divide-border dark:divide-border-dark">
               <div className="p-4 lg:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="flex gap-4">
-                  <div className="p-2 bg-white/5 border border-white/10 rounded-xl h-fit">
-                    <Lock className="w-5 h-5 text-slate-400" />
+                  <div className="p-2 bg-surface-muted dark:bg-surface-muted-dark border border-border dark:border-border-dark rounded-xl h-fit shadow-sm">
+                    <Lock className="w-5 h-5 text-text-muted" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-sm text-white">Account Session</h4>
-                    <p className="text-xs text-slate-400 mt-1">Manage your active session and security preferences.</p>
+                    <h4 className="font-bold text-sm text-text-primary dark:text-text-primary-dark">Account Session</h4>
+                    <p className="text-xs text-text-secondary dark:text-text-secondary-dark mt-1">Manage your active session and security preferences.</p>
                   </div>
                 </div>
                 <button 
                   onClick={signOut}
-                  className="text-red-400 text-xs font-bold hover:underline flex items-center gap-2"
+                  className="text-danger text-xs font-bold hover:underline flex items-center gap-2"
                 >
                   <LogOut className="w-4 h-4" /> Sign Out
                 </button>
               </div>
               <div className="p-4 lg:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="flex gap-4">
-                  <div className="p-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl h-fit">
-                    <ShieldCheck className="w-5 h-5 text-emerald-400" />
+                  <div className="p-2 bg-success/10 border border-success/20 rounded-xl h-fit shadow-sm">
+                    <ShieldCheck className="w-5 h-5 text-success" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-sm text-white">Two-Factor Authentication</h4>
-                    <p className="text-xs text-slate-400 mt-1">Biometric and Authenticator App verification active.</p>
+                    <h4 className="font-bold text-sm text-text-primary dark:text-text-primary-dark">Two-Factor Authentication</h4>
+                    <p className="text-xs text-text-secondary dark:text-text-secondary-dark mt-1">Biometric and Authenticator App verification active.</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Active</span>
-                  <button className="w-10 h-5 bg-emerald-500 rounded-full relative transition-colors">
-                    <div className="w-3 h-3 bg-white rounded-full absolute top-1 right-1 shadow-sm"></div>
+                  <span className="text-[10px] font-bold text-success uppercase tracking-wider">Active</span>
+                  <button className="w-10 h-5 bg-success rounded-full relative transition-colors shadow-inner">
+                    <div className="w-3 h-3 bg-theme-surface-light dark:bg-theme-surface-dark rounded-full absolute top-1 right-1 shadow-sm"></div>
                   </button>
                 </div>
               </div>
@@ -329,12 +330,12 @@ export const SettingsPage = () => {
         </section>
 
         {/* Global Actions */}
-        <div className="flex flex-col sm:flex-row items-center justify-end gap-4 pt-6 border-t border-white/10">
-          <button className="w-full sm:w-auto px-6 py-2.5 text-sm font-bold text-slate-400 hover:text-white transition-colors">Discard Changes</button>
+        <div className="flex flex-col sm:flex-row items-center justify-end gap-4 pt-6 border-t border-border dark:border-border-dark">
+          <button className="w-full sm:w-auto px-6 py-2.5 text-sm font-bold text-text-muted hover:text-text-primary dark:hover:text-text-primary-dark transition-colors">Discard Changes</button>
           <button 
             onClick={handleSaveSettings}
             disabled={isSaving}
-            className="w-full sm:w-auto px-8 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-600/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50"
+            className="w-full sm:w-auto px-8 py-2.5 bg-brand-primary text-white rounded-xl text-sm font-bold shadow-premium hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50"
           >
             {isSaving ? 'Saving...' : 'Save Configuration'}
           </button>

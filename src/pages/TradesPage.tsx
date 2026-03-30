@@ -277,7 +277,7 @@ export const TradesPage = ({
               >
                 <X className="w-5 h-5" />
               </button>
-              <div className="w-20 h-20 bg-brand-primary/10 text-brand-primary rounded-full flex items-center justify-center mx-auto shadow-xl shadow-brand-primary/20 border border-brand-primary/30">
+              <div className="w-20 h-20 bg-brand-primary/10 text-brand-primary rounded-full flex items-center justify-center mx-auto shadow-premium border border-brand-primary/30">
                 <Wallet className="w-10 h-10" />
               </div>
               <div>
@@ -475,8 +475,8 @@ export const TradesPage = ({
                 <div className="relative aspect-video rounded-2xl overflow-hidden border-2 border-border dark:border-border-dark shadow-inner">
                   <img src={screenshot} alt="Preview" className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-background/40 dark:bg-background-dark/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                    <div className="bg-white/20 backdrop-blur-md p-3 rounded-full border border-white/30">
-                      <Camera className="w-6 h-6 text-white" />
+                    <div className="bg-theme-surface-light/20 dark:bg-theme-surface-dark/20 backdrop-blur-md p-3 rounded-full border border-theme-border-light/30 dark:border-theme-border-dark/30">
+                      <Camera className="w-6 h-6 text-theme-text-primary-light dark:text-theme-text-primary-dark" />
                     </div>
                   </div>
                   <button 
@@ -485,7 +485,7 @@ export const TradesPage = ({
                       e.stopPropagation();
                       setScreenshot(null);
                     }}
-                    className="absolute top-3 right-3 p-1.5 bg-status-danger text-white rounded-lg shadow-lg hover:bg-status-danger/90 transition-colors"
+                    className="absolute top-3 right-3 p-1.5 bg-status-danger text-white rounded-lg shadow-premium hover:bg-status-danger/90 transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -789,7 +789,7 @@ export const TradesPage = ({
                 onClick={() => setCurrentPageNum(num)}
                 className={cn(
                   "w-8 h-8 flex items-center justify-center rounded-lg border border-border dark:border-border-dark text-xs font-bold transition-colors",
-                  currentPageNum === num ? 'bg-brand-primary text-white border-brand-primary' : 'text-text-secondary dark:text-text-secondary-dark hover:text-brand-primary'
+                  currentPageNum === num ? 'bg-brand-primary text-white border-brand-primary shadow-premium' : 'text-text-secondary dark:text-text-secondary-dark hover:text-brand-primary'
                 )}
               >
                 {num}

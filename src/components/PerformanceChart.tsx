@@ -73,7 +73,7 @@ export const PerformanceChart = ({ isConnected = false, trades = [] }: { isConne
     <Card className="flex flex-col h-full relative p-8">
       {!isConnected && trades.length === 0 && (
         <div className="absolute inset-0 z-20 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-md flex items-center justify-center rounded-[2rem]">
-          <div className="text-center p-6 glass border-brand-primary/20 shadow-glow">
+          <div className="text-center p-6 bg-surface border border-brand-primary/20 shadow-premium rounded-2xl">
             <p className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em]">Connect MT5 to see performance</p>
           </div>
         </div>

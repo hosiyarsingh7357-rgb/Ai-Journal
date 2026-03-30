@@ -56,7 +56,7 @@ export const AIReportPage = ({ tradesList }: { tradesList: any[] }) => {
           <div className="flex gap-3 w-full sm:w-auto">
             <button 
               onClick={handleGenerate}
-              className="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-brand-primary text-white font-bold text-sm hover:bg-brand-primary/90 transition-all flex items-center justify-center gap-2 shadow-glow-primary"
+              className="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-brand-primary text-white font-bold text-sm hover:bg-brand-primary/90 transition-all flex items-center justify-center gap-2 shadow-premium"
             >
               <BrainCircuit className="w-4 h-4" />
               <span>{loading ? "Analyzing..." : "Generate AI Report"}</span>

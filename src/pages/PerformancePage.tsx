@@ -270,7 +270,7 @@ export const PerformancePage = ({
                     onClick={() => setActiveRange(range)}
                     className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                       activeRange === range
-                        ? 'bg-brand-primary shadow-glow text-white'
+                        ? 'bg-brand-primary shadow-premium text-white'
                         : 'text-theme-text-secondary-light dark:text-theme-text-secondary-dark hover:text-theme-text-primary-light dark:hover:text-theme-text-primary-dark'
                     }`}
                   >
@@ -468,25 +468,25 @@ export const PerformancePage = ({
         </div>
 
         {/* AI Insight Footer */}
-        <div className="bg-brand-primary rounded-[2.5rem] p-10 text-white relative overflow-hidden shadow-glow">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 blur-[120px] -mr-48 -mt-48" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 blur-[100px] -ml-32 -mb-32" />
+        <div className="bg-brand-primary rounded-[2.5rem] p-10 text-white relative overflow-hidden shadow-premium">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-theme-surface-light/10 dark:bg-theme-surface-dark/10 blur-[120px] -mr-48 -mt-48" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-theme-surface-light/5 dark:bg-theme-surface-dark/5 blur-[100px] -ml-32 -mb-32" />
           
           <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
             <div className="flex items-center gap-6">
-              <div className="w-16 h-16 rounded-3xl bg-white/20 backdrop-blur-xl flex items-center justify-center shadow-inner">
+              <div className="w-16 h-16 rounded-3xl bg-theme-surface-light/20 dark:bg-theme-surface-dark/20 backdrop-blur-xl flex items-center justify-center shadow-inner">
                 <Zap className="w-8 h-8 text-white" />
               </div>
               <div>
                 <h4 className="text-2xl font-black tracking-tight">Strategy Optimization Detected</h4>
-                <p className="text-white/80 font-medium max-w-xl mt-1">
+                <p className="text-theme-text-secondary-dark font-medium max-w-xl mt-1">
                   Your performance on {stats.bestTrade.symbol} has improved by 14% since you started using hard stops. AI recommends increasing position size by 0.25 lots.
                 </p>
               </div>
             </div>
             <button 
               onClick={() => onNavigate('ai-report')}
-              className="px-10 py-4 bg-white text-brand-primary rounded-2xl font-black text-sm transition-all hover:scale-105 active:scale-95 shadow-xl whitespace-nowrap"
+              className="px-10 py-4 bg-white text-brand-primary rounded-2xl font-black text-sm transition-all hover:scale-105 active:scale-95 shadow-premium whitespace-nowrap"
             >
               VIEW DETAILED AI AUDIT
             </button>

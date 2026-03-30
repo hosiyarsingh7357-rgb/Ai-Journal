@@ -82,11 +82,11 @@ export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) =>
             <p className="text-text-secondary dark:text-text-secondary-dark mt-1">Your psychological edge is being analyzed in real-time.</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="bg-surface dark:bg-surface-dark text-orange-500 px-5 py-2.5 rounded-2xl flex items-center gap-2 border border-orange-500/20 shadow-glow shadow-orange-500/10">
+            <div className="bg-surface dark:bg-surface-dark text-orange-500 px-5 py-2.5 rounded-2xl flex items-center gap-2 border border-orange-500/20 shadow-premium">
               <Flame className="w-5 h-5 fill-orange-500" />
               <span className="font-black text-xs uppercase tracking-widest">12 DAY STREAK</span>
             </div>
-            <div className="bg-surface dark:bg-surface-dark text-brand-primary px-5 py-2.5 rounded-2xl flex items-center gap-2 border border-brand-primary/20 shadow-glow shadow-brand-primary/10">
+            <div className="bg-surface dark:bg-surface-dark text-brand-primary px-5 py-2.5 rounded-2xl flex items-center gap-2 border border-brand-primary/20 shadow-premium">
               <Calendar className="w-5 h-5" />
               <span className="font-black text-xs uppercase tracking-widest">MAR 30</span>
             </div>
@@ -104,7 +104,7 @@ export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) =>
               <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 blur-[100px] -mr-32 -mt-32 rounded-full group-hover:bg-brand-primary/10 transition-colors" />
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-2xl bg-brand-primary text-white flex items-center justify-center shadow-glow">
+                  <div className="w-10 h-10 rounded-2xl bg-brand-primary text-white flex items-center justify-center shadow-premium">
                     <BrainCircuit className="w-6 h-6" />
                   </div>
                   <h3 className="text-xs font-bold uppercase tracking-widest text-brand-primary">AI Intelligence Summary</h3>
@@ -168,7 +168,7 @@ export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) =>
                     className={cn(
                       "w-10 h-10 rounded-2xl flex items-center justify-center text-xl transition-all hover:scale-110 active:scale-95",
                       i === 3 
-                        ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/30" 
+                        ? "bg-brand-primary text-white shadow-premium" 
                         : "bg-surface-muted dark:bg-surface-muted-dark hover:bg-border dark:hover:bg-border-dark"
                     )}
                   >
@@ -180,22 +180,22 @@ export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) =>
             </Card>
 
             {/* AI Suggestions */}
-            <Card className="p-6 bg-brand-primary text-white border-none shadow-glow-primary relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-3xl -mr-16 -mt-16" />
+            <Card className="p-6 bg-brand-primary text-white border-none shadow-premium relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-theme-surface-light/10 dark:bg-theme-surface-dark/10 blur-3xl -mr-16 -mt-16" />
               <div className="relative z-10">
                 <div className="flex items-center gap-2 mb-4">
-                  <Sparkles className="w-4 h-4 text-white/80" />
-                  <h3 className="text-xs font-bold uppercase tracking-widest text-white/90">AI Suggestions</h3>
+                  <Sparkles className="w-4 h-4 text-theme-text-secondary-dark" />
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-theme-text-primary-dark">AI Suggestions</h3>
                 </div>
                 <div className="space-y-4">
-                  <div className="p-3 rounded-xl bg-white/10 border border-white/20 text-xs font-bold leading-relaxed">
+                  <div className="p-3 rounded-xl bg-theme-surface-light/10 dark:bg-theme-surface-dark/10 border border-theme-border-light/20 dark:border-theme-border-dark/20 text-xs font-bold leading-relaxed">
                     Reduce position size on GBPUSD. Your win rate drops significantly after 3 consecutive wins.
                   </div>
-                  <div className="p-3 rounded-xl bg-white/10 border border-white/20 text-xs font-bold leading-relaxed">
+                  <div className="p-3 rounded-xl bg-theme-surface-light/10 dark:bg-theme-surface-dark/10 border border-theme-border-light/20 dark:border-theme-border-dark/20 text-xs font-bold leading-relaxed">
                     Take a 15-minute break. You've been staring at the charts for 4 hours.
                   </div>
                 </div>
-                <button className="w-full mt-6 py-3 rounded-xl bg-white text-brand-primary font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-transform shadow-lg">
+                <button className="w-full mt-6 py-3 rounded-xl bg-white text-brand-primary font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-transform shadow-premium">
                   Unlock Pro Insights
                 </button>
               </div>

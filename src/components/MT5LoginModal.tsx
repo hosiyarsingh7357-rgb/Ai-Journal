@@ -76,7 +76,7 @@ export const MT5LoginModal = ({ isOpen, onClose, onSuccess }: MT5LoginModalProps
         {/* Header */}
         <div className="p-6 border-b border-theme-border-light dark:border-theme-border-dark flex justify-between items-center bg-theme-bg-light/50 dark:bg-theme-bg-dark/50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-brand-primary flex items-center justify-center text-white shadow-lg shadow-brand-primary/20">
+            <div className="w-10 h-10 rounded-xl bg-brand-primary flex items-center justify-center text-white shadow-premium">
               <Shield className="w-6 h-6" />
             </div>
             <div>
@@ -108,7 +108,7 @@ export const MT5LoginModal = ({ isOpen, onClose, onSuccess }: MT5LoginModalProps
                     onClick={() => setFormData({ ...formData, platform: p })}
                     className={`py-3 rounded-xl font-bold text-xs transition-all border ${
                       formData.platform === p
-                        ? 'bg-brand-primary text-white border-brand-primary shadow-lg shadow-brand-primary/20'
+                        ? 'bg-brand-primary text-white border-brand-primary shadow-premium'
                         : 'bg-theme-bg-light dark:bg-theme-bg-dark text-theme-text-secondary-light dark:text-theme-text-secondary-dark border-theme-border-light dark:border-theme-border-dark hover:border-brand-primary/50'
                     }`}
                   >
@@ -192,11 +192,11 @@ export const MT5LoginModal = ({ isOpen, onClose, onSuccess }: MT5LoginModalProps
             <button
               disabled={isConnecting}
               type="submit"
-              className="w-full py-4 bg-brand-primary text-white rounded-2xl font-bold text-sm shadow-xl shadow-brand-primary/20 hover:bg-brand-primary/90 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+              className="w-full py-4 bg-brand-primary text-white rounded-2xl font-bold text-sm shadow-premium hover:bg-brand-primary/90 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
             >
               {isConnecting ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-theme-border-light/30 dark:border-theme-border-dark/30 border-t-white rounded-full animate-spin" />
                   CONNECTING TO SERVER...
                 </>
               ) : (
@@ -213,7 +213,7 @@ export const MT5LoginModal = ({ isOpen, onClose, onSuccess }: MT5LoginModalProps
           </form>
         ) : (
           <div className="p-10 text-center space-y-6 animate-in fade-in slide-in-from-bottom-4">
-            <div className="w-20 h-20 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto shadow-xl shadow-emerald-900/20 border border-emerald-500/30">
+            <div className="w-20 h-20 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto shadow-premium border border-emerald-500/30">
               <CheckCircle2 className="w-10 h-10" />
             </div>
             <div>
@@ -236,7 +236,7 @@ export const MT5LoginModal = ({ isOpen, onClose, onSuccess }: MT5LoginModalProps
                   if (onSuccess) onSuccess();
                   onClose();
                 }}
-                className="w-full py-4 bg-brand-primary text-white rounded-2xl font-bold text-sm shadow-xl shadow-brand-primary/20 hover:bg-brand-primary/90 transition-all active:scale-[0.98] flex items-center justify-center gap-3"
+                className="w-full py-4 bg-brand-primary text-white rounded-2xl font-bold text-sm shadow-premium hover:bg-brand-primary/90 transition-all active:scale-[0.98] flex items-center justify-center gap-3"
               >
                 <RefreshCw className="w-4 h-4" />
                 START DATA IMPORT

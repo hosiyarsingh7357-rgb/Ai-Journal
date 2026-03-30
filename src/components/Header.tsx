@@ -64,10 +64,10 @@ export const Header = ({
           <button 
             onClick={onOpenLogin}
             className={cn(
-              "flex items-center gap-2 px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-glow border",
+              "flex items-center gap-2 px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-premium border",
               isAccountConnected 
-                ? "bg-status-success text-white border-status-success/20" 
-                : "bg-brand-primary text-white border-brand-primary/20 hover:scale-105"
+                ? "bg-status-success text-white border-status-success/20 shadow-premium" 
+                : "bg-brand-primary text-white border-brand-primary/20 hover:scale-105 shadow-premium"
             )}
           >
             <LogIn className="w-4 h-4" />
@@ -77,7 +77,7 @@ export const Header = ({
 
           <button 
             onClick={onLogout}
-            className="p-2.5 text-text-secondary dark:text-text-secondary-dark hover:text-status-danger hover:bg-surface-muted dark:hover:bg-surface-muted-dark rounded-xl transition-all active:scale-90"
+            className="p-2.5 text-text-secondary dark:text-text-secondary-dark hover:text-danger hover:bg-surface-muted dark:hover:bg-surface-muted-dark rounded-xl transition-all active:scale-90"
           >
             <LogOut className="w-5 h-5" />
           </button>
@@ -87,10 +87,10 @@ export const Header = ({
             className="relative text-text-secondary dark:text-text-secondary-dark hover:text-brand-primary hover:bg-surface-muted dark:hover:bg-surface-muted-dark rounded-xl transition-all p-2.5 active:scale-90"
           >
             <Bell className="w-5 h-5" />
-            <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-status-danger rounded-full border-2 border-background dark:border-background-dark"></span>
+            <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-danger rounded-full border-2 border-background dark:border-background-dark"></span>
           </button>
           
-          <div className="h-10 w-10 rounded-2xl overflow-hidden border-2 border-border dark:border-border-dark cursor-pointer flex-shrink-0 bg-surface-muted dark:bg-surface-muted-dark hover:scale-110 transition-transform shadow-glow">
+          <div className="h-10 w-10 rounded-2xl overflow-hidden border-2 border-border dark:border-border-dark cursor-pointer flex-shrink-0 bg-surface-muted dark:bg-surface-muted-dark hover:scale-110 transition-transform shadow-premium">
             <img
               alt="User Avatar"
               className="w-full h-full object-cover"

@@ -58,7 +58,7 @@ export const SupportPage = () => {
           <div className="relative max-w-2xl mx-auto">
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-brand-primary w-5 h-5 lg:w-6 lg:h-6" />
             <input 
-              className="w-full h-12 lg:h-16 pl-14 pr-6 bg-theme-surface-light/50 dark:bg-theme-surface-dark/50 backdrop-blur-xl border border-theme-border-light dark:border-theme-border-dark rounded-2xl shadow-2xl focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary/50 transition-all text-theme-text-primary-light dark:text-theme-text-primary-dark placeholder:text-theme-text-secondary-light/50 dark:placeholder:text-theme-text-secondary-dark/50 outline-none" 
+              className="w-full h-12 lg:h-16 pl-14 pr-6 bg-theme-surface-light/50 dark:bg-theme-surface-dark/50 backdrop-blur-xl border border-theme-border-light dark:border-theme-border-dark rounded-2xl shadow-premium focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary/50 transition-all text-theme-text-primary-light dark:text-theme-text-primary-dark placeholder:text-theme-text-secondary-light/50 dark:placeholder:text-theme-text-secondary-dark/50 outline-none" 
               placeholder="Search for articles, guides, or troubleshooting..." 
               type="text"
             />
@@ -98,29 +98,29 @@ export const SupportPage = () => {
         </section>
 
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          <div className="lg:col-span-2 bg-brand-primary rounded-3xl p-6 lg:p-10 flex flex-col md:flex-row items-center gap-10 relative overflow-hidden shadow-glow-primary">
+          <div className="lg:col-span-2 bg-brand-primary rounded-3xl p-6 lg:p-10 flex flex-col md:flex-row items-center gap-10 relative overflow-hidden shadow-premium">
             <div className="relative z-10 flex-1 text-center md:text-left">
-              <h2 className="text-2xl lg:text-3xl font-bold text-white mb-4">Need personalized assistance?</h2>
-              <p className="text-white/80 mb-8 max-w-md mx-auto md:mx-0">Our support team is available 24/5 to help you with complex technical issues or account inquiries.</p>
+              <h2 className="heading-2 text-white mb-4">Need personalized assistance?</h2>
+              <p className="body-text text-theme-text-secondary-dark mb-8 max-w-md mx-auto md:mx-0">Our support team is available 24/5 to help you with complex technical issues or account inquiries.</p>
               <div className="flex flex-wrap justify-center md:justify-start gap-4">
-                <button className="w-full sm:w-auto bg-white text-brand-primary px-8 py-4 rounded-2xl font-bold hover:bg-white/90 transition-colors flex items-center justify-center gap-2 shadow-lg">
+                <button className="w-full sm:w-auto bg-white text-brand-primary px-8 py-4 rounded-2xl font-bold hover:bg-theme-surface-light transition-colors flex items-center justify-center gap-2 shadow-premium">
                   <MessageSquare className="w-5 h-5" />
                   Live Chat Now
                 </button>
-                <a className="w-full sm:w-auto border border-white/30 text-white px-8 py-4 rounded-2xl font-bold hover:bg-white/10 transition-colors flex items-center justify-center gap-2" href="mailto:support@tradefxbook.com">
+                <a className="w-full sm:w-auto border border-theme-border-light/30 dark:border-theme-border-dark/30 text-white px-8 py-4 rounded-2xl font-bold hover:bg-theme-surface-light/10 dark:hover:bg-theme-surface-dark/10 transition-colors flex items-center justify-center gap-2" href="mailto:support@tradefxbook.com">
                   <Mail className="w-5 h-5" />
                   Email Support
                 </a>
               </div>
             </div>
             <div className="relative z-10 hidden md:block">
-              <div className="w-48 h-48 bg-white/10 backdrop-blur-xl rounded-full flex items-center justify-center p-8 border border-white/20">
-                <div className="w-full h-full bg-white/20 rounded-full flex items-center justify-center border border-white/20">
+              <div className="w-48 h-48 bg-theme-surface-light/10 dark:bg-theme-surface-dark/10 backdrop-blur-xl rounded-full flex items-center justify-center p-8 border border-theme-border-light/20 dark:border-theme-border-dark/20">
+                <div className="w-full h-full bg-theme-surface-light/20 dark:bg-theme-surface-dark/20 rounded-full flex items-center justify-center border border-theme-border-light/20 dark:border-theme-border-dark/20">
                   <Headphones className="text-white w-12 h-12" />
                 </div>
               </div>
             </div>
-            <div className="absolute -right-20 -top-20 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
+            <div className="absolute -right-20 -top-20 w-80 h-80 bg-theme-surface-light/10 dark:bg-theme-surface-dark/10 rounded-full blur-3xl"></div>
           </div>
           
           <Card className="p-6 lg:p-10 flex flex-col justify-between">
@@ -133,7 +133,7 @@ export const SupportPage = () => {
               </div>
               <p className="body-text mb-6 leading-relaxed">Join 50,000+ traders in our community. Share strategies, report bugs, and learn from veteran architects in real-time.</p>
             </div>
-            <a className="w-full py-4 bg-[#5865F2] text-white rounded-2xl font-bold text-center hover:bg-[#5865F2]/90 transition-colors shadow-lg shadow-[#5865F2]/20" href="#">
+            <a className="w-full py-4 bg-[#5865F2] text-white rounded-2xl font-bold text-center hover:bg-[#5865F2]/90 transition-colors shadow-premium block" href="#">
               Join Community Discord
             </a>
           </Card>

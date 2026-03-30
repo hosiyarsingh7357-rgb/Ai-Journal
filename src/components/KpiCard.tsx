@@ -34,7 +34,7 @@ export const KpiCard = ({
         <p className="label-text text-theme-text-secondary-light dark:text-theme-text-secondary-dark">{subtitle}</p>
       </div>
 
-      <div className={`absolute top-6 right-6 w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 group-hover:rotate-3 ${iconBg} ${iconColor} shadow-glow`}>
+      <div className={`absolute top-6 right-6 w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 group-hover:rotate-3 ${iconBg} ${iconColor} shadow-premium`}>
         <Icon className="w-6 h-6" />
       </div>
     </div>

@@ -246,7 +246,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
               {selectedDate && (
                 <button 
                   onClick={() => setSelectedDate('')}
-                  className="absolute -top-1 -right-1 w-4 h-4 bg-status-danger text-white rounded-full flex items-center justify-center text-[8px] font-bold z-20 shadow-glow"
+                  className="absolute -top-1 -right-1 w-4 h-4 bg-status-danger text-white rounded-full flex items-center justify-center text-[8px] font-bold z-20 shadow-premium"
                 >
                   <X className="w-2 h-2" />
                 </button>
@@ -264,7 +264,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                 className={cn(
                   "px-4 py-1.5 text-[10px] font-black rounded-lg uppercase tracking-wider transition-all",
                   activeTab === tab
-                    ? "bg-brand-primary text-white shadow-glow"
+                    ? "bg-brand-primary text-white shadow-premium"
                     : "bg-secondary text-muted-foreground border border-border hover:text-foreground"
                 )}
               >
@@ -284,7 +284,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                     className={cn(
                       "px-3 py-1 text-[10px] font-bold rounded uppercase transition-all",
                       activeFilter === filter
-                        ? "bg-brand-primary text-white shadow-glow"
+                        ? "bg-brand-primary text-white shadow-premium"
                         : "bg-secondary text-muted-foreground border border-border hover:text-foreground"
                     )}
                   >
@@ -643,7 +643,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
       {/* Floating Action Button */}
       <button 
         onClick={() => { setEditingEntry(null); setIsModalOpen(true); }}
-        className="fixed bottom-8 right-8 w-14 h-14 bg-brand-primary text-white rounded-full shadow-glow flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50"
+        className="fixed bottom-8 right-8 w-14 h-14 bg-brand-primary text-white rounded-full shadow-premium flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50"
       >
         <Edit3 className="w-6 h-6" />
       </button>

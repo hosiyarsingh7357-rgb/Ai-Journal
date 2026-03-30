@@ -6,41 +6,41 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          primary: '#6366f1',
+          primary: '#4F46E5',
           secondary: '#8b5cf6',
           accent: '#06b6d4',
         },
         // SaaS Design System
         background: {
-          DEFAULT: '#f8fafc',
-          dark: '#0b0f19',
+          DEFAULT: '#FFFFFF',
+          dark: '#0B0F19',
         },
         surface: {
-          DEFAULT: '#ffffff',
-          dark: '#161b26',
+          DEFAULT: '#F9FAFB',
+          dark: '#111827',
           muted: '#f1f5f9',
           'muted-dark': '#1e293b',
         },
         text: {
-          primary: '#0f172a',
-          'primary-dark': '#f8fafc',
+          primary: '#111827',
+          'primary-dark': '#E5E7EB',
           secondary: '#475569',
           'secondary-dark': '#94a3b8',
           muted: '#64748b',
           'muted-dark': '#64748b',
         },
         border: {
-          DEFAULT: '#e2e8f0',
-          dark: '#232936',
+          DEFAULT: '#E5E7EB',
+          dark: '#374151',
           strong: '#cbd5e1',
           'strong-dark': '#334155',
         },
         success: {
-          DEFAULT: '#10b981',
-          dark: '#059669',
+          DEFAULT: '#22C55E',
+          dark: '#16a34a',
         },
         danger: {
-          DEFAULT: '#ef4444',
+          DEFAULT: '#EF4444',
           dark: '#dc2626',
         },
         warning: {

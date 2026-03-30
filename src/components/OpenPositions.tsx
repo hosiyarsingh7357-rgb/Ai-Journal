@@ -17,7 +17,7 @@ export const OpenPositions = ({ isConnected = false, trades = [] }: { isConnecte
 
   return (
     <Card className="flex flex-col min-h-[220px]">
-      <h3 className="font-bold text-gray-900 dark:text-white mb-4">Open Positions</h3>
+      <h3 className="heading-3 mb-4">Open Positions</h3>
       {(!isConnected && trades.length === 0) || openPositions.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
           <Clock className="w-8 h-8 mb-2 opacity-50" />
@@ -36,7 +36,7 @@ export const OpenPositions = ({ isConnected = false, trades = [] }: { isConnecte
                     {isWinner ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-gray-900 dark:text-white">{pos.symbol}</p>
+                    <p className="text-sm font-bold text-text-primary dark:text-text-primary-dark">{pos.symbol}</p>
                     <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">{pos.type} • {pos.size} Lots</p>
                   </div>
                 </div>

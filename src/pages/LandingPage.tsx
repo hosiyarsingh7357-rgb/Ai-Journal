@@ -30,7 +30,7 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
           </div>
           <button 
             onClick={onGetStarted}
-            className="bg-brand-primary hover:bg-brand-primary/90 text-white px-6 py-2.5 rounded-full font-bold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-brand-primary/20"
+            className="bg-brand-primary hover:bg-brand-primary/90 text-white px-6 py-2.5 rounded-full font-bold transition-all hover:scale-105 active:scale-95 shadow-premium"
           >
             Start Free
           </button>
@@ -69,7 +69,7 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
           >
             <button 
               onClick={onGetStarted}
-              className="w-full sm:w-auto bg-brand-primary text-white px-10 py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-2 hover:bg-brand-primary/90 transition-all hover:scale-105 active:scale-95 group shadow-lg shadow-brand-primary/20"
+              className="w-full sm:w-auto bg-brand-primary text-white px-10 py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-2 hover:bg-brand-primary/90 transition-all hover:scale-105 active:scale-95 group shadow-premium"
             >
               Try AI Now <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
@@ -93,7 +93,7 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
               ))}
             </div>
             <p className="text-sm text-slate-500">
-              Joined by <span className="text-white font-bold">1,200+ profitable traders</span> this month
+              Joined by <span className="text-theme-text-primary-light dark:text-theme-text-primary-dark font-bold">1,200+ profitable traders</span> this month
             </p>
           </motion.div>
         </div>
@@ -127,7 +127,7 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
 
           <div className="relative">
             <div className="absolute -inset-4 bg-gradient-to-r from-brand-primary to-brand-secondary blur-2xl opacity-20 rounded-[2rem]" />
-            <div className="relative bg-theme-surface-light dark:bg-theme-surface-dark border border-theme-border-light dark:border-theme-border-dark rounded-[2rem] overflow-hidden shadow-2xl">
+            <div className="relative bg-theme-surface-light dark:bg-theme-surface-dark border border-theme-border-light dark:border-theme-border-dark rounded-[2rem] overflow-hidden shadow-premium">
               <div className="p-6 border-b border-theme-border-light dark:border-theme-border-dark bg-theme-bg-light/50 dark:bg-theme-bg-dark/50 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-2xl bg-brand-primary flex items-center justify-center">
@@ -146,13 +146,13 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
               </div>
               <div className="p-6 space-y-6">
                 <div className="flex flex-col items-end gap-2">
-                  <div className="bg-brand-primary text-white px-4 py-3 rounded-2xl rounded-tr-none text-sm max-w-[80%] shadow-lg">
+                  <div className="bg-brand-primary text-white px-4 py-3 rounded-2xl rounded-tr-none text-sm max-w-[80%] shadow-premium">
                     I felt really anxious before this XAUUSD trade. I was worried about missing the move after the news release.
                   </div>
                   <span className="text-[10px] text-theme-text-secondary-light dark:text-theme-text-secondary-dark font-bold uppercase">Trader • 2m ago</span>
                 </div>
                 <div className="flex flex-col items-start gap-2">
-                  <div className="bg-theme-bg-light dark:bg-theme-bg-dark text-theme-text-primary-light dark:text-theme-text-primary-dark px-4 py-3 rounded-2xl rounded-tl-none text-sm max-w-[80%] border border-theme-border-light dark:border-theme-border-dark shadow-lg">
+                  <div className="bg-theme-bg-light dark:bg-theme-bg-dark text-theme-text-primary-light dark:text-theme-text-primary-dark px-4 py-3 rounded-2xl rounded-tl-none text-sm max-w-[80%] border border-theme-border-light dark:border-theme-border-dark shadow-premium">
                     <p className="mb-2">I've detected a pattern of <span className="text-brand-primary font-bold">FOMO-driven entries</span> in your last 5 gold trades.</p>
                     <p className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark text-xs italic">Recommendation: Wait for the 5-minute candle closure after news before executing. Your win rate increases by 24% when you wait.</p>
                   </div>
@@ -244,22 +244,22 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
             </div>
 
             {/* Pro Plan */}
-            <div className="p-8 rounded-[2rem] bg-brand-primary border border-brand-primary flex flex-col relative scale-105 shadow-2xl shadow-brand-primary/20">
-              <div className="absolute top-0 right-8 -translate-y-1/2 bg-white text-brand-primary px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest">Most Popular</div>
-              <h3 className="text-xl font-bold mb-2 text-white">Pro</h3>
-              <p className="text-brand-primary-light text-sm mb-6 text-white/80">For serious active traders.</p>
-              <div className="text-4xl font-black mb-8 text-white">$29<span className="text-lg text-white/60 font-normal">/mo</span></div>
+            <div className="p-8 rounded-[2rem] bg-theme-surface-light dark:bg-theme-surface-dark border-2 border-brand-primary flex flex-col relative scale-105 shadow-premium">
+              <div className="absolute top-0 right-8 -translate-y-1/2 bg-brand-primary text-white px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest">Most Popular</div>
+              <h3 className="text-xl font-bold mb-2 text-theme-text-primary-light dark:text-theme-text-primary-dark">Pro</h3>
+              <p className="text-brand-primary-light text-sm mb-6 text-theme-text-secondary-light dark:text-theme-text-secondary-dark">For serious active traders.</p>
+              <div className="text-4xl font-black mb-8 text-theme-text-primary-light dark:text-theme-text-primary-dark">$29<span className="text-lg text-theme-text-secondary-light dark:text-theme-text-secondary-dark font-normal">/mo</span></div>
               <div className="space-y-4 mb-8 flex-1">
                 {["Unlimited AI Intelligence", "MT5 Auto-Sync", "Advanced Psychology Reports", "Unlimited Accounts", "Priority Support"].map((f, i) => (
                   <div key={i} className="flex items-center gap-3 text-sm">
-                    <CheckCircle2 className="w-4 h-4 text-white" />
-                    <span className="text-white/90">{f}</span>
+                    <CheckCircle2 className="w-4 h-4 text-brand-primary" />
+                    <span className="text-theme-text-primary-light dark:text-theme-text-primary-dark/90">{f}</span>
                   </div>
                 ))}
               </div>
               <button 
                 onClick={onGetStarted}
-                className="w-full py-4 rounded-xl bg-white text-brand-primary font-black text-lg transition-all hover:scale-105 shadow-xl"
+                className="w-full py-4 rounded-xl bg-brand-primary text-white font-black text-lg transition-all hover:scale-105 shadow-premium"
               >
                 Start Pro Trial
               </button>
@@ -320,19 +320,19 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
 
       {/* Final CTA */}
       <section className="py-24 px-6">
-        <div className="max-w-4xl mx-auto rounded-[3rem] bg-gradient-to-br from-brand-primary to-brand-secondary p-12 md:p-20 text-center space-y-8 relative overflow-hidden shadow-2xl">
+        <div className="max-w-4xl mx-auto rounded-[3rem] bg-gradient-to-br from-brand-primary to-brand-secondary p-12 md:p-20 text-center space-y-8 relative overflow-hidden shadow-premium">
           <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent" />
           </div>
           <h2 className="text-4xl md:text-6xl font-black leading-tight text-white">Ready to master your <br />trading psychology?</h2>
-          <p className="text-xl text-white/80 max-w-xl mx-auto">Join thousands of traders who are using AI to build consistent profitability.</p>
+          <p className="text-xl text-theme-text-secondary-dark max-w-xl mx-auto">Join thousands of traders who are using AI to build consistent profitability.</p>
           <button 
             onClick={onGetStarted}
-            className="bg-white text-brand-primary px-12 py-5 rounded-2xl font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-2xl"
+            className="bg-white text-brand-primary px-12 py-5 rounded-2xl font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-premium"
           >
             Get Started For Free
           </button>
-          <p className="text-sm text-white/60 font-medium">No credit card required • 14-day Pro trial included</p>
+          <p className="text-sm text-theme-text-secondary-dark font-medium">No credit card required • 14-day Pro trial included</p>
         </div>
       </section>
 
@@ -346,8 +346,8 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
           <p className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark text-sm">© 2026 AJ Ai Journal. All rights reserved. Trading involves risk.</p>
           <div className="flex gap-6 text-sm text-theme-text-secondary-light dark:text-theme-text-secondary-dark">
             <a href="#" className="hover:text-theme-text-primary-light dark:hover:text-theme-text-primary-dark transition-colors">Privacy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms</a>
-            <a href="#" className="hover:text-white transition-colors">Contact</a>
+            <a href="#" className="hover:text-theme-text-primary-light dark:hover:text-theme-text-primary-dark transition-colors">Terms</a>
+            <a href="#" className="hover:text-theme-text-primary-light dark:hover:text-theme-text-primary-dark transition-colors">Contact</a>
           </div>
         </div>
       </footer>

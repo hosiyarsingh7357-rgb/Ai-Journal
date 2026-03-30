@@ -152,7 +152,7 @@ export const MarketPage = () => {
                     onClick={() => setActiveFilter(filter)}
                     className={`px-4 py-1.5 text-[10px] lg:text-xs font-bold rounded-full whitespace-nowrap transition-all ${
                       activeFilter === filter
-                        ? 'bg-brand-primary text-white shadow-glow-primary'
+                        ? 'bg-brand-primary text-white shadow-premium'
                         : 'text-theme-text-secondary-light dark:text-theme-text-secondary-dark hover:bg-theme-surface-light dark:hover:bg-theme-surface-dark'
                     }`}
                   >
@@ -298,7 +298,7 @@ export const MarketPage = () => {
             </Card>
 
             {/* Breaking News Snippet */}
-            <Card className="bg-brand-primary/10 border-brand-primary/20 text-theme-text-primary-light dark:text-theme-text-primary-dark p-6 relative overflow-hidden shadow-glow-primary">
+            <Card className="bg-brand-primary/10 border-brand-primary/20 text-theme-text-primary-light dark:text-theme-text-primary-dark p-6 relative overflow-hidden shadow-premium">
               <div className="relative z-10">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-2 h-2 rounded-full bg-status-danger animate-pulse"></div>

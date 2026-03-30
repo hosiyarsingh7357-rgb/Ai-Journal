@@ -16,19 +16,19 @@
 /* Typography System */
 @layer components {
   .heading-1 {
-    @apply text-4xl font-black tracking-tight text-text-primary dark:text-text-primary-dark;
+    @apply text-3xl lg:text-4xl font-bold tracking-tight text-text-primary dark:text-text-primary-dark;
   }
   .heading-2 {
-    @apply text-2xl font-bold tracking-tight text-text-primary dark:text-text-primary-dark;
+    @apply text-xl lg:text-2xl font-semibold tracking-tight text-text-primary dark:text-text-primary-dark;
   }
   .heading-3 {
-    @apply text-lg font-bold text-text-primary dark:text-text-primary-dark;
+    @apply text-lg font-semibold text-text-primary dark:text-text-primary-dark;
   }
   .body-text {
     @apply text-sm text-text-secondary dark:text-text-secondary-dark leading-relaxed;
   }
   .label-text {
-    @apply text-[10px] font-black uppercase tracking-widest text-text-muted dark:text-text-muted-dark;
+    @apply text-[10px] font-bold uppercase tracking-widest text-text-muted dark:text-text-muted-dark;
   }
 }
 
@@ -38,7 +38,7 @@
 }
 
 .glass-hover {
-  @apply hover:shadow-glow hover:scale-[1.01] active:scale-[0.99] hover:border-brand-primary/30;
+  @apply hover:shadow-premium hover:scale-[1.01] active:scale-[0.99] hover:border-brand-primary/30;
 }
 
 /* smooth theme transition */

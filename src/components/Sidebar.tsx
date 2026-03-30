@@ -51,14 +51,14 @@ export const Sidebar = ({
         {/* Logo */}
         <div className="h-20 flex items-center justify-between px-6 border-b border-border dark:border-border-dark flex-shrink-0">
           <div className="flex items-center gap-2 font-black text-xl tracking-tight cursor-pointer group" onClick={() => onNavigate('dashboard')}>
-            <div className="w-8 h-8 rounded-xl bg-brand-primary flex items-center justify-center shadow-glow group-hover:scale-110 transition-transform">
+            <div className="w-8 h-8 rounded-xl bg-brand-primary flex items-center justify-center shadow-premium group-hover:scale-110 transition-transform">
               <span className="text-white text-xs font-black">AJ</span>
             </div>
             <span className="font-black text-text-primary dark:text-text-primary-dark text-lg tracking-tighter">Ai Journal</span>
           </div>
           <button 
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-2 text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark"
+            className="lg:hidden p-2 text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark transition-colors"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
@@ -73,7 +73,7 @@ export const Sidebar = ({
               className={cn(
                 "w-full flex items-center justify-between px-4 py-3 rounded-2xl font-bold text-sm transition-all group",
                 currentPage === item.id
-                  ? "bg-brand-primary text-white shadow-glow" 
+                  ? "bg-brand-primary text-white shadow-premium" 
                   : "text-text-secondary dark:text-text-secondary-dark hover:bg-surface-muted dark:hover:bg-surface-muted-dark hover:text-text-primary dark:hover:text-text-primary-dark"
               )}
             >
@@ -98,7 +98,7 @@ export const Sidebar = ({
               className={cn(
                 "w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold rounded-xl transition-all",
                 currentPage === item.id
-                  ? "bg-brand-primary text-white"
+                  ? "bg-brand-primary text-white shadow-premium"
                   : "text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark hover:bg-surface-muted dark:hover:bg-surface-muted-dark"
               )}
             >
