@@ -44,15 +44,17 @@ export const Sidebar = ({
   onNavigate: (id: string) => void
 }) => {
   return (
-    <aside className={`fixed lg:static inset-y-0 left-0 w-64 bg-gradient-to-b from-[#020617] to-[#0f172a] border-r border-white/10 flex flex-col justify-between h-full flex-shrink-0 z-50 transition-transform duration-300 lg:translate-x-0 ${
+    <aside className={`fixed lg:static inset-y-0 left-0 w-64 bg-[#020617] border-r border-white/5 flex flex-col justify-between h-full flex-shrink-0 z-50 transition-transform duration-300 lg:translate-x-0 ${
       isOpen ? 'translate-x-0' : '-translate-x-full'
     }`}>
       <div className="flex flex-col h-full overflow-y-auto">
         {/* Logo */}
-        <div className="h-16 flex items-center justify-between px-6 border-b border-white/10 flex-shrink-0">
-          <div className="flex items-center gap-2 font-bold text-xl tracking-tight cursor-pointer text-white" onClick={() => onNavigate('dashboard')}>
-            <span className="italic font-black text-blue-500 text-xl">AJ</span>
-            <span className="font-bold text-white text-lg">Ai Journal</span>
+        <div className="h-20 flex items-center justify-between px-6 border-b border-white/5 flex-shrink-0">
+          <div className="flex items-center gap-2 font-black text-xl tracking-tight cursor-pointer group" onClick={() => onNavigate('dashboard')}>
+            <div className="w-8 h-8 rounded-xl bg-brand-primary flex items-center justify-center shadow-glow group-hover:scale-110 transition-transform">
+              <span className="text-white text-xs font-black">AJ</span>
+            </div>
+            <span className="font-black text-white text-lg tracking-tighter">Ai Journal</span>
           </div>
           <button 
             onClick={onClose}
@@ -63,19 +65,19 @@ export const Sidebar = ({
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
           {navItems.map((item, index) => (
             <button
               key={index}
               onClick={() => onNavigate(item.id)}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-medium transition-colors group ${
+              className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl font-bold text-sm transition-all group ${
                 currentPage === item.id
-                  ? 'bg-blue-600 text-white' 
+                  ? 'bg-brand-primary text-white shadow-glow' 
                   : 'text-slate-400 hover:bg-white/5 hover:text-white'
               }`}
             >
               <div className="flex items-center gap-3">
-                {item.icon && item.id !== 'analysis' && <item.icon className="w-5 h-5" />}
+                {item.icon && <item.icon className={`w-5 h-5 transition-colors ${currentPage === item.id ? 'text-white' : 'text-slate-500 group-hover:text-white'}`} />}
                 <span>{item.label}</span>
               </div>
               {item.hasSubmenu && <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />}
@@ -84,15 +86,15 @@ export const Sidebar = ({
         </nav>
 
         {/* Bottom Links */}
-        <div className="px-3 py-4 border-t border-white/10 space-y-1 flex-shrink-0">
+        <div className="px-4 py-6 border-t border-white/5 space-y-1 flex-shrink-0">
           {bottomItems.map((item, index) => (
             <button
               key={index}
               onClick={() => onNavigate(item.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-colors ${
+              className={`w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold rounded-xl transition-all ${
                 currentPage === item.id
-                  ? 'bg-blue-600 text-white'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-brand-primary/10 text-brand-primary'
+                  : 'text-slate-500 hover:text-white hover:bg-white/5'
               }`}
             >
               <item.icon className="w-4 h-4" />

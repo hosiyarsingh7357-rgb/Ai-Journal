@@ -70,25 +70,28 @@ export const PerformanceChart = ({ isConnected = false, trades = [] }: { isConne
   }, [trades, isConnected, activeRange]);
 
   return (
-    <Card className="flex flex-col h-full relative">
+    <Card className="flex flex-col h-full relative p-8">
       {!isConnected && trades.length === 0 && (
-        <div className="absolute inset-0 z-20 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm flex items-center justify-center rounded-2xl">
-          <div className="text-center p-4">
-            <p className="text-sm font-bold text-gray-900 dark:text-gray-100 uppercase tracking-widest">Connect MT5 to see performance</p>
+        <div className="absolute inset-0 z-20 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-md flex items-center justify-center rounded-[2rem]">
+          <div className="text-center p-6 glass border-brand-primary/20 shadow-glow">
+            <p className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em]">Connect MT5 to see performance</p>
           </div>
         </div>
       )}
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="font-bold text-gray-900 dark:text-white">Performance</h3>
-        <div className="flex bg-gray-100 dark:bg-gray-700 p-1 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-300">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-3">
+          <div className="w-2 h-8 bg-brand-primary rounded-full" />
+          <h3 className="font-black text-xs uppercase tracking-widest text-slate-500">Performance Analytics</h3>
+        </div>
+        <div className="flex bg-slate-100 dark:bg-white/5 p-1 rounded-2xl text-[10px] font-black text-slate-500 uppercase tracking-widest">
           {ranges.map((range) => (
             <button
               key={range}
               onClick={() => setActiveRange(range)}
-              className={`px-3 py-1.5 rounded-md transition-all ${
+              className={`px-4 py-2 rounded-xl transition-all ${
                 activeRange === range 
-                  ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm' 
-                  : 'hover:bg-gray-200 dark:hover:bg-gray-600'
+                  ? 'bg-white dark:bg-brand-primary text-slate-900 dark:text-white shadow-premium' 
+                  : 'hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               {range}
@@ -97,7 +100,7 @@ export const PerformanceChart = ({ isConnected = false, trades = [] }: { isConne
         </div>
       </div>
       
-      <div className="flex-1 min-h-[250px] w-full">
+      <div className="flex-1 min-h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={chartData}
@@ -105,41 +108,47 @@ export const PerformanceChart = ({ isConnected = false, trades = [] }: { isConne
           >
             <defs>
               <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#3B82F6" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#6366F1" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#6366F1" stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(156, 163, 175, 0.2)" />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255, 255, 255, 0.05)" />
             <XAxis 
               dataKey="name" 
               axisLine={false} 
               tickLine={false} 
-              tick={{ fontSize: 10, fill: '#9ca3af' }}
-              dy={10}
+              tick={{ fontSize: 10, fill: '#64748b', fontWeight: 700 }}
+              dy={15}
             />
             <YAxis 
               axisLine={false} 
               tickLine={false} 
-              tick={{ fontSize: 10, fill: '#9ca3af' }}
+              tick={{ fontSize: 10, fill: '#64748b', fontWeight: 700 }}
               tickFormatter={(value) => `$${value}`}
             />
             <Tooltip 
-              formatter={(value: number) => [`$${value.toFixed(2)}`, 'Cumulative P&L']}
+              formatter={(value: number) => [`$${value.toLocaleString()}`, 'Cumulative P&L']}
               contentStyle={{ 
-                borderRadius: '12px', 
-                border: '1px solid #e5e7eb', 
-                backgroundColor: '#ffffff',
-                color: '#111827',
-                boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' 
+                borderRadius: '20px', 
+                border: '1px solid rgba(255, 255, 255, 0.1)', 
+                backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                backdropFilter: 'blur(12px)',
+                color: '#f8fafc',
+                boxShadow: '0 20px 40px -15px rgba(0, 0, 0, 0.5)',
+                padding: '12px 16px',
+                fontSize: '12px',
+                fontWeight: 'bold'
               }}
+              itemStyle={{ color: '#6366f1' }}
             />
             <Area 
               type="monotone" 
               dataKey="value" 
-              stroke="#3B82F6" 
-              strokeWidth={2}
+              stroke="#6366F1" 
+              strokeWidth={4}
               fillOpacity={1} 
               fill="url(#colorValue)" 
+              animationDuration={1500}
             />
           </AreaChart>
         </ResponsiveContainer>

@@ -15,18 +15,27 @@ export const KpiCard = ({
   value, 
   subtitle, 
   icon: Icon, 
-  iconBg = 'bg-blue-500/20',
-  iconColor = 'text-blue-400'
+  iconBg = 'bg-brand-primary/10',
+  iconColor = 'text-brand-primary'
 }: KpiCardProps) => {
   return (
-    <div className="p-4 rounded-2xl bg-white dark:bg-gray-800 shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 relative hover:scale-105 transition-all duration-300 flex flex-col justify-between">
-      <div>
-        <p className="text-sm text-gray-400 mb-1">{title}</p>
-        <h2 className="text-3xl font-bold text-white">{value}</h2>
+    <div className="glass p-6 border border-white/10 dark:border-white/5 shadow-premium relative hover:scale-[1.02] transition-all duration-300 flex flex-col justify-between group overflow-hidden">
+      <div className="absolute top-0 right-0 w-24 h-24 bg-brand-primary/5 blur-3xl -mr-12 -mt-12 rounded-full group-hover:bg-brand-primary/10 transition-colors" />
+      
+      <div className="relative z-10">
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">{title}</p>
+        <h2 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">{value}</h2>
       </div>
-      <p className="text-xs text-gray-500 mt-4">{subtitle}</p>
-      <div className={`absolute top-6 right-6 w-10 h-10 rounded-xl flex items-center justify-center ${iconBg} ${iconColor}`}>
-        <Icon className="w-5 h-5" />
+      
+      <div className="relative z-10 mt-6 flex items-center gap-2">
+        <div className="h-1 w-8 rounded-full bg-brand-primary/20 overflow-hidden">
+          <div className="h-full w-2/3 bg-brand-primary rounded-full" />
+        </div>
+        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{subtitle}</p>
+      </div>
+
+      <div className={`absolute top-6 right-6 w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 group-hover:rotate-3 ${iconBg} ${iconColor} shadow-glow`}>
+        <Icon className="w-6 h-6" />
       </div>
     </div>
   );

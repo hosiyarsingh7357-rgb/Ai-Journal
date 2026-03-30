@@ -75,19 +75,19 @@ export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) =>
     >
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <h1 className="text-3xl font-black tracking-tight">Welcome back, Trader</h1>
-            <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">Your psychological edge is being analyzed in real-time.</p>
+            <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white">Welcome back, <span className="text-gradient">Trader</span></h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mt-1">Your psychological edge is being analyzed in real-time.</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="bg-orange-500/10 text-orange-500 px-4 py-2 rounded-2xl flex items-center gap-2 border border-orange-500/20">
+            <div className="bg-orange-500/10 text-orange-500 px-5 py-2.5 rounded-2xl flex items-center gap-2 border border-orange-500/20 shadow-glow shadow-orange-500/10">
               <Flame className="w-5 h-5 fill-orange-500" />
-              <span className="font-black text-sm">12 DAY STREAK</span>
+              <span className="font-black text-xs uppercase tracking-widest">12 DAY STREAK</span>
             </div>
-            <div className="bg-blue-500/10 text-blue-500 px-4 py-2 rounded-2xl flex items-center gap-2 border border-blue-500/20">
+            <div className="bg-brand-primary/10 text-brand-primary px-5 py-2.5 rounded-2xl flex items-center gap-2 border border-brand-primary/20 shadow-glow shadow-brand-primary/10">
               <Calendar className="w-5 h-5" />
-              <span className="font-black text-sm">MAR 30</span>
+              <span className="font-black text-xs uppercase tracking-widest">MAR 30</span>
             </div>
           </div>
         </div>
@@ -95,23 +95,23 @@ export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) =>
         {/* AI Insight Card */}
         {report && (
           <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <Card className="p-8 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-3xl -mr-16 -mt-16 rounded-full group-hover:bg-blue-500/20 transition-colors" />
+            <Card className="p-10 relative overflow-hidden group border-brand-primary/20">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/10 blur-[100px] -mr-32 -mt-32 rounded-full group-hover:bg-brand-primary/20 transition-colors" />
               <div className="relative z-10">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                    <BrainCircuit className="w-5 h-5 text-blue-500" />
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-2xl bg-brand-primary/10 flex items-center justify-center shadow-glow">
+                    <BrainCircuit className="w-6 h-6 text-brand-primary" />
                   </div>
-                  <h3 className="text-blue-500 font-black uppercase tracking-[0.2em] text-[10px]">AI Intelligence Summary</h3>
+                  <h3 className="text-brand-primary font-black uppercase tracking-[0.3em] text-[10px]">AI Intelligence Summary</h3>
                 </div>
-                <p className="text-lg font-bold text-slate-800 dark:text-slate-200 leading-relaxed max-w-4xl">{report}</p>
-                <div className="mt-6 flex items-center gap-4">
-                  <button className="text-xs font-black text-blue-500 flex items-center gap-1 hover:gap-2 transition-all">
-                    VIEW FULL PSYCHOLOGY REPORT <ArrowRight className="w-3 h-3" />
+                <p className="text-xl font-bold text-slate-800 dark:text-slate-100 leading-relaxed max-w-4xl">{report}</p>
+                <div className="mt-8 flex items-center gap-4">
+                  <button className="text-[10px] font-black text-brand-primary flex items-center gap-2 hover:gap-3 transition-all uppercase tracking-widest">
+                    VIEW FULL PSYCHOLOGY REPORT <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
