@@ -6,15 +6,10 @@ import {
   BarChart3, 
   TrendingUp, 
   Bot, 
-  History, 
-  Users, 
-  Wrench, 
   Settings, 
   HelpCircle, 
   CreditCard, 
   MessageSquare,
-  DollarSign,
-  Globe,
   ChevronDown,
   ChevronLeft
 } from 'lucide-react';
@@ -26,7 +21,6 @@ const navItems = [
   { icon: ArrowLeftRight, label: 'Trades', id: 'trades' },
   { icon: BookOpen, label: 'Journal', id: 'journal' },
   { icon: Bot, label: 'AI Report', id: 'ai-report' },
-  { icon: History, label: 'Backtesting', id: 'backtesting' },
   { icon: BarChart3, label: 'Analysis', id: 'analysis', hasSubmenu: true },
   { icon: TrendingUp, label: 'Market', id: 'market' },
 ];

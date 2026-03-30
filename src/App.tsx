@@ -9,7 +9,6 @@ import { SettingsPage } from './components/SettingsPage';
 import { AnalysisPage } from './components/AnalysisPage';
 import { MarketPage } from './components/MarketPage';
 import { AIReportPage } from './components/AIReportPage';
-import { BacktestingPage } from './components/BacktestingPage';
 import { PerformancePage } from './components/PerformancePage';
 import { JournalPage } from './components/JournalPage';
 import { TradesPage } from './components/TradesPage';
@@ -88,7 +87,6 @@ export default function App() {
     analysis: 'Analysis',
     market: 'Market',
     'ai-report': 'AI Performance Intelligence',
-    backtesting: 'Backtesting',
     support: 'Support',
     subscription: 'Subscription',
     feedback: 'Feedback',
@@ -159,8 +157,6 @@ export default function App() {
         return <MarketPage />;
       case 'ai-report':
         return <AIReportPage tradesList={trades} />;
-      case 'backtesting':
-        return <BacktestingPage />;
       case 'support':
         return <SupportPage />;
       case 'subscription':
