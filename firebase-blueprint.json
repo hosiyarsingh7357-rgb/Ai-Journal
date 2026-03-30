@@ -1,0 +1,87 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and settings",
+      "type": "object",
+      "properties": {
+        "username": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "passwordHash": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" }
+      },
+      "required": ["username", "email", "passwordHash", "createdAt"]
+    },
+    "BrokerAccount": {
+      "title": "BrokerAccount",
+      "description": "Broker account details",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "accountName": { "type": "string" },
+        "brokerName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "accountNumber": { "type": "string" },
+        "currency": { "type": "string" }
+      },
+      "required": ["userId", "accountName", "brokerName", "createdAt"]
+    },
+    "Trade": {
+      "title": "Trade",
+      "description": "Execution history of a trade",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "brokerAccountId": { "type": "string" },
+        "tradeDate": { "type": "string", "format": "date" },
+        "instrument": { "type": "string" },
+        "tradeType": { "type": "string" },
+        "quantity": { "type": "number" },
+        "entryPrice": { "type": "number" },
+        "exitPrice": { "type": "number" },
+        "profitLoss": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "entryTime": { "type": "string" },
+        "exitTime": { "type": "string" },
+        "notes": { "type": "string" }
+      },
+      "required": ["userId", "brokerAccountId", "tradeDate", "instrument", "tradeType", "quantity", "entryPrice", "exitPrice", "profitLoss", "createdAt"]
+    },
+    "TradeScreenshot": {
+      "title": "TradeScreenshot",
+      "description": "Screenshot of a trade",
+      "type": "object",
+      "properties": {
+        "tradeId": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "caption": { "type": "string" }
+      },
+      "required": ["tradeId", "imageUrl", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile data"
+    },
+    "/users/{userId}/brokerAccounts/{accountId}": {
+      "schema": "BrokerAccount",
+      "description": "Broker accounts for a user"
+    },
+    "/users/{userId}/trades/{tradeId}": {
+      "schema": "Trade",
+      "description": "Trades for a user"
+    },
+    "/users/{userId}/journals/{journalId}": {
+      "schema": "JournalEntry",
+      "description": "Journal entries for a user"
+    },
+    "/trades/{tradeId}/screenshots/{screenshotId}": {
+      "schema": "TradeScreenshot",
+      "description": "Screenshots for a trade"
+    }
+  }
+}

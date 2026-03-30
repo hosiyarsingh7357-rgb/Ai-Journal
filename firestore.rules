@@ -1,0 +1,120 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function validStringLength(field, minLen, maxLen) {
+      return request.resource.data[field] is string &&
+             request.resource.data[field].size() >= minLen &&
+             request.resource.data[field].size() <= maxLen;
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+    function isValidUser(data) {
+      return hasOnlyAllowedFields(['username', 'email', 'passwordHash', 'createdAt', 'firstName', 'lastName']) &&
+             validStringLength('username', 3, 50) &&
+             validStringLength('email', 5, 100) &&
+             data.passwordHash is string &&
+             (data.createdAt is timestamp || data.createdAt is string) &&
+             (!('firstName' in data) || data.firstName is string) &&
+             (!('lastName' in data) || data.lastName is string);
+    }
+
+    function isValidBrokerAccount(data) {
+      return hasOnlyAllowedFields(['userId', 'accountName', 'brokerName', 'createdAt', 'accountNumber', 'currency']) &&
+             data.userId == request.auth.uid &&
+             validStringLength('accountName', 1, 100) &&
+             validStringLength('brokerName', 1, 100) &&
+             (data.createdAt is timestamp || data.createdAt is string) &&
+             (!('accountNumber' in data) || data.accountNumber is string) &&
+             (!('currency' in data) || data.currency is string);
+    }
+
+    function isValidTrade(data) {
+      return hasOnlyAllowedFields(['userId', 'brokerAccountId', 'tradeDate', 'instrument', 'tradeType', 'quantity', 'entryPrice', 'exitPrice', 'profitLoss', 'createdAt', 'entryTime', 'exitTime', 'notes']) &&
+             data.userId == request.auth.uid &&
+             data.brokerAccountId is string &&
+             (data.tradeDate is timestamp || data.tradeDate is string) &&
+             validStringLength('instrument', 1, 20) &&
+             validStringLength('tradeType', 1, 10) &&
+             data.quantity is number &&
+             data.entryPrice is number &&
+             data.exitPrice is number &&
+             data.profitLoss is number &&
+             (data.createdAt is timestamp || data.createdAt is string) &&
+             (!('entryTime' in data) || data.entryTime is string) &&
+             (!('exitTime' in data) || data.exitTime is string) &&
+             (!('notes' in data) || data.notes is string);
+    }
+
+    function isValidTradeScreenshot(data) {
+      return hasOnlyAllowedFields(['tradeId', 'imageUrl', 'createdAt', 'caption']) &&
+             data.tradeId is string &&
+             data.imageUrl is string &&
+             (data.createdAt is timestamp || data.createdAt is string) &&
+             (!('caption' in data) || data.caption is string);
+    }
+
+    function isValidJournal(data) {
+      return hasOnlyAllowedFields(['userId', 'title', 'createdAt', 'narrative', 'confidence', 'logic', 'emotionalCheck', 'emotions', 'updatedAt']) &&
+             data.userId == request.auth.uid &&
+             validStringLength('title', 1, 100) &&
+             (data.createdAt is timestamp || data.createdAt is string);
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUser(request.resource.data);
+      allow update: if isOwner(userId) && isValidUser(request.resource.data);
+      
+      match /brokerAccounts/{accountId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidBrokerAccount(request.resource.data);
+        allow update: if isOwner(userId) && isValidBrokerAccount(request.resource.data);
+        allow delete: if isOwner(userId);
+      }
+
+      match /trades/{tradeId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidTrade(request.resource.data);
+        allow update: if isOwner(userId) && isValidTrade(request.resource.data);
+        allow delete: if isOwner(userId);
+      }
+
+      match /journals/{journalId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidJournal(request.resource.data);
+        allow update: if isOwner(userId) && isValidJournal(request.resource.data);
+        allow delete: if isOwner(userId);
+      }
+    }
+
+    match /trades/{tradeId} {
+      match /screenshots/{screenshotId} {
+        // Need to verify ownership of the trade
+        allow read: if isAuthenticated() && get(/databases/$(database)/documents/trades/$(tradeId)).data.userId == request.auth.uid;
+        allow create: if isAuthenticated() && get(/databases/$(database)/documents/trades/$(tradeId)).data.userId == request.auth.uid && isValidTradeScreenshot(request.resource.data);
+        allow update: if isAuthenticated() && get(/databases/$(database)/documents/trades/$(tradeId)).data.userId == request.auth.uid && isValidTradeScreenshot(request.resource.data);
+        allow delete: if isAuthenticated() && get(/databases/$(database)/documents/trades/$(tradeId)).data.userId == request.auth.uid;
+      }
+    }
+  }
+}
