@@ -23,7 +23,7 @@ import { useTrades } from '../context/TradeContext';
 import { useAuth } from '../context/AuthContext';
 import { subscribeToJournals } from '../services/journalService';
 
-import { Card } from './ui/Card';
+import { Card } from '../components/ui/Card';
 
 export const AnalysisPage = () => {
   const { trades } = useTrades();

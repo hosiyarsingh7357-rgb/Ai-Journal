@@ -10,39 +10,52 @@ module.exports = {
           secondary: '#8b5cf6',
           accent: '#06b6d4',
         },
-        // Standardized Design System
-        theme: {
-          bg: {
-            light: '#f8fafc',
-            dark: '#0b0f19',  // Deep dark background
-          },
-          surface: {
-            light: '#ffffff',
-            dark: '#161b26',  // Premium card surface
-          },
-          text: {
-            primary: {
-              light: '#0f172a',
-              dark: '#f8fafc',
-            },
-            secondary: {
-              light: '#475569',
-              dark: '#94a3b8',
-            }
-          },
-          border: {
-            light: '#e2e8f0',
-            dark: '#232936',  // Subtle border
-          }
+        // SaaS Design System
+        background: {
+          DEFAULT: '#f8fafc',
+          dark: '#0b0f19',
         },
-        status: {
-          success: '#10b981',
-          'success-light': '#34d399',
-          danger: '#ef4444',
-          'danger-light': '#f87171',
-          warning: '#f59e0b',
-          info: '#3b82f6',
+        surface: {
+          DEFAULT: '#ffffff',
+          dark: '#161b26',
+          muted: '#f1f5f9',
+          'muted-dark': '#1e293b',
+        },
+        text: {
+          primary: '#0f172a',
+          'primary-dark': '#f8fafc',
+          secondary: '#475569',
+          'secondary-dark': '#94a3b8',
+          muted: '#64748b',
+          'muted-dark': '#64748b',
+        },
+        border: {
+          DEFAULT: '#e2e8f0',
+          dark: '#232936',
+          strong: '#cbd5e1',
+          'strong-dark': '#334155',
+        },
+        success: {
+          DEFAULT: '#10b981',
+          dark: '#059669',
+        },
+        danger: {
+          DEFAULT: '#ef4444',
+          dark: '#dc2626',
+        },
+        warning: {
+          DEFAULT: '#f59e0b',
+          dark: '#d97706',
+        },
+        info: {
+          DEFAULT: '#3b82f6',
+          dark: '#2563eb',
         }
+      },
+      borderRadius: {
+        'xl': '0.75rem',
+        '2xl': '1rem',
+        '3xl': '1.5rem',
       },
       backgroundImage: {
         'gradient-premium': 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',

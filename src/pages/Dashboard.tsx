@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { KpiCard } from './KpiCard';
-import { PerformanceChart } from './PerformanceChart';
-import { OpenPositions } from './OpenPositions';
-import { RecentActivity } from './RecentActivity';
-import { MonthlyPnL } from './MonthlyPnL';
-import { QuickStats } from './QuickStats';
-import { Card } from './ui/Card';
+import { KpiCard } from '../components/KpiCard';
+import { PerformanceChart } from '../components/PerformanceChart';
+import { OpenPositions } from '../components/OpenPositions';
+import { RecentActivity } from '../components/RecentActivity';
+import { MonthlyPnL } from '../components/MonthlyPnL';
+import { QuickStats } from '../components/QuickStats';
+import { Card } from '../components/ui/Card';
 import { ArrowUpRight, PieChart, BrainCircuit, Flame, Smile, Sparkles, Calendar, ArrowRight } from 'lucide-react';
 import { useTrades } from '../context/TradeContext';
 import { Trade } from '../types';
 import { generateAIReport } from '../services/ai';
 import { motion } from 'motion/react';
+import { cn } from '../lib/utils';
 
 export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) => {
   const { trades } = useTrades();
@@ -71,21 +72,21 @@ export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) =>
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="flex-1 overflow-y-auto p-4 lg:p-8 bg-theme-bg-light dark:bg-theme-bg-dark"
+      className="flex-1 overflow-y-auto p-4 lg:p-8 bg-background dark:bg-background-dark"
     >
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <h1 className="heading-1">Welcome back, <span className="text-gradient">Trader</span></h1>
-            <p className="body-text mt-1">Your psychological edge is being analyzed in real-time.</p>
+            <h1 className="text-3xl font-bold text-text-primary dark:text-text-primary-dark">Welcome back, <span className="text-brand-primary">Trader</span></h1>
+            <p className="text-text-secondary dark:text-text-secondary-dark mt-1">Your psychological edge is being analyzed in real-time.</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="bg-theme-surface-light dark:bg-theme-surface-dark text-orange-500 px-5 py-2.5 rounded-2xl flex items-center gap-2 border border-orange-500/20 shadow-glow shadow-orange-500/10">
+            <div className="bg-surface dark:bg-surface-dark text-orange-500 px-5 py-2.5 rounded-2xl flex items-center gap-2 border border-orange-500/20 shadow-glow shadow-orange-500/10">
               <Flame className="w-5 h-5 fill-orange-500" />
               <span className="font-black text-xs uppercase tracking-widest">12 DAY STREAK</span>
             </div>
-            <div className="bg-theme-surface-light dark:bg-theme-surface-dark text-brand-primary px-5 py-2.5 rounded-2xl flex items-center gap-2 border border-brand-primary/20 shadow-glow shadow-brand-primary/10">
+            <div className="bg-surface dark:bg-surface-dark text-brand-primary px-5 py-2.5 rounded-2xl flex items-center gap-2 border border-brand-primary/20 shadow-glow shadow-brand-primary/10">
               <Calendar className="w-5 h-5" />
               <span className="font-black text-xs uppercase tracking-widest">MAR 30</span>
             </div>
@@ -99,16 +100,16 @@ export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) =>
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <Card className="p-10 relative overflow-hidden group border-brand-primary/30 bg-theme-surface-light dark:bg-theme-surface-dark shadow-premium">
+            <Card className="p-10 relative overflow-hidden group border-brand-primary/30 bg-surface dark:bg-surface-dark shadow-premium">
               <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 blur-[100px] -mr-32 -mt-32 rounded-full group-hover:bg-brand-primary/10 transition-colors" />
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-10 h-10 rounded-2xl bg-brand-primary text-white flex items-center justify-center shadow-glow">
                     <BrainCircuit className="w-6 h-6" />
                   </div>
-                  <h3 className="label-text text-brand-primary">AI Intelligence Summary</h3>
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-brand-primary">AI Intelligence Summary</h3>
                 </div>
-                <p className="text-xl font-bold text-theme-text-primary-light dark:text-theme-text-primary-dark leading-relaxed max-w-4xl">{report}</p>
+                <p className="text-xl font-bold text-text-primary dark:text-text-primary-dark leading-relaxed max-w-4xl">{report}</p>
                 <div className="mt-8 flex items-center gap-4">
                   <button className="text-[10px] font-black text-brand-primary flex items-center gap-2 hover:gap-3 transition-all uppercase tracking-widest">
                     VIEW FULL PSYCHOLOGY REPORT <ArrowRight className="w-4 h-4" />
@@ -157,20 +158,25 @@ export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) =>
             {/* Mood Tracker */}
             <Card className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="label-text">Current Mood</h3>
-                <Smile className="w-4 h-4 text-theme-text-secondary-light dark:text-theme-text-secondary-dark" />
+                <h3 className="text-xs font-bold uppercase tracking-widest text-text-secondary dark:text-text-secondary-dark">Current Mood</h3>
+                <Smile className="w-4 h-4 text-text-secondary dark:text-text-secondary-dark" />
               </div>
               <div className="flex justify-between items-center mb-6">
                 {['😫', '😕', '😐', '🙂', '🤩'].map((emoji, i) => (
                   <button 
                     key={i} 
-                    className={`w-10 h-10 rounded-2xl flex items-center justify-center text-xl transition-all hover:scale-110 active:scale-95 ${i === 3 ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30' : 'bg-theme-bg-light dark:bg-theme-bg-dark hover:bg-theme-border-light dark:hover:bg-theme-border-dark'}`}
+                    className={cn(
+                      "w-10 h-10 rounded-2xl flex items-center justify-center text-xl transition-all hover:scale-110 active:scale-95",
+                      i === 3 
+                        ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/30" 
+                        : "bg-surface-muted dark:bg-surface-muted-dark hover:bg-border dark:hover:bg-border-dark"
+                    )}
                   >
                     {emoji}
                   </button>
                 ))}
               </div>
-              <p className="text-[10px] text-theme-text-secondary-light dark:text-theme-text-secondary-dark font-medium text-center italic">"Your mood is 15% more positive than last week."</p>
+              <p className="text-[10px] text-text-secondary dark:text-text-secondary-dark font-medium text-center italic">"Your mood is 15% more positive than last week."</p>
             </Card>
 
             {/* AI Suggestions */}
@@ -179,7 +185,7 @@ export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) =>
               <div className="relative z-10">
                 <div className="flex items-center gap-2 mb-4">
                   <Sparkles className="w-4 h-4 text-white/80" />
-                  <h3 className="label-text text-white/90">AI Suggestions</h3>
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-white/90">AI Suggestions</h3>
                 </div>
                 <div className="space-y-4">
                   <div className="p-3 rounded-xl bg-white/10 border border-white/20 text-xs font-bold leading-relaxed">

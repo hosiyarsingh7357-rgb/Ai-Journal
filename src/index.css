@@ -9,32 +9,32 @@
 /* Global Styles */
 @layer base {
   body {
-    @apply bg-theme-bg-light dark:bg-theme-bg-dark text-theme-text-primary-light dark:text-theme-text-primary-dark transition-colors duration-300;
+    @apply bg-background dark:bg-background-dark text-text-primary dark:text-text-primary-dark transition-colors duration-300 antialiased;
   }
 }
 
 /* Typography System */
 @layer components {
   .heading-1 {
-    @apply text-4xl font-black tracking-tight text-theme-text-primary-light dark:text-theme-text-primary-dark;
+    @apply text-4xl font-black tracking-tight text-text-primary dark:text-text-primary-dark;
   }
   .heading-2 {
-    @apply text-2xl font-bold tracking-tight text-theme-text-primary-light dark:text-theme-text-primary-dark;
+    @apply text-2xl font-bold tracking-tight text-text-primary dark:text-text-primary-dark;
   }
   .heading-3 {
-    @apply text-lg font-bold text-theme-text-primary-light dark:text-theme-text-primary-dark;
+    @apply text-lg font-bold text-text-primary dark:text-text-primary-dark;
   }
   .body-text {
-    @apply text-sm text-theme-text-secondary-light dark:text-theme-text-secondary-dark leading-relaxed;
+    @apply text-sm text-text-secondary dark:text-text-secondary-dark leading-relaxed;
   }
   .label-text {
-    @apply text-[10px] font-black uppercase tracking-widest text-theme-text-secondary-light dark:text-theme-text-secondary-dark;
+    @apply text-[10px] font-black uppercase tracking-widest text-text-muted dark:text-text-muted-dark;
   }
 }
 
 /* Standardized Card System */
 .glass {
-  @apply bg-theme-surface-light dark:bg-theme-surface-dark border border-theme-border-light dark:border-theme-border-dark shadow-premium rounded-[2rem] p-6 transition-all duration-300;
+  @apply bg-surface dark:bg-surface-dark border border-border dark:border-border-dark shadow-premium rounded-2xl p-6 transition-all duration-300;
 }
 
 .glass-hover {

@@ -67,7 +67,7 @@ export const SupportPage = () => {
 
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16 lg:mb-20">
           {categories.map((cat, i) => (
-            <Card key={i} className="p-6 lg:p-8 cursor-pointer group">
+            <Card className="p-6 lg:p-8 cursor-pointer group">
               <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-brand-primary/20 transition-colors border border-brand-primary/20">
                 <cat.icon className="w-6 h-6 text-brand-primary" />
               </div>

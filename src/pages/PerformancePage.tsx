@@ -27,7 +27,7 @@ import {
   PieChart,
   Pie
 } from 'recharts';
-import { Card } from './ui/Card';
+import { Card } from '../components/ui/Card';
 import { Trade } from '../types';
 
 const parsePnL = (pnl?: string) => {

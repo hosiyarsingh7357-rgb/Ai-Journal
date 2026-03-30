@@ -24,7 +24,12 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { subscribeToJournals, addJournal, updateJournal, deleteJournal } from '../services/journalService';
 import { uploadImage } from '../services/storageService';
-import { Card } from './ui/Card';
+import { Card } from '../components/ui/Card';
+import { Button } from '../components/ui/Button';
+import { Input } from '../components/ui/Input';
+import { cn } from '../lib/utils';
+import { useAppStore } from '../store/useAppStore';
+import { motion, AnimatePresence } from 'motion/react';
 
 export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: any[], onUpdateTrade?: (id: string, updates: any) => Promise<void> }) => {
   const { user } = useAuth();
@@ -219,12 +224,13 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
   };
 
   return (
-    <div className="flex-1 flex overflow-hidden bg-transparent relative">
+    <div className="flex-1 flex overflow-hidden bg-background relative">
       {/* Left Pane: Master List */}
-      <aside className={`absolute inset-0 lg:relative lg:inset-auto lg:w-96 flex flex-col bg-theme-bg-light dark:bg-theme-bg-dark border-r border-theme-border-light dark:border-theme-border-dark shrink-0 transition-transform duration-300 z-20 ${
-        showDetail ? '-translate-x-full lg:translate-x-0' : 'translate-x-0'
-      }`}>
-        <div className="p-4 lg:p-6 border-b border-theme-border-light dark:border-theme-border-dark">
+      <aside className={cn(
+        "absolute inset-0 lg:relative lg:inset-auto lg:w-96 flex flex-col bg-background border-r border-border shrink-0 transition-transform duration-300 z-20",
+        showDetail ? "-translate-x-full lg:translate-x-0" : "translate-x-0"
+      )}>
+        <div className="p-4 lg:p-6 border-b border-border">
           <div className="flex items-center justify-between mb-4">
             <h2 className="heading-2">Ai Journal</h2>
             <div className="relative group">
@@ -234,7 +240,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                 onChange={(e) => setSelectedDate(e.target.value)}
                 className="absolute inset-0 opacity-0 cursor-pointer z-10"
               />
-              <button className="p-2 bg-theme-surface-light dark:bg-theme-surface-dark border border-theme-border-light dark:border-theme-border-dark rounded-xl text-theme-text-secondary-light dark:text-theme-text-secondary-dark hover:text-brand-primary transition-all shadow-sm">
+              <button className="p-2 bg-secondary border border-border rounded-xl text-muted-foreground hover:text-brand-primary transition-all shadow-sm">
                 <CalendarIcon className="w-4 h-4" />
               </button>
               {selectedDate && (
@@ -255,11 +261,12 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                   setActiveTab(tab);
                   if (tab === 'JOURNAL') setActiveFilter('All');
                 }}
-                className={`px-4 py-1.5 text-[10px] font-black rounded-lg uppercase tracking-wider transition-all ${
+                className={cn(
+                  "px-4 py-1.5 text-[10px] font-black rounded-lg uppercase tracking-wider transition-all",
                   activeTab === tab
-                    ? 'bg-brand-primary text-white shadow-glow'
-                    : 'bg-theme-surface-light dark:bg-theme-surface-dark text-theme-text-secondary-light dark:text-theme-text-secondary-dark border border-theme-border-light dark:border-theme-border-dark hover:text-theme-text-primary-light dark:hover:text-theme-text-primary-dark'
-                }`}
+                    ? "bg-brand-primary text-white shadow-glow"
+                    : "bg-secondary text-muted-foreground border border-border hover:text-foreground"
+                )}
               >
                 {tab}
               </button>
@@ -268,17 +275,18 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
           
           {activeTab === 'TRADES' && (
             <>
-              <div className="h-px bg-theme-border-light dark:bg-theme-border-dark my-4" />
+              <div className="h-px bg-border my-4" />
               <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
                 {['All', 'Winners', 'Losses'].map((filter) => (
                   <button
                     key={filter}
                     onClick={() => setActiveFilter(filter)}
-                    className={`px-3 py-1 text-[10px] font-bold rounded uppercase transition-all ${
+                    className={cn(
+                      "px-3 py-1 text-[10px] font-bold rounded uppercase transition-all",
                       activeFilter === filter
-                        ? 'bg-brand-primary text-white shadow-glow'
-                        : 'bg-theme-surface-light dark:bg-theme-surface-dark text-theme-text-secondary-light dark:text-theme-text-secondary-dark border border-theme-border-light dark:border-theme-border-dark hover:text-theme-text-primary-light dark:hover:text-theme-text-primary-dark'
-                    }`}
+                        ? "bg-brand-primary text-white shadow-glow"
+                        : "bg-secondary text-muted-foreground border border-border hover:text-foreground"
+                    )}
                   >
                     {filter}
                   </button>
@@ -292,11 +300,11 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
           {activeTab === 'JOURNAL' ? (
             filteredEntries.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4">
-                <div className="w-16 h-16 rounded-3xl bg-theme-surface-light dark:bg-theme-surface-dark border border-theme-border-light dark:border-theme-border-dark flex items-center justify-center mb-2">
-                  <BookOpen className="w-8 h-8 text-theme-text-secondary-light dark:text-theme-text-secondary-dark" />
+                <div className="w-16 h-16 rounded-3xl bg-secondary border border-border flex items-center justify-center mb-2">
+                  <BookOpen className="w-8 h-8 text-muted-foreground" />
                 </div>
-                <h3 className="text-sm font-bold text-theme-text-primary-light dark:text-theme-text-primary-dark">Your journal is waiting...</h3>
-                <p className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark leading-relaxed">"The first step to mastery is awareness. Start writing your first thought about the markets today."</p>
+                <h3 className="text-sm font-bold text-foreground">Your journal is waiting...</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">"The first step to mastery is awareness. Start writing your first thought about the markets today."</p>
                 <button 
                   onClick={() => { setEditingEntry(null); setIsModalOpen(true); }}
                   className="text-xs font-black text-brand-primary uppercase tracking-widest hover:text-brand-secondary transition-colors"
@@ -309,72 +317,86 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                 <div 
                   key={entry.id}
                   onClick={() => handleSelectEntry(entry.id)}
-                  className={`p-4 lg:p-5 cursor-pointer transition-all border-b border-theme-border-light dark:border-theme-border-dark hover:bg-theme-surface-light dark:hover:bg-theme-surface-dark ${
-                    selectedId === entry.id ? 'bg-theme-surface-light dark:bg-theme-surface-dark shadow-premium border-l-4 border-l-brand-primary' : ''
-                  }`}
+                  className={cn(
+                    "p-4 lg:p-5 cursor-pointer transition-all border-b border-border hover:bg-secondary",
+                    selectedId === entry.id ? "bg-secondary shadow-premium border-l-4 border-l-brand-primary" : ""
+                  )}
                 >
                   <div className="flex justify-between items-start mb-1">
-                    <span className={`text-sm font-bold ${selectedId === entry.id ? 'text-brand-primary' : 'text-theme-text-primary-light dark:text-theme-text-primary-dark'}`}>
+                    <span className={cn(
+                      "text-sm font-bold",
+                      selectedId === entry.id ? "text-brand-primary" : "text-foreground"
+                    )}>
                       {entry.instrument}
                     </span>
-                    <span className={`text-xs font-bold ${
-                      entry.status === 'won' ? 'text-status-success' : 
-                      entry.status === 'lost' ? 'text-status-danger' : 'text-theme-text-secondary-light dark:text-theme-text-secondary-dark'
-                    }`}>
+                    <span className={cn(
+                      "text-xs font-bold",
+                      entry.status === 'won' ? "text-status-success" : 
+                      entry.status === 'lost' ? "text-status-danger" : "text-muted-foreground"
+                    )}>
                       {entry.pnl || 'N/A'}
                     </span>
                   </div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-[11px] text-theme-text-secondary-light dark:text-theme-text-secondary-dark font-medium">{entry.date} • {entry.time}</span>
-                    <span className={`px-1.5 py-0.5 text-[9px] font-bold rounded uppercase ${
-                      entry.status === 'won' ? 'bg-status-success/10 text-status-success' : 
-                      entry.status === 'lost' ? 'bg-status-danger/10 text-status-danger' : 'bg-theme-surface-light dark:bg-theme-surface-dark text-theme-text-secondary-light dark:text-theme-text-secondary-dark border border-theme-border-light dark:border-theme-border-dark'
-                    }`}>
+                    <span className="text-[11px] text-muted-foreground font-medium">{entry.date} • {entry.time}</span>
+                    <span className={cn(
+                      "px-1.5 py-0.5 text-[9px] font-bold rounded uppercase",
+                      entry.status === 'won' ? "bg-status-success/10 text-status-success" : 
+                      entry.status === 'lost' ? "bg-status-danger/10 text-status-danger" : "bg-secondary text-muted-foreground border border-border"
+                    )}>
                       {entry.status === 'won' ? 'Trade Won' : entry.status === 'lost' ? 'Trade Lost' : 'No Trade'}
                     </span>
                   </div>
-                  <p className="text-[11px] text-theme-text-secondary-light dark:text-theme-text-secondary-dark line-clamp-1 italic">"{entry.tradeNotes || 'No notes provided.'}"</p>
+                  <p className="text-[11px] text-muted-foreground line-clamp-1 italic">"{entry.tradeNotes || 'No notes provided.'}"</p>
                 </div>
               ))
             )
           ) : (
             filteredTrades.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4">
-                <div className="w-16 h-16 rounded-3xl bg-theme-surface-light dark:bg-theme-surface-dark border border-theme-border-light dark:border-theme-border-dark flex items-center justify-center mb-2">
-                  <TrendingUp className="w-8 h-8 text-theme-text-secondary-light dark:text-theme-text-secondary-dark" />
+                <div className="w-16 h-16 rounded-3xl bg-secondary border border-border flex items-center justify-center mb-2">
+                  <TrendingUp className="w-8 h-8 text-muted-foreground" />
                 </div>
-                <h3 className="text-sm font-bold text-theme-text-primary-light dark:text-theme-text-primary-dark">No trades recorded yet</h3>
-                <p className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark leading-relaxed">Sync your account or manually add your first trade to see the analysis.</p>
+                <h3 className="text-sm font-bold text-foreground">No trades recorded yet</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">Sync your account or manually add your first trade to see the analysis.</p>
               </div>
             ) : (
               filteredTrades.map((trade, index) => (
               <div 
                 key={trade.id || index}
                 onClick={() => handleSelectEntry(trade.id)}
-                className={`p-4 lg:p-5 border-b border-theme-border-light dark:border-theme-border-dark hover:bg-theme-surface-light dark:hover:bg-theme-surface-dark transition-all cursor-pointer ${
-                  selectedId === trade.id ? 'bg-theme-surface-light dark:bg-theme-surface-dark shadow-premium border-l-4 border-l-brand-primary' : ''
-                }`}
+                className={cn(
+                  "p-4 lg:p-5 border-b border-border hover:bg-secondary transition-all cursor-pointer",
+                  selectedId === trade.id ? "bg-secondary shadow-premium border-l-4 border-l-brand-primary" : ""
+                )}
               >
                 <div className="flex justify-between items-start mb-1">
-                  <span className={`text-sm font-bold ${selectedId === trade.id ? 'text-brand-primary' : 'text-theme-text-primary-light dark:text-theme-text-primary-dark'}`}>{trade.symbol}</span>
-                  <span className={`text-xs font-bold ${trade.isWinner ? 'text-status-success' : 'text-status-danger'}`}>
+                  <span className={cn(
+                    "text-sm font-bold",
+                    selectedId === trade.id ? "text-brand-primary" : "text-foreground"
+                  )}>{trade.symbol}</span>
+                  <span className={cn(
+                    "text-xs font-bold",
+                    trade.isWinner ? "text-status-success" : "text-status-danger"
+                  )}>
                     {trade.pnl}
                   </span>
                 </div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-[11px] text-theme-text-secondary-light dark:text-theme-text-secondary-dark font-medium">
+                  <span className="text-[11px] text-muted-foreground font-medium">
                     {trade.date || (trade.entryDate ? new Date(trade.entryDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—')} • 
                     {trade.time || (trade.entryDate ? new Date(trade.entryDate).toLocaleTimeString('en-US', { hour12: false }) : '—')}
                   </span>
-                  <span className={`px-1.5 py-0.5 text-[9px] font-bold rounded uppercase ${
-                    trade.isWinner || parseFloat((trade.pnl || "0").replace(/[$,+]/g, '')) > 0 ? 'bg-status-success/10 text-status-success' : 
-                    trade.isWinner === false || parseFloat((trade.pnl || "0").replace(/[$,+]/g, '')) < 0 ? 'bg-status-danger/10 text-status-danger' : 'bg-theme-surface-light dark:bg-theme-surface-dark text-theme-text-secondary-light dark:text-theme-text-secondary-dark border border-theme-border-light dark:border-theme-border-dark'
-                  }`}>
+                  <span className={cn(
+                    "px-1.5 py-0.5 text-[9px] font-bold rounded uppercase",
+                    trade.isWinner || parseFloat((trade.pnl || "0").replace(/[$,+]/g, '')) > 0 ? "bg-status-success/10 text-status-success" : 
+                    trade.isWinner === false || parseFloat((trade.pnl || "0").replace(/[$,+]/g, '')) < 0 ? "bg-status-danger/10 text-status-danger" : "bg-secondary text-muted-foreground border border-border"
+                  )}>
                     {trade.type} {trade.size}
                   </span>
                 </div>
-                <div className="bg-theme-bg-light dark:bg-theme-bg-dark p-2 rounded-lg border border-theme-border-light dark:border-theme-border-dark">
-                  <p className="text-[10px] text-theme-text-secondary-light dark:text-theme-text-secondary-dark italic line-clamp-2">
+                <div className="bg-background p-2 rounded-lg border border-border">
+                  <p className="text-[10px] text-muted-foreground italic line-clamp-2">
                     {trade.notes || 'No notes added yet...'}
                   </p>
                 </div>
@@ -385,31 +407,33 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
       </aside>
 
       {/* Right Pane: Detail View */}
-      <section className={`absolute inset-0 lg:relative lg:inset-auto flex-1 overflow-y-auto custom-scrollbar bg-transparent transition-transform duration-300 z-30 lg:z-10 ${
-        showDetail ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
-      }`}>
+      <section className={cn(
+        "absolute inset-0 lg:relative lg:inset-auto flex-1 overflow-y-auto custom-scrollbar bg-background transition-transform duration-300 z-30 lg:z-10",
+        showDetail ? "translate-x-0" : "translate-x-full lg:translate-x-0"
+      )}>
         <div className="max-w-5xl mx-auto p-4 lg:p-10">
           {selectedEntry ? (
             <>
               {/* Detail Header */}
-              <header className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8 lg:mb-10 pb-6 lg:pb-8 border-b border-theme-border-light dark:border-theme-border-dark">
+              <header className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8 lg:mb-10 pb-6 lg:pb-8 border-b border-border">
                 <div className="w-full">
                   <div className="flex items-center gap-3 mb-2">
                     <button 
                       onClick={() => setShowDetail(false)}
-                      className="lg:hidden p-1.5 -ml-1.5 hover:bg-theme-surface-light dark:hover:bg-theme-surface-dark rounded-lg text-theme-text-secondary-light dark:text-theme-text-secondary-dark"
+                      className="lg:hidden p-1.5 -ml-1.5 hover:bg-secondary rounded-lg text-muted-foreground"
                     >
                       <ChevronLeft className="w-5 h-5" />
                     </button>
-                    <span className={`px-2 py-1 text-[10px] font-bold rounded uppercase ${
-                      selectedEntry?.status === 'won' ? 'bg-status-success/20 text-status-success' : 
-                      selectedEntry?.status === 'lost' ? 'bg-status-danger/20 text-status-danger' : 'bg-theme-surface-light dark:bg-theme-surface-dark text-theme-text-secondary-light dark:text-theme-text-secondary-dark border border-theme-border-light dark:border-theme-border-dark'
-                    }`}>
+                    <span className={cn(
+                      "px-2 py-1 text-[10px] font-bold rounded uppercase",
+                      selectedEntry?.status === 'won' ? "bg-status-success/20 text-status-success" : 
+                      selectedEntry?.status === 'lost' ? "bg-status-danger/20 text-status-danger" : "bg-secondary text-muted-foreground border border-border"
+                    )}>
                       {selectedEntry?.status?.toUpperCase() || 'N/A'}
                     </span>
-                    <span className="text-sm font-medium text-theme-text-secondary-light dark:text-theme-text-secondary-dark">{selectedEntry?.date}</span>
+                    <span className="text-sm font-medium text-muted-foreground">{selectedEntry?.date}</span>
                   </div>
-                  <h2 className="text-2xl lg:text-3xl font-black text-theme-text-primary-light dark:text-theme-text-primary-dark tracking-tight">
+                  <h2 className="text-2xl lg:text-3xl font-black text-foreground tracking-tight">
                     {selectedEntry?.instrument} - {selectedEntry?.title}
                   </h2>
                   <div className="flex flex-wrap items-center gap-2 lg:gap-4 mt-3">
@@ -424,19 +448,19 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                 <div className="flex items-center gap-2 lg:gap-3 w-full sm:w-auto">
                   <button 
                     onClick={handleEditEntry}
-                    className="p-2 border border-theme-border-light dark:border-theme-border-dark rounded-lg hover:bg-theme-surface-light dark:hover:bg-theme-surface-dark transition-all text-theme-text-secondary-light dark:text-theme-text-secondary-dark hover:text-brand-primary"
+                    className="p-2 border border-border rounded-lg hover:bg-secondary transition-all text-muted-foreground hover:text-brand-primary"
                   >
                     <Edit3 className="w-4 h-4" />
                   </button>
                   {selectedEntry.type !== 'trade-note' && (
                     <button 
                       onClick={() => handleDeleteEntry(selectedEntry.id)}
-                      className="p-2 border border-theme-border-light dark:border-theme-border-dark rounded-lg hover:bg-status-danger/10 transition-all text-theme-text-secondary-light dark:text-theme-text-secondary-dark hover:text-status-danger"
+                      className="p-2 border border-border rounded-lg hover:bg-status-danger/10 transition-all text-muted-foreground hover:text-status-danger"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   )}
-                  <button className="p-2 border border-theme-border-light dark:border-theme-border-dark rounded-lg hover:bg-theme-surface-light dark:hover:bg-theme-surface-dark transition-all text-theme-text-secondary-light dark:text-theme-text-secondary-dark">
+                  <button className="p-2 border border-border rounded-lg hover:bg-secondary transition-all text-muted-foreground">
                     <Share2 className="w-4 h-4" />
                   </button>
                 </div>
@@ -449,21 +473,27 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:gap-4">
                     <Card className="p-4 rounded-2xl">
                       <p className="label-text mb-1">Symbol</p>
-                      <p className="text-lg font-black text-theme-text-primary-light dark:text-theme-text-primary-dark">{selectedEntry?.instrument}</p>
+                      <p className="text-lg font-black text-foreground">{selectedEntry?.instrument}</p>
                     </Card>
                     <Card className="p-4 rounded-2xl">
                       <p className="label-text mb-1">Type</p>
-                      <p className={`text-lg font-black ${selectedEntry?.tradeType?.includes('BUY') ? 'text-brand-primary' : 'text-status-danger'}`}>
+                      <p className={cn(
+                        "text-lg font-black",
+                        selectedEntry?.tradeType?.includes('BUY') ? "text-brand-primary" : "text-status-danger"
+                      )}>
                         {selectedEntry?.tradeType}
                       </p>
                     </Card>
                     <Card className="p-4 rounded-2xl">
                       <p className="label-text mb-1">Size</p>
-                      <p className="text-lg font-black text-theme-text-primary-light dark:text-theme-text-primary-dark">{selectedEntry?.volume}</p>
+                      <p className="text-lg font-black text-foreground">{selectedEntry?.volume}</p>
                     </Card>
                     <Card className="p-4 rounded-2xl">
                       <p className="label-text mb-1">Net P&L</p>
-                      <p className={`text-lg font-black ${selectedEntry?.pnl?.startsWith('+') ? 'text-status-success' : 'text-status-danger'}`}>
+                      <p className={cn(
+                        "text-lg font-black",
+                        selectedEntry?.pnl?.startsWith('+') ? "text-status-success" : "text-status-danger"
+                      )}>
                         {selectedEntry?.pnl}
                       </p>
                     </Card>
@@ -477,12 +507,12 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                       </h3>
                       <div className="space-y-3">
                         <div className="flex justify-between">
-                          <span className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark">Entry Price</span>
-                          <span className="text-xs font-black text-theme-text-primary-light dark:text-theme-text-primary-dark">{selectedEntry?.entryPrice || '—'}</span>
+                          <span className="text-xs text-muted-foreground">Entry Price</span>
+                          <span className="text-xs font-black text-foreground">{selectedEntry?.entryPrice || '—'}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark">Entry Date</span>
-                          <span className="text-xs font-black text-theme-text-primary-light dark:text-theme-text-primary-dark">
+                          <span className="text-xs text-muted-foreground">Entry Date</span>
+                          <span className="text-xs font-black text-foreground">
                             {selectedEntry?.entryDateRaw ? new Date(selectedEntry.entryDateRaw).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'}
                           </span>
                         </div>
@@ -494,12 +524,12 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                       </h3>
                       <div className="space-y-3">
                         <div className="flex justify-between">
-                          <span className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark">Exit Price</span>
-                          <span className="text-xs font-black text-theme-text-primary-light dark:text-theme-text-primary-dark">{selectedEntry?.exitPrice || '—'}</span>
+                          <span className="text-xs text-muted-foreground">Exit Price</span>
+                          <span className="text-xs font-black text-foreground">{selectedEntry?.exitPrice || '—'}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark">Exit Date</span>
-                          <span className="text-xs font-black text-theme-text-primary-light dark:text-theme-text-primary-dark">
+                          <span className="text-xs text-muted-foreground">Exit Date</span>
+                          <span className="text-xs font-black text-foreground">
                             {selectedEntry?.exitDateRaw ? new Date(selectedEntry.exitDateRaw).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'}
                           </span>
                         </div>
@@ -508,7 +538,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                   </div>
 
                   {/* AI Analysis Section */}
-                  <section className="relative overflow-hidden rounded-[2rem] border border-brand-primary/20 bg-theme-surface-light dark:bg-theme-surface-dark p-6 lg:p-8 shadow-premium">
+                  <section className="relative overflow-hidden rounded-[2rem] border border-brand-primary/20 bg-secondary p-6 lg:p-8 shadow-premium">
                     <div className="absolute top-0 right-0 p-4 opacity-5">
                       <Brain className="w-24 h-24 text-brand-primary" />
                     </div>
@@ -518,7 +548,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                           <Brain className="w-5 h-5 text-brand-primary" />
                         </div>
                         <div>
-                          <h3 className="text-sm font-black text-theme-text-primary-light dark:text-theme-text-primary-dark uppercase tracking-widest">AI Psychological Analysis</h3>
+                          <h3 className="text-sm font-black text-foreground uppercase tracking-widest">AI Psychological Analysis</h3>
                           <p className="text-[10px] text-brand-primary/60 font-bold uppercase tracking-tighter">Powered by Gemini Pro</p>
                         </div>
                       </div>
@@ -538,16 +568,16 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                           </div>
                           <div className="space-y-2">
                             <p className="label-text">Risk Assessment</p>
-                            <p className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark font-medium leading-relaxed">
+                            <p className="text-xs text-foreground font-medium leading-relaxed">
                               Your execution was precise. However, notice the slight hesitation before entry. This suggests a minor lack of confidence in your setup.
                             </p>
                           </div>
                         </div>
 
-                        <div className="pt-4 border-t border-theme-border-light dark:border-theme-border-dark">
+                        <div className="pt-4 border-t border-border">
                           <p className="label-text mb-3">AI Recommendation</p>
-                          <div className="bg-theme-bg-light dark:bg-theme-bg-dark rounded-2xl p-4 border border-theme-border-light dark:border-theme-border-dark">
-                            <p className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark italic leading-relaxed">
+                          <div className="bg-secondary rounded-2xl p-4 border border-border shadow-sm">
+                            <p className="text-xs text-foreground italic leading-relaxed">
                               "You're performing well under pressure. To improve, try reducing your position size by 20% on the next trade to eliminate that entry hesitation."
                             </p>
                           </div>
@@ -561,8 +591,8 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                     <h3 className="label-text mb-4 flex items-center gap-2">
                       <Layers className="w-3 h-3 text-brand-primary" /> Trade Notes & Logic
                     </h3>
-                    <div className="bg-theme-surface-light dark:bg-theme-surface-dark p-6 rounded-[2rem] border border-theme-border-light dark:border-theme-border-dark shadow-premium">
-                      <p className="text-sm text-theme-text-secondary-light dark:text-theme-text-secondary-dark leading-relaxed">
+                    <div className="bg-secondary p-6 rounded-[2rem] border border-border shadow-premium">
+                      <p className="text-sm text-foreground leading-relaxed">
                         {selectedEntry?.tradeNotes || 'No notes provided.'}
                       </p>
                     </div>
@@ -598,8 +628,8 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
             </>
           ) : (
             <div className="flex flex-col items-center justify-center h-[60vh] text-center space-y-6">
-              <div className="w-24 h-24 rounded-[2.5rem] bg-theme-surface-light dark:bg-theme-surface-dark border border-theme-border-light dark:border-theme-border-dark flex items-center justify-center shadow-premium">
-                <BookOpen className="w-10 h-10 text-theme-text-secondary-light dark:text-theme-text-secondary-dark opacity-50" />
+              <div className="w-24 h-24 rounded-[2.5rem] bg-secondary border border-border flex items-center justify-center shadow-premium">
+                <BookOpen className="w-10 h-10 text-muted-foreground opacity-50" />
               </div>
               <div>
                 <h2 className="heading-2 mb-2">Select an entry</h2>
@@ -621,120 +651,94 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
       {/* New Entry Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-md z-[60] flex items-center justify-center p-4">
-          <Card key={editingEntry?.id || 'new'} className="w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200 p-0 rounded-[2.5rem]">
-            <div className="p-6 border-b border-theme-border-light dark:border-theme-border-dark flex justify-between items-center bg-theme-bg-light dark:bg-theme-bg-dark">
+          <Card className="w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200 p-0 rounded-[2.5rem]">
+            <div className="p-6 border-b border-border flex justify-between items-center bg-background">
               <h3 className="heading-3">{editingEntry ? 'Edit Journal Entry' : 'New Journal Entry'}</h3>
               <button 
                 onClick={() => { setIsModalOpen(false); setEditingEntry(null); }} 
-                className="p-2 hover:bg-theme-surface-light dark:hover:bg-theme-surface-dark rounded-xl text-theme-text-secondary-light dark:text-theme-text-secondary-dark transition-colors"
+                className="p-2 hover:bg-secondary rounded-xl text-muted-foreground transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto custom-scrollbar bg-theme-surface-light dark:bg-theme-surface-dark">
+            <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto custom-scrollbar bg-secondary">
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="label-text mb-1.5 block">Instrument Symbol</label>
-                  <input 
-                    type="text" 
-                    placeholder="e.g. XAUUSD" 
-                    defaultValue={editingEntry?.instrument || ''}
-                    id="instrument-input"
-                    className="w-full px-4 py-2.5 rounded-xl bg-theme-bg-light dark:bg-theme-bg-dark border border-theme-border-light dark:border-theme-border-dark focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all text-sm text-theme-text-primary-light dark:text-theme-text-primary-dark placeholder-theme-text-secondary-light/50 dark:placeholder-theme-text-secondary-dark/50" 
-                  />
-                </div>
-                <div>
-                  <label className="label-text mb-1.5 block">Trade Type</label>
+                <Input 
+                  label="Instrument Symbol"
+                  placeholder="e.g. XAUUSD" 
+                  defaultValue={editingEntry?.instrument || ''}
+                  id="instrument-input"
+                />
+                <div className="w-full space-y-1.5">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block ml-1">Trade Type</label>
                   <select 
                     id="trade-type-input"
                     defaultValue={editingEntry?.tradeType || 'BUY'}
-                    className="w-full px-4 py-2.5 rounded-xl bg-theme-bg-light dark:bg-theme-bg-dark border border-theme-border-light dark:border-theme-border-dark focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all text-sm text-theme-text-primary-light dark:text-theme-text-primary-dark"
+                    className="w-full h-11 px-4 rounded-xl bg-background border border-border text-foreground focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary outline-none transition-all duration-200 text-sm font-medium"
                   >
-                    <option value="BUY" className="bg-theme-bg-light dark:bg-theme-bg-dark">BUY</option>
-                    <option value="SELL" className="bg-theme-bg-light dark:bg-theme-bg-dark">SELL</option>
+                    <option value="BUY">BUY</option>
+                    <option value="SELL">SELL</option>
                   </select>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="label-text mb-1.5 block">Position Size</label>
-                  <input 
-                    type="text" 
-                    placeholder="e.g. 1.00 Lots" 
-                    defaultValue={editingEntry?.volume || ''}
-                    id="volume-input"
-                    className="w-full px-4 py-2.5 rounded-xl bg-theme-bg-light dark:bg-theme-bg-dark border border-theme-border-light dark:border-theme-border-dark focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all text-sm text-theme-text-primary-light dark:text-theme-text-primary-dark placeholder-theme-text-secondary-light/50 dark:placeholder-theme-text-secondary-dark/50" 
-                  />
-                </div>
-                <div>
-                  <label className="label-text mb-1.5 block">Net P&L</label>
-                  <input 
-                    type="text" 
-                    placeholder="e.g. +$1,200.00" 
-                    defaultValue={editingEntry?.pnl || ''}
-                    id="pnl-input"
-                    className="w-full px-4 py-2.5 rounded-xl bg-theme-bg-light dark:bg-theme-bg-dark border border-theme-border-light dark:border-theme-border-dark focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all text-sm text-theme-text-primary-light dark:text-theme-text-primary-dark placeholder-theme-text-secondary-light/50 dark:placeholder-theme-text-secondary-dark/50" 
-                  />
-                </div>
+                <Input 
+                  label="Position Size"
+                  placeholder="e.g. 1.00 Lots" 
+                  defaultValue={editingEntry?.volume || ''}
+                  id="volume-input"
+                />
+                <Input 
+                  label="Net P&L"
+                  placeholder="e.g. +$1,200.00" 
+                  defaultValue={editingEntry?.pnl || ''}
+                  id="pnl-input"
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="label-text mb-1.5 block">Entry Price</label>
-                  <input 
-                    type="text" 
-                    placeholder="e.g. 2015.50" 
-                    defaultValue={editingEntry?.entryPrice || ''}
-                    id="entry-price-input"
-                    className="w-full px-4 py-2.5 rounded-xl bg-theme-bg-light dark:bg-theme-bg-dark border border-theme-border-light dark:border-theme-border-dark focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all text-sm text-theme-text-primary-light dark:text-theme-text-primary-dark placeholder-theme-text-secondary-light/50 dark:placeholder-theme-text-secondary-dark/50" 
-                  />
-                </div>
-                <div>
-                  <label className="label-text mb-1.5 block">Entry Date</label>
-                  <input 
-                    type="datetime-local" 
-                    defaultValue={editingEntry?.entryDateRaw ? new Date(editingEntry.entryDateRaw).toISOString().slice(0, 16) : ''}
-                    id="entry-date-input"
-                    className="w-full px-4 py-2.5 rounded-xl bg-theme-bg-light dark:bg-theme-bg-dark border border-theme-border-light dark:border-theme-border-dark focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all text-sm text-theme-text-primary-light dark:text-theme-text-primary-dark" 
-                  />
-                </div>
+                <Input 
+                  label="Entry Price"
+                  placeholder="e.g. 2015.50" 
+                  defaultValue={editingEntry?.entryPrice || ''}
+                  id="entry-price-input"
+                />
+                <Input 
+                  label="Entry Date"
+                  type="datetime-local" 
+                  defaultValue={editingEntry?.entryDateRaw ? new Date(editingEntry.entryDateRaw).toISOString().slice(0, 16) : ''}
+                  id="entry-date-input"
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="label-text mb-1.5 block">Exit Price</label>
-                  <input 
-                    type="text" 
-                    placeholder="e.g. 2035.20" 
-                    defaultValue={editingEntry?.exitPrice || ''}
-                    id="exit-price-input"
-                    className="w-full px-4 py-2.5 rounded-xl bg-theme-bg-light dark:bg-theme-bg-dark border border-theme-border-light dark:border-theme-border-dark focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all text-sm text-theme-text-primary-light dark:text-theme-text-primary-dark placeholder-theme-text-secondary-light/50 dark:placeholder-theme-text-secondary-dark/50" 
-                  />
-                </div>
-                <div>
-                  <label className="label-text mb-1.5 block">Exit Date</label>
-                  <input 
-                    type="datetime-local" 
-                    defaultValue={editingEntry?.exitDateRaw ? new Date(editingEntry.exitDateRaw).toISOString().slice(0, 16) : ''}
-                    id="exit-date-input"
-                    className="w-full px-4 py-2.5 rounded-xl bg-theme-bg-light dark:bg-theme-bg-dark border border-theme-border-light dark:border-theme-border-dark focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all text-sm text-theme-text-primary-light dark:text-theme-text-primary-dark" 
-                  />
-                </div>
+                <Input 
+                  label="Exit Price"
+                  placeholder="e.g. 2035.20" 
+                  defaultValue={editingEntry?.exitPrice || ''}
+                  id="exit-price-input"
+                />
+                <Input 
+                  label="Exit Date"
+                  type="datetime-local" 
+                  defaultValue={editingEntry?.exitDateRaw ? new Date(editingEntry.exitDateRaw).toISOString().slice(0, 16) : ''}
+                  id="exit-date-input"
+                />
               </div>
 
-              <div>
-                <label className="label-text mb-1.5 block">Trade Notes & Logic</label>
+              <div className="w-full space-y-1.5">
+                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block ml-1">Trade Notes & Logic</label>
                 <textarea 
                   rows={4} 
                   placeholder="Describe your trade logic and emotions..." 
                   defaultValue={editingEntry?.tradeNotes || ''}
                   id="trade-notes-textarea"
-                  className="w-full px-4 py-2.5 rounded-xl bg-theme-bg-light dark:bg-theme-bg-dark border border-theme-border-light dark:border-theme-border-dark focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all resize-none text-sm text-theme-text-primary-light dark:text-theme-text-primary-dark placeholder-theme-text-secondary-light/50 dark:placeholder-theme-text-secondary-dark/50"
+                  className="w-full px-4 py-2.5 rounded-xl bg-background border border-border focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary outline-none transition-all resize-none text-sm text-foreground placeholder:text-muted-foreground/70"
                 ></textarea>
               </div>
-              <div>
-                <label className="label-text mb-1.5 block">Evidence Screenshot</label>
+              <div className="w-full space-y-1.5">
+                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block ml-1">Evidence Screenshot</label>
                 <input 
                   type="file" 
                   accept="image/*"
@@ -751,7 +755,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                       }
                     }
                   }}
-                  className="w-full px-4 py-2.5 rounded-xl bg-theme-bg-light dark:bg-theme-bg-dark border border-theme-border-light dark:border-theme-border-dark focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all text-sm text-theme-text-primary-light dark:text-theme-text-primary-dark placeholder-theme-text-secondary-light/50 dark:placeholder-theme-text-secondary-dark/50" 
+                  className="w-full px-4 py-2.5 rounded-xl bg-background border border-border focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary outline-none transition-all text-sm text-foreground" 
                 />
                 <input 
                   type="hidden" 
@@ -762,13 +766,14 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
               </div>
 
               <div className="flex gap-3 pt-2">
-                <button 
+                <Button 
+                  variant="outline"
                   onClick={() => { setIsModalOpen(false); setEditingEntry(null); }}
-                  className="flex-1 py-3 bg-theme-bg-light dark:bg-theme-bg-dark text-theme-text-secondary-light dark:text-theme-text-secondary-dark rounded-xl font-bold border border-theme-border-light dark:border-theme-border-dark hover:bg-theme-surface-light dark:hover:bg-theme-surface-dark transition-all text-sm"
+                  className="flex-1"
                 >
                   Cancel
-                </button>
-                <button 
+                </Button>
+                <Button 
                   onClick={() => {
                     const instrument = (document.getElementById('instrument-input') as HTMLInputElement).value;
                     const tradeType = (document.getElementById('trade-type-input') as HTMLSelectElement).value;
@@ -794,10 +799,10 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                       screenshot
                     });
                   }}
-                  className="flex-1 py-3 bg-brand-primary text-white rounded-xl font-bold shadow-glow hover:bg-brand-secondary transition-all text-sm"
+                  className="flex-1"
                 >
                   Save Entry
-                </button>
+                </Button>
               </div>
             </div>
           </Card>
