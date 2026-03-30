@@ -174,20 +174,20 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-[#020205] text-white">
+      <div className="flex items-center justify-center h-screen bg-theme-bg-light dark:bg-theme-bg-dark text-theme-text-primary-light dark:text-theme-text-primary-dark">
         <BackgroundAnimation />
-        <div className="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full"></div>
+        <div className="animate-spin w-12 h-12 border-4 border-brand-primary border-t-transparent rounded-full"></div>
       </div>
     );
   }
 
   if (verificationEmailSent || (user && !user.emailVerified)) {
     return (
-      <div className="flex items-center justify-center h-screen bg-slate-900 text-white">
+      <div className="flex items-center justify-center h-screen bg-theme-bg-light dark:bg-theme-bg-dark text-theme-text-primary-light dark:text-theme-text-primary-dark">
         <BackgroundAnimation />
         <div className="glass rounded-2xl shadow-2xl p-8 flex flex-col items-center gap-6 w-full max-w-sm relative z-10">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Ai Journal</h1>
-          <p className="text-slate-400 text-center text-sm">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">Ai Journal</h1>
+          <p className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark text-center text-sm">
             {verificationEmailSent 
               ? `We have sent you a verification email to ${email}. Please verify it and log in.`
               : `Your email is not verified. Please check your inbox for a verification email.`
@@ -199,7 +199,7 @@ export default function App() {
               setIsSignUp(false);
               signOut();
             }}
-            className="bg-blue-600 hover:bg-blue-700 transition-colors px-8 py-3 rounded-xl font-bold w-full shadow-lg shadow-blue-500/20"
+            className="bg-brand-primary hover:bg-brand-primary/90 transition-colors px-8 py-3 rounded-xl font-bold w-full shadow-lg shadow-brand-primary/20"
           >
             Login
           </button>
@@ -214,27 +214,27 @@ export default function App() {
     }
 
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#020617] text-white overflow-hidden relative">
+      <div className="flex items-center justify-center min-h-screen bg-theme-bg-light dark:bg-theme-bg-dark text-theme-text-primary-light dark:text-theme-text-primary-dark overflow-hidden relative">
         <BackgroundAnimation />
         
         <button 
           onClick={() => setShowAuth(false)}
-          className="absolute top-8 left-8 text-slate-400 hover:text-white flex items-center gap-2 font-bold transition-colors z-20"
+          className="absolute top-8 left-8 text-theme-text-secondary-light dark:text-theme-text-secondary-dark hover:text-theme-text-primary-light dark:hover:text-theme-text-primary-dark flex items-center gap-2 font-bold transition-colors z-20"
         >
           <X className="w-5 h-5" /> Back to Home
         </button>
 
-        <div className="glass rounded-[2.5rem] shadow-2xl p-10 flex flex-col items-center gap-8 w-full max-w-md relative z-10 border border-white/10 backdrop-blur-3xl">
+        <div className="glass rounded-[2.5rem] shadow-2xl p-10 flex flex-col items-center gap-8 w-full max-w-md relative z-10 border border-theme-border-light dark:border-theme-border-dark backdrop-blur-3xl">
           <div className="text-center space-y-2">
-            <h1 className="text-4xl font-black bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Ai Journal</h1>
-            <p className="text-slate-400 text-sm font-medium">{isSignUp ? 'Create your professional trading account' : 'Welcome back, Master your mind'}</p>
+            <h1 className="text-4xl font-black bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">Ai Journal</h1>
+            <p className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark text-sm font-medium">{isSignUp ? 'Create your professional trading account' : 'Welcome back, Master your mind'}</p>
           </div>
 
           {error && (
             <motion.div 
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="w-full bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-2xl text-xs font-bold text-center"
+              className="w-full bg-status-danger/10 border border-status-danger/20 text-status-danger p-4 rounded-2xl text-xs font-bold text-center"
             >
               {error}
             </motion.div>
@@ -242,36 +242,36 @@ export default function App() {
 
           <div className="w-full space-y-4">
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-4">Email Address</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-theme-text-secondary-light dark:text-theme-text-secondary-dark ml-4">Email Address</label>
               <input
                 type="email"
                 placeholder="trader@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                className="w-full bg-theme-surface-light dark:bg-theme-surface-dark border border-theme-border-light dark:border-theme-border-dark rounded-2xl px-5 py-4 text-theme-text-primary-light dark:text-theme-text-primary-dark placeholder-theme-text-secondary-light dark:placeholder-theme-text-secondary-dark focus:outline-none focus:ring-2 focus:ring-brand-primary transition-all"
               />
             </div>
             
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-4">Password</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-theme-text-secondary-light dark:text-theme-text-secondary-dark ml-4">Password</label>
               <input
                 type="password"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                className="w-full bg-theme-surface-light dark:bg-theme-surface-dark border border-theme-border-light dark:border-theme-border-dark rounded-2xl px-5 py-4 text-theme-text-primary-light dark:text-theme-text-primary-dark placeholder-theme-text-secondary-light dark:placeholder-theme-text-secondary-dark focus:outline-none focus:ring-2 focus:ring-brand-primary transition-all"
               />
             </div>
 
             {isSignUp && (
               <div className="space-y-1.5">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-4">Confirm Password</label>
+                <label className="text-[10px] font-black uppercase tracking-widest text-theme-text-secondary-light dark:text-theme-text-secondary-dark ml-4">Confirm Password</label>
                 <input
                   type="password"
                   placeholder="••••••••"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="w-full bg-theme-surface-light dark:bg-theme-surface-dark border border-theme-border-light dark:border-theme-border-dark rounded-2xl px-5 py-4 text-theme-text-primary-light dark:text-theme-text-primary-dark placeholder-theme-text-secondary-light dark:placeholder-theme-text-secondary-dark focus:outline-none focus:ring-2 focus:ring-brand-primary transition-all"
                 />
               </div>
             )}
@@ -279,20 +279,20 @@ export default function App() {
 
           <button 
             onClick={handleAuth}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-black w-full shadow-xl shadow-blue-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="bg-brand-primary hover:bg-brand-primary/90 text-white px-8 py-4 rounded-2xl font-black w-full shadow-xl shadow-brand-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             {isSignUp ? 'Create Account' : 'Sign In to Dashboard'}
           </button>
 
           <div className="w-full flex items-center gap-4 py-2">
-            <div className="h-px bg-white/5 flex-1" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">OR</span>
-            <div className="h-px bg-white/5 flex-1" />
+            <div className="h-px bg-theme-border-light dark:bg-theme-border-dark flex-1" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-theme-text-secondary-light dark:text-theme-text-secondary-dark">OR</span>
+            <div className="h-px bg-theme-border-light dark:bg-theme-border-dark flex-1" />
           </div>
 
           <button
             onClick={signInWithGoogle}
-            className="bg-white text-slate-900 hover:bg-slate-100 transition-all px-8 py-4 rounded-2xl font-black w-full shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-[0.98]"
+            className="bg-theme-surface-light dark:bg-theme-surface-dark text-theme-text-primary-light dark:text-theme-text-primary-dark hover:bg-theme-bg-light dark:hover:bg-theme-bg-dark transition-all px-8 py-4 rounded-2xl font-black w-full shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-[0.98] border border-theme-border-light dark:border-theme-border-dark"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.3-4.74 3.3-8.09z"/>
@@ -305,7 +305,7 @@ export default function App() {
 
           <button
             onClick={() => setIsSignUp(!isSignUp)}
-            className="text-slate-500 text-xs font-bold hover:text-white transition-colors"
+            className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark text-xs font-bold hover:text-theme-text-primary-light dark:hover:text-theme-text-primary-dark transition-colors"
           >
             {isSignUp ? 'Already have an account? Sign In' : 'New to AJ Journal? Create an account'}
           </button>
@@ -315,20 +315,20 @@ export default function App() {
   }
 
   return (
-    <div className="relative min-h-screen bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+    <div className="relative min-h-screen bg-theme-bg-light dark:bg-theme-bg-dark text-theme-text-primary-light dark:text-theme-text-primary-dark transition-colors duration-300">
       <div className="absolute inset-0 -z-10">
         <BackgroundAnimation />
       </div>
       <div className="relative z-10 flex h-screen overflow-hidden">
         {isSyncing && (
           <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50 backdrop-blur-sm">
-            <div className="animate-spin w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full"></div>
+            <div className="animate-spin w-16 h-16 border-4 border-brand-primary border-t-transparent rounded-full"></div>
           </div>
         )}
 
         {isSidebarOpen && (
           <div 
-            className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 lg:hidden transition-opacity"
+            className="fixed inset-0 bg-theme-bg-dark/50 backdrop-blur-sm z-40 lg:hidden transition-opacity"
             onClick={() => setIsSidebarOpen(false)}
           />
         )}

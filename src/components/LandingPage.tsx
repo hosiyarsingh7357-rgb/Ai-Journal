@@ -15,22 +15,22 @@ import {
 
 export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
   return (
-    <div className="min-h-screen bg-[#020617] text-white selection:bg-blue-500/30">
+    <div className="min-h-screen bg-theme-bg-dark text-theme-text-primary-dark selection:bg-brand-primary/30">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#020617]/80 backdrop-blur-xl">
+      <nav className="fixed top-0 w-full z-50 border-b border-theme-border-dark bg-theme-bg-dark/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-2xl tracking-tight">
-            <span className="italic font-black text-blue-500 text-2xl">AJ</span>
-            <span className="font-bold text-white">Ai Journal</span>
+            <span className="italic font-black text-brand-primary text-2xl">AJ</span>
+            <span className="font-bold text-theme-text-primary-dark">Ai Journal</span>
           </div>
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#demo" className="hover:text-white transition-colors">AI Demo</a>
-            <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
+          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-theme-text-secondary-dark">
+            <a href="#features" className="hover:text-theme-text-primary-dark transition-colors">Features</a>
+            <a href="#demo" className="hover:text-theme-text-primary-dark transition-colors">AI Demo</a>
+            <a href="#pricing" className="hover:text-theme-text-primary-dark transition-colors">Pricing</a>
           </div>
           <button 
             onClick={onGetStarted}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-full font-bold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/20"
+            className="bg-brand-primary hover:bg-brand-primary/90 text-white px-6 py-2.5 rounded-full font-bold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-brand-primary/20"
           >
             Start Free
           </button>
@@ -50,13 +50,13 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <span className="inline-block px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-widest mb-6">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-xs font-bold uppercase tracking-widest mb-6">
               The Future of Trading Psychology
             </span>
             <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-[1.1] mb-8">
-              Stop Trading with <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Emotions</span>. Start Trading with <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-500">Intelligence</span>.
+              Stop Trading with <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-secondary">Emotions</span>. Start Trading with <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-brand-primary">Intelligence</span>.
             </h1>
-            <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl text-theme-text-secondary-dark max-w-2xl mx-auto leading-relaxed">
               AJ Ai Journal is your personal trading companion. We analyze your trades and thoughts to uncover the psychological patterns holding you back from consistent profitability.
             </p>
           </motion.div>
@@ -69,11 +69,11 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
           >
             <button 
               onClick={onGetStarted}
-              className="w-full sm:w-auto bg-white text-slate-950 px-10 py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-2 hover:bg-slate-100 transition-all hover:scale-105 active:scale-95 group"
+              className="w-full sm:w-auto bg-theme-text-primary-dark text-theme-bg-dark px-10 py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-2 hover:bg-theme-text-primary-dark/90 transition-all hover:scale-105 active:scale-95 group"
             >
               Try AI Now <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
-            <button className="w-full sm:w-auto bg-white/5 hover:bg-white/10 border border-white/10 px-10 py-4 rounded-2xl font-bold text-lg transition-all">
+            <button className="w-full sm:w-auto bg-theme-surface-dark/50 hover:bg-theme-surface-dark border border-theme-border-dark px-10 py-4 rounded-2xl font-bold text-lg transition-all">
               Watch Demo
             </button>
           </motion.div>
@@ -100,13 +100,13 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
       </section>
 
       {/* AI Demo Section */}
-      <section id="demo" className="py-24 px-6 bg-slate-900/30">
+      <section id="demo" className="py-24 px-6 bg-theme-surface-dark/30">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
           <div className="space-y-8">
             <h2 className="text-4xl md:text-5xl font-bold leading-tight">
-              See the <span className="text-blue-500">AI Intelligence</span> in Action
+              See the <span className="text-brand-primary">AI Intelligence</span> in Action
             </h2>
-            <p className="text-lg text-slate-400 leading-relaxed">
+            <p className="text-lg text-theme-text-secondary-dark leading-relaxed">
               Our AI doesn't just look at numbers. It reads your journal entries, analyzes your entry/exit timing, and identifies emotional triggers like FOMO or Revenge Trading.
             </p>
             <div className="space-y-4">
@@ -116,47 +116,47 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
                 "Uncover why you're missing winning setups"
               ].map((text, i) => (
                 <div key={i} className="flex items-center gap-3">
-                  <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center">
-                    <CheckCircle2 className="w-4 h-4 text-blue-500" />
+                  <div className="w-6 h-6 rounded-full bg-brand-primary/20 flex items-center justify-center">
+                    <CheckCircle2 className="w-4 h-4 text-brand-primary" />
                   </div>
-                  <span className="font-medium text-slate-300">{text}</span>
+                  <span className="font-medium text-theme-text-primary-dark/80">{text}</span>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 to-purple-600 blur-2xl opacity-20 rounded-[2rem]" />
-            <div className="relative bg-[#0f172a] border border-white/10 rounded-[2rem] overflow-hidden shadow-2xl">
-              <div className="p-6 border-b border-white/5 bg-white/5 flex items-center justify-between">
+            <div className="absolute -inset-4 bg-gradient-to-r from-brand-primary to-brand-secondary blur-2xl opacity-20 rounded-[2rem]" />
+            <div className="relative bg-theme-surface-dark border border-theme-border-dark rounded-[2rem] overflow-hidden shadow-2xl">
+              <div className="p-6 border-b border-theme-border-dark bg-theme-bg-dark/50 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
-                    <BrainCircuit className="w-6 h-6" />
+                  <div className="w-10 h-10 rounded-full bg-brand-primary flex items-center justify-center">
+                    <BrainCircuit className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <p className="font-bold text-sm">AJ Intelligence</p>
-                    <p className="text-[10px] text-blue-400 uppercase tracking-widest font-black">Active Analysis</p>
+                    <p className="font-bold text-sm text-theme-text-primary-dark">AJ Intelligence</p>
+                    <p className="text-[10px] text-brand-primary uppercase tracking-widest font-black">Active Analysis</p>
                   </div>
                 </div>
                 <div className="flex gap-1.5">
-                  <div className="w-2 h-2 rounded-full bg-slate-700" />
-                  <div className="w-2 h-2 rounded-full bg-slate-700" />
-                  <div className="w-2 h-2 rounded-full bg-slate-700" />
+                  <div className="w-2 h-2 rounded-full bg-theme-border-dark" />
+                  <div className="w-2 h-2 rounded-full bg-theme-border-dark" />
+                  <div className="w-2 h-2 rounded-full bg-theme-border-dark" />
                 </div>
               </div>
               <div className="p-6 space-y-6">
                 <div className="flex flex-col items-end gap-2">
-                  <div className="bg-blue-600 text-white px-4 py-3 rounded-2xl rounded-tr-none text-sm max-w-[80%] shadow-lg">
+                  <div className="bg-brand-primary text-white px-4 py-3 rounded-2xl rounded-tr-none text-sm max-w-[80%] shadow-lg">
                     I felt really anxious before this XAUUSD trade. I was worried about missing the move after the news release.
                   </div>
-                  <span className="text-[10px] text-slate-500 font-bold uppercase">Trader • 2m ago</span>
+                  <span className="text-[10px] text-theme-text-secondary-dark font-bold uppercase">Trader • 2m ago</span>
                 </div>
                 <div className="flex flex-col items-start gap-2">
-                  <div className="bg-slate-800 text-slate-200 px-4 py-3 rounded-2xl rounded-tl-none text-sm max-w-[80%] border border-white/5 shadow-lg">
-                    <p className="mb-2">I've detected a pattern of <span className="text-blue-400 font-bold">FOMO-driven entries</span> in your last 5 gold trades.</p>
-                    <p className="text-slate-400 text-xs italic">Recommendation: Wait for the 5-minute candle closure after news before executing. Your win rate increases by 24% when you wait.</p>
+                  <div className="bg-theme-bg-dark text-theme-text-primary-dark px-4 py-3 rounded-2xl rounded-tl-none text-sm max-w-[80%] border border-theme-border-dark shadow-lg">
+                    <p className="mb-2">I've detected a pattern of <span className="text-brand-primary font-bold">FOMO-driven entries</span> in your last 5 gold trades.</p>
+                    <p className="text-theme-text-secondary-dark text-xs italic">Recommendation: Wait for the 5-minute candle closure after news before executing. Your win rate increases by 24% when you wait.</p>
                   </div>
-                  <span className="text-[10px] text-blue-400 font-bold uppercase">AJ AI • Just now</span>
+                  <span className="text-[10px] text-brand-primary font-bold uppercase">AJ AI • Just now</span>
                 </div>
               </div>
             </div>

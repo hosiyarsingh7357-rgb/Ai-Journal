@@ -13,6 +13,8 @@ import {
   Info
 } from 'lucide-react';
 
+import { Card } from './ui/Card';
+
 const marketPulseData = [
   {
     symbol: 'EUR / USD',
@@ -140,8 +142,8 @@ export const MarketPage = () => {
           <div className="col-span-12 lg:col-span-8 space-y-6 lg:space-y-8">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
               <div>
-                <h2 className="text-2xl lg:text-3xl font-extrabold tracking-tight text-white">Market Pulse</h2>
-                <p className="text-slate-400 font-medium text-xs lg:text-sm mt-1">Real-time global currency and commodity streams.</p>
+                <h2 className="heading-1">Market Pulse</h2>
+                <p className="body-text mt-1">Real-time global currency and commodity streams.</p>
               </div>
               <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
                 {['ALL ASSETS', 'FOREX', 'INDICES'].map((filter) => (
@@ -150,8 +152,8 @@ export const MarketPage = () => {
                     onClick={() => setActiveFilter(filter)}
                     className={`px-4 py-1.5 text-[10px] lg:text-xs font-bold rounded-full whitespace-nowrap transition-all ${
                       activeFilter === filter
-                        ? 'bg-blue-600 text-white'
-                        : 'text-slate-400 hover:bg-white/10'
+                        ? 'bg-brand-primary text-white shadow-glow-primary'
+                        : 'text-theme-text-secondary-light dark:text-theme-text-secondary-dark hover:bg-theme-surface-light dark:hover:bg-theme-surface-dark'
                     }`}
                   >
                     {filter}
@@ -161,11 +163,11 @@ export const MarketPage = () => {
             </div>
 
             {/* High Density Table */}
-            <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
+            <Card className="overflow-hidden !p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-separate border-spacing-y-4 px-4">
                   <thead>
-                    <tr className="text-slate-400 font-bold text-[11px] uppercase tracking-wider">
+                    <tr className="label-text">
                       <th className="px-6 pb-2">Instrument</th>
                       <th className="px-6 pb-2 text-right">Last Price</th>
                       <th className="px-6 pb-2 text-right">24h Change</th>
@@ -175,141 +177,141 @@ export const MarketPage = () => {
                   </thead>
                   <tbody className="text-sm">
                     {marketPulseData.map((item, index) => (
-                      <tr key={index} className="group hover:bg-white/5 transition-colors">
+                      <tr key={index} className="group hover:bg-theme-surface-light/50 dark:hover:bg-theme-surface-dark/50 transition-colors">
                         <td className="px-6 py-4 first:rounded-l-xl last:rounded-r-xl">
                           <div className="flex items-center gap-3">
-                            <div className={`w-8 h-8 rounded-full ${item.bg.replace('bg-', 'bg-').replace('50', '500/10').replace('100', '500/10')} flex items-center justify-center font-bold ${item.color.replace('900', '100')} text-[10px]`}>
+                            <div className={`w-8 h-8 rounded-full bg-brand-primary/10 flex items-center justify-center font-bold text-brand-primary text-[10px]`}>
                               {item.initials}
                             </div>
                             <div>
-                              <p className="font-bold text-white leading-tight">{item.symbol}</p>
-                              <p className="text-[10px] text-slate-400 font-medium">{item.name}</p>
+                              <p className="font-bold text-theme-text-primary-light dark:text-theme-text-primary-dark leading-tight">{item.symbol}</p>
+                              <p className="text-[10px] text-theme-text-secondary-light dark:text-theme-text-secondary-dark font-medium">{item.name}</p>
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-right font-bold text-base text-white">{item.price}</td>
+                        <td className="px-6 py-4 text-right font-bold text-base text-theme-text-primary-light dark:text-theme-text-primary-dark">{item.price}</td>
                         <td className="px-6 py-4 text-right">
-                          <span className={`inline-flex items-center px-2 py-1 rounded ${item.isPositive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'} text-xs font-bold`}>
+                          <span className={`inline-flex items-center px-2 py-1 rounded ${item.isPositive ? 'bg-status-success/10 text-status-success' : 'bg-status-danger/10 text-status-danger'} text-xs font-bold`}>
                             {item.change}
                           </span>
                         </td>
                         <td className="px-6 py-4">
                           <div className="h-8 w-32 mx-auto overflow-hidden">
-                            <Sparkline data={item.trend} color={item.isPositive ? '#34d399' : '#f87171'} />
+                            <Sparkline data={item.trend} color={item.isPositive ? 'var(--color-status-success)' : 'var(--color-status-danger)'} />
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-right text-slate-400 font-medium">{item.volume}</td>
+                        <td className="px-6 py-4 text-right text-theme-text-secondary-light dark:text-theme-text-secondary-dark font-medium">{item.volume}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-            </div>
+            </Card>
 
             {/* Secondary Row: Market Sentiment Bento */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-2xl flex flex-col justify-between h-48 relative overflow-hidden">
+              <Card className="p-6 flex flex-col justify-between h-48 relative overflow-hidden">
                 <div className="relative z-10">
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">USD INDEX (DXY)</p>
-                  <h3 className="text-3xl font-extrabold mt-2 text-white">104.18</h3>
-                  <p className="text-emerald-400 text-sm font-bold flex items-center gap-1 mt-1">
+                  <p className="label-text">USD INDEX (DXY)</p>
+                  <h3 className="heading-1 mt-2">104.18</h3>
+                  <p className="text-status-success text-sm font-bold flex items-center gap-1 mt-1">
                     <TrendingUp className="w-4 h-4" />
                     Bullish Momentum
                   </p>
                 </div>
                 <div className="absolute bottom-0 right-0 w-1/2 h-full opacity-10 pointer-events-none">
                   <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
-                    <path d="M0,100 C20,80 40,90 60,60 C80,30 100,40 100,0 L100,100 Z" fill="currentColor" className="text-blue-500" />
+                    <path d="M0,100 C20,80 40,90 60,60 C80,30 100,40 100,0 L100,100 Z" fill="currentColor" className="text-brand-primary" />
                   </svg>
                 </div>
-              </div>
+              </Card>
 
-              <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-2xl flex flex-col justify-between h-48">
+              <Card className="p-6 flex flex-col justify-between h-48">
                 <div>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">SENTIMENT SPLIT</p>
+                  <p className="label-text">SENTIMENT SPLIT</p>
                   <div className="mt-6 flex flex-col gap-2">
                     <div className="flex justify-between text-[11px] font-bold">
-                      <span className="text-emerald-400">BUY (68%)</span>
-                      <span className="text-red-400">SELL (32%)</span>
+                      <span className="text-status-success">BUY (68%)</span>
+                      <span className="text-status-danger">SELL (32%)</span>
                     </div>
-                    <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden flex">
-                      <div className="h-full bg-emerald-500 w-[68%]"></div>
-                      <div className="h-full bg-red-500 w-[32%]"></div>
+                    <div className="h-2 w-full bg-theme-border-light dark:bg-theme-border-dark rounded-full overflow-hidden flex">
+                      <div className="h-full bg-status-success w-[68%]"></div>
+                      <div className="h-full bg-status-danger w-[32%]"></div>
                     </div>
-                    <p className="text-[10px] text-slate-400 mt-2 italic text-center">Based on 12k institutional positions</p>
+                    <p className="text-[10px] text-theme-text-secondary-light dark:text-theme-text-secondary-dark mt-2 italic text-center">Based on 12k institutional positions</p>
                   </div>
                 </div>
-              </div>
+              </Card>
             </div>
           </div>
 
           {/* Right Column: Economic Calendar */}
           <div className="col-span-12 lg:col-span-4 space-y-8">
             <div>
-              <h2 className="text-xl font-bold tracking-tight text-white">Economic Calendar</h2>
-              <p className="text-slate-400 font-medium text-xs mt-1">Impact events for the next 24h</p>
+              <h2 className="heading-3">Economic Calendar</h2>
+              <p className="body-text mt-1">Impact events for the next 24h</p>
             </div>
             
-            <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden flex flex-col">
+            <Card className="overflow-hidden flex flex-col !p-0">
               {calendarEvents.map((event, index) => (
-                <div key={index} className={`p-5 group hover:bg-white/5 transition-colors ${index !== calendarEvents.length - 1 ? 'border-b border-white/10' : ''}`}>
+                <div key={index} className={`p-5 group hover:bg-theme-surface-light/50 dark:hover:bg-theme-surface-dark/50 transition-colors ${index !== calendarEvents.length - 1 ? 'border-b border-theme-border-light dark:border-theme-border-dark' : ''}`}>
                   <div className="flex items-start justify-between">
                     <div className="flex gap-4">
                       <div className="text-center w-10">
-                        <p className="text-xs font-extrabold text-white">{event.time}</p>
-                        <p className="text-[10px] text-slate-400">{event.timezone}</p>
+                        <p className="text-xs font-extrabold text-theme-text-primary-light dark:text-theme-text-primary-dark">{event.time}</p>
+                        <p className="text-[10px] text-theme-text-secondary-light dark:text-theme-text-secondary-dark">{event.timezone}</p>
                       </div>
                       <div>
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-sm">{event.flag}</span>
-                          <span className="text-[10px] font-bold text-slate-400 uppercase">{event.currency}</span>
+                          <span className="label-text">{event.currency}</span>
                         </div>
-                        <h4 className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">{event.event}</h4>
+                        <h4 className="text-sm font-bold text-theme-text-primary-light dark:text-theme-text-primary-dark group-hover:text-brand-primary transition-colors">{event.event}</h4>
                       </div>
                     </div>
-                    <span className={`px-2 py-0.5 rounded text-[9px] font-extrabold ${event.impactColor.replace('bg-', 'bg-').replace('50', '500/10').replace('100', '500/10').replace('600', '400').replace('500', '400')} tracking-tighter uppercase`}>
+                    <span className={`px-2 py-0.5 rounded text-[9px] font-extrabold ${event.impact.toLowerCase().includes('high') ? 'bg-status-danger/10 text-status-danger' : event.impact.toLowerCase().includes('med') ? 'bg-status-warning/10 text-status-warning' : 'bg-theme-surface-light dark:bg-theme-surface-dark text-theme-text-secondary-light dark:text-theme-text-secondary-dark'} tracking-tighter uppercase`}>
                       {event.impact}
                     </span>
                   </div>
                   
                   {event.actual && (
                     <div className="mt-4 grid grid-cols-3 gap-2">
-                      <div className="bg-slate-800/50 p-2 rounded">
-                        <p className="text-[9px] text-slate-400 font-bold">ACTUAL</p>
-                        <p className={`text-xs font-bold ${event.actualColor ? event.actualColor.replace('600', '400') : 'text-white'}`}>{event.actual}</p>
+                      <div className="bg-theme-bg-light/50 dark:bg-theme-bg-dark/50 p-2 rounded">
+                        <p className="text-[9px] text-theme-text-secondary-light dark:text-theme-text-secondary-dark font-bold">ACTUAL</p>
+                        <p className={`text-xs font-bold ${event.actualColor ? 'text-status-success' : 'text-theme-text-primary-light dark:text-theme-text-primary-dark'}`}>{event.actual}</p>
                       </div>
-                      <div className="bg-slate-800/50 p-2 rounded">
-                        <p className="text-[9px] text-slate-400 font-bold">FORECAST</p>
-                        <p className="text-xs font-bold text-white">{event.forecast}</p>
+                      <div className="bg-theme-bg-light/50 dark:bg-theme-bg-dark/50 p-2 rounded">
+                        <p className="text-[9px] text-theme-text-secondary-light dark:text-theme-text-secondary-dark font-bold">FORECAST</p>
+                        <p className="text-xs font-bold text-theme-text-primary-light dark:text-theme-text-primary-dark">{event.forecast}</p>
                       </div>
-                      <div className="bg-slate-800/50 p-2 rounded">
-                        <p className="text-[9px] text-slate-400 font-bold">PREVIOUS</p>
-                        <p className="text-xs font-bold text-white">{event.previous}</p>
+                      <div className="bg-theme-bg-light/50 dark:bg-theme-bg-dark/50 p-2 rounded">
+                        <p className="text-[9px] text-theme-text-secondary-light dark:text-theme-text-secondary-dark font-bold">PREVIOUS</p>
+                        <p className="text-xs font-bold text-theme-text-primary-light dark:text-theme-text-primary-dark">{event.previous}</p>
                       </div>
                     </div>
                   )}
                 </div>
               ))}
-              <button className="m-4 py-3 bg-slate-800/50 text-blue-400 text-[11px] font-extrabold uppercase tracking-widest rounded-lg hover:bg-slate-800 transition-colors">
+              <button className="m-4 py-3 bg-theme-surface-light dark:bg-theme-surface-dark text-brand-primary text-[11px] font-extrabold uppercase tracking-widest rounded-lg hover:bg-brand-primary hover:text-white transition-all border border-theme-border-light dark:border-theme-border-dark">
                 VIEW FULL CALENDAR
               </button>
-            </div>
+            </Card>
 
             {/* Breaking News Snippet */}
-            <div className="bg-blue-900/40 backdrop-blur-xl border border-blue-500/20 text-white rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+            <Card className="bg-brand-primary/10 border-brand-primary/20 text-theme-text-primary-light dark:text-theme-text-primary-dark p-6 relative overflow-hidden shadow-glow-primary">
               <div className="relative z-10">
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-                  <span className="text-[10px] font-bold tracking-[0.2em] text-blue-300 uppercase">Breaking News</span>
+                  <div className="w-2 h-2 rounded-full bg-status-danger animate-pulse"></div>
+                  <span className="text-[10px] font-bold tracking-[0.2em] text-brand-primary uppercase">Breaking News</span>
                 </div>
                 <h3 className="text-lg font-bold leading-tight">Yen plunges to 34-year low as BoJ remains cautious on rate hikes.</h3>
-                <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4">
-                  <span className="text-[10px] text-blue-300">2 MINUTES AGO</span>
-                  <ChevronRight className="w-4 h-4 text-blue-300 hover:text-white cursor-pointer" />
+                <div className="mt-6 flex items-center justify-between border-t border-theme-border-light dark:border-theme-border-dark pt-4">
+                  <span className="text-[10px] text-theme-text-secondary-light dark:text-theme-text-secondary-dark">2 MINUTES AGO</span>
+                  <ChevronRight className="w-4 h-4 text-brand-primary hover:text-theme-text-primary-light dark:hover:text-theme-text-primary-dark cursor-pointer" />
                 </div>
               </div>
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-transparent pointer-events-none"></div>
-            </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/10 to-transparent pointer-events-none"></div>
+            </Card>
           </div>
         </div>
       </div>

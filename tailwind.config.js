@@ -10,14 +10,36 @@ module.exports = {
           secondary: '#8b5cf6',
           accent: '#06b6d4',
         },
-        surface: {
-          light: '#ffffff',
-          dark: '#0f172a',
-          glass: 'rgba(255, 255, 255, 0.03)',
+        // Standardized Design System
+        theme: {
+          bg: {
+            light: '#f8fafc',
+            dark: '#0b0f19',  // Deep dark background
+          },
+          surface: {
+            light: '#ffffff',
+            dark: '#161b26',  // Premium card surface
+          },
+          text: {
+            primary: {
+              light: '#0f172a',
+              dark: '#f8fafc',
+            },
+            secondary: {
+              light: '#475569',
+              dark: '#94a3b8',
+            }
+          },
+          border: {
+            light: '#e2e8f0',
+            dark: '#232936',  // Subtle border
+          }
         },
         status: {
           success: '#10b981',
+          'success-light': '#34d399',
           danger: '#ef4444',
+          'danger-light': '#f87171',
           warning: '#f59e0b',
           info: '#3b82f6',
         }

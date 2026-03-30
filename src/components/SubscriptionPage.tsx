@@ -59,6 +59,8 @@ const billingHistory = [
   { date: 'Oct 12, 2021', description: 'Standard Starter Plan (Monthly)', amount: '$29.00' },
 ];
 
+import { Card } from './ui/Card';
+
 export const SubscriptionPage = () => {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
 

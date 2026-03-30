@@ -1,13 +1,14 @@
 import React from 'react';
 
-interface CardProps {
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
+  key?: React.Key;
 }
 
-export const Card = ({ children, className = '' }: CardProps) => {
+export const Card = ({ children, className = '', ...props }: CardProps) => {
   return (
-    <div className={`glass border border-white/10 dark:border-white/5 shadow-premium transition-all duration-300 hover:shadow-glow hover:scale-[1.01] ${className}`}>
+    <div className={`glass glass-hover ${className}`} {...props}>
       {children}
     </div>
   );

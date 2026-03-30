@@ -6,25 +6,44 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
+/* Global Styles */
+@layer base {
+  body {
+    @apply bg-theme-bg-light dark:bg-theme-bg-dark text-theme-text-primary-light dark:text-theme-text-primary-dark transition-colors duration-300;
+  }
+}
+
+/* Typography System */
+@layer components {
+  .heading-1 {
+    @apply text-4xl font-black tracking-tight text-theme-text-primary-light dark:text-theme-text-primary-dark;
+  }
+  .heading-2 {
+    @apply text-2xl font-bold tracking-tight text-theme-text-primary-light dark:text-theme-text-primary-dark;
+  }
+  .heading-3 {
+    @apply text-lg font-bold text-theme-text-primary-light dark:text-theme-text-primary-dark;
+  }
+  .body-text {
+    @apply text-sm text-theme-text-secondary-light dark:text-theme-text-secondary-dark leading-relaxed;
+  }
+  .label-text {
+    @apply text-[10px] font-black uppercase tracking-widest text-theme-text-secondary-light dark:text-theme-text-secondary-dark;
+  }
+}
+
+/* Standardized Card System */
+.glass {
+  @apply bg-theme-surface-light dark:bg-theme-surface-dark border border-theme-border-light dark:border-theme-border-dark shadow-premium rounded-[2rem] p-6 transition-all duration-300;
+}
+
+.glass-hover {
+  @apply hover:shadow-glow hover:scale-[1.01] active:scale-[0.99] hover:border-brand-primary/30;
+}
+
 /* smooth theme transition */
 * {
-  transition: background-color 0.3s, color 0.3s;
-}
-
-/* Glass card */
-.glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
-  border-radius: 24px;
-}
-
-.dark .glass {
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
 /* Premium Gradient Text */

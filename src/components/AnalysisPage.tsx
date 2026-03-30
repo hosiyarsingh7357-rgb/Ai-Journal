@@ -23,6 +23,8 @@ import { useTrades } from '../context/TradeContext';
 import { useAuth } from '../context/AuthContext';
 import { subscribeToJournals } from '../services/journalService';
 
+import { Card } from './ui/Card';
+
 export const AnalysisPage = () => {
   const { trades } = useTrades();
   const { user } = useAuth();
@@ -122,20 +124,20 @@ export const AnalysisPage = () => {
         {/* Analysis Hero Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div>
-            <h2 className="text-3xl font-extrabold tracking-tight text-white">Advanced Analysis</h2>
-            <p className="text-slate-400 mt-2 max-w-lg">
+            <h2 className="heading-1">Advanced Analysis</h2>
+            <p className="body-text mt-2 max-w-lg">
               Deep-dive into your trading performance metrics. Institutional-grade quantitative analysis of your equity growth and risk management.
             </p>
           </div>
-          <div className="flex gap-3 bg-white/5 p-1.5 rounded-xl border border-white/10 shadow-sm backdrop-blur-xl">
+          <div className="flex gap-3 bg-theme-surface-light/50 dark:bg-theme-surface-dark/50 border border-theme-border-light dark:border-theme-border-dark p-1.5 rounded-xl backdrop-blur-sm">
             {['All Time', 'Last 30D', 'Last 7D'].map((range) => (
               <button
                 key={range}
                 onClick={() => setActiveRange(range)}
                 className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                   activeRange === range
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-brand-primary text-white shadow-sm'
+                    : 'text-theme-text-secondary-light dark:text-theme-text-secondary-dark hover:text-theme-text-primary-light dark:hover:text-theme-text-primary-dark'
                 }`}
               >
                 {range}
@@ -145,57 +147,57 @@ export const AnalysisPage = () => {
         </div>
 
         {/* KPI Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white/5 backdrop-blur-xl p-6 rounded-2xl border border-white/10 shadow-2xl">
+变换        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total P&L</p>
-              <TrendingUp className="w-4 h-4 text-emerald-400" />
+              <p className="label-text">Total P&L</p>
+              <TrendingUp className="w-4 h-4 text-status-success" />
             </div>
-            <h3 className="text-3xl font-bold text-white tracking-tight">${kpiMetrics.equityGrowth.toLocaleString()}</h3>
-          </div>
+            <h3 className="heading-2">${kpiMetrics.equityGrowth.toLocaleString()}</h3>
+          </Card>
 
-          <div className="bg-white/5 backdrop-blur-xl p-6 rounded-2xl border border-white/10 shadow-2xl">
+          <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Profit Factor</p>
-              <Activity className="w-4 h-4 text-blue-400" />
+              <p className="label-text">Profit Factor</p>
+              <Activity className="w-4 h-4 text-brand-primary" />
             </div>
-            <h3 className="text-3xl font-bold text-white tracking-tight">{kpiMetrics.profitFactor}</h3>
-          </div>
+            <h3 className="heading-2">{kpiMetrics.profitFactor}</h3>
+          </Card>
 
-          <div className="bg-white/5 backdrop-blur-xl p-6 rounded-2xl border border-white/10 shadow-2xl">
+          <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Win Rate</p>
-              <ShieldAlert className="w-4 h-4 text-red-400" />
+              <p className="label-text">Win Rate</p>
+              <ShieldAlert className="w-4 h-4 text-status-danger" />
             </div>
-            <h3 className="text-3xl font-bold text-white tracking-tight">{kpiMetrics.winRate}%</h3>
-          </div>
+            <h3 className="heading-2">{kpiMetrics.winRate}%</h3>
+          </Card>
 
-          <div className="bg-white/5 backdrop-blur-xl p-6 rounded-2xl border border-white/10 shadow-2xl">
+          <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Trades</p>
-              <Clock className="w-4 h-4 text-slate-400" />
+              <p className="label-text">Total Trades</p>
+              <Clock className="w-4 h-4 text-theme-text-secondary-light dark:text-theme-text-secondary-dark" />
             </div>
-            <h3 className="text-3xl font-bold text-white tracking-tight">{kpiMetrics.tradesCount}</h3>
-          </div>
+            <h3 className="heading-2">{kpiMetrics.tradesCount}</h3>
+          </Card>
         </div>
 
         {/* Main Analysis Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cumulative Equity Curve */}
-          <div className="lg:col-span-2 bg-white/5 backdrop-blur-xl p-8 rounded-2xl border border-white/10 shadow-2xl">
+          <Card className="lg:col-span-2 p-8">
             <div className="flex justify-between items-center mb-10">
               <div>
-                <h4 className="text-lg font-bold text-white">Cumulative Equity Curve</h4>
-                <p className="text-xs text-slate-400">Performance trajectory over {filteredData.trades.length} executed trades</p>
+                <h4 className="heading-3">Cumulative Equity Curve</h4>
+                <p className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark">Performance trajectory over {filteredData.trades.length} executed trades</p>
               </div>
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1.5">
-                  <span className="w-3 h-3 rounded-full bg-blue-500"></span>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Equity</span>
+                  <span className="w-3 h-3 rounded-full bg-brand-primary"></span>
+                  <span className="label-text">Equity</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="w-3 h-3 rounded-full bg-slate-600"></span>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Balance</span>
+                  <span className="w-3 h-3 rounded-full bg-theme-border-light dark:bg-theme-border-dark"></span>
+                  <span className="label-text">Balance</span>
                 </div>
               </div>
             </div>
@@ -204,33 +206,35 @@ export const AnalysisPage = () => {
                 <AreaChart data={equityData}>
                   <defs>
                     <linearGradient id="colorEquity" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2}/>
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="var(--color-brand-primary)" stopOpacity={0.2}/>
+                      <stop offset="95%" stopColor="var(--color-brand-primary)" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1e293b" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-theme-border-light/20 dark:text-theme-border-dark/20" />
                   <XAxis 
                     dataKey="trade" 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{fontSize: 10, fill: '#64748b'}}
+                    tick={{fontSize: 10, fill: 'currentColor'}}
+                    className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark"
                     dy={10}
                   />
                   <YAxis 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{fontSize: 10, fill: '#64748b'}}
+                    tick={{fontSize: 10, fill: 'currentColor'}}
+                    className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark"
                     tickFormatter={(value) => `$${value/1000}k`}
                   />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#0f172a', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}
+                    contentStyle={{ backgroundColor: 'var(--color-theme-surface-dark)', borderRadius: '12px', border: '1px solid var(--color-theme-border-dark)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}
                     itemStyle={{ color: '#fff' }}
                     formatter={(value: number) => [`$${value.toLocaleString()}`, '']}
                   />
                   <Area 
                     type="monotone" 
                     dataKey="equity" 
-                    stroke="#3b82f6" 
+                    stroke="var(--color-brand-primary)" 
                     strokeWidth={3} 
                     fillOpacity={1} 
                     fill="url(#colorEquity)" 
@@ -238,7 +242,7 @@ export const AnalysisPage = () => {
                   <Area 
                     type="monotone" 
                     dataKey="balance" 
-                    stroke="#475569" 
+                    stroke="var(--color-theme-border-dark)" 
                     strokeWidth={2} 
                     fill="transparent" 
                     strokeDasharray="5 5"
@@ -246,108 +250,110 @@ export const AnalysisPage = () => {
                 </AreaChart>
               </ResponsiveContainer>
             </div>
-          </div>
+          </Card>
 
           {/* Session Performance */}
-          <div className="bg-white/5 backdrop-blur-xl p-8 rounded-2xl border border-white/10 shadow-2xl flex flex-col">
-            <h4 className="text-lg font-bold text-white mb-2">Session Performance</h4>
-            <p className="text-xs text-slate-400 mb-8">Win percentage across global markets</p>
+          <Card className="p-8 flex flex-col">
+            <h4 className="heading-3 mb-2">Session Performance</h4>
+            <p className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark mb-8">Win percentage across global markets</p>
             <div className="flex-1 flex flex-col justify-center space-y-8">
               <div className="space-y-2">
                 <div className="flex justify-between items-end mb-1">
-                  <span className="text-xs font-bold text-slate-300">London Open</span>
-                  <span className="text-xs font-bold text-emerald-400">68% WR</span>
+                  <span className="text-xs font-bold text-theme-text-primary-light dark:text-theme-text-primary-dark">London Open</span>
+                  <span className="text-xs font-bold text-status-success">68% WR</span>
                 </div>
-                <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-emerald-500 w-[68%] rounded-full"></div>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between items-end mb-1">
-                  <span className="text-xs font-bold text-slate-300">New York Session</span>
-                  <span className="text-xs font-bold text-emerald-400">54% WR</span>
-                </div>
-                <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-emerald-500 w-[54%] rounded-full"></div>
+                <div className="h-2 w-full bg-theme-border-light dark:bg-theme-border-dark rounded-full overflow-hidden">
+                  <div className="h-full bg-status-success w-[68%] rounded-full"></div>
                 </div>
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between items-end mb-1">
-                  <span className="text-xs font-bold text-slate-300">Asian Session</span>
-                  <span className="text-xs font-bold text-red-400">32% WR</span>
+                  <span className="text-xs font-bold text-theme-text-primary-light dark:text-theme-text-primary-dark">New York Session</span>
+                  <span className="text-xs font-bold text-status-success">54% WR</span>
                 </div>
-                <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-red-500 w-[32%] rounded-full"></div>
+                <div className="h-2 w-full bg-theme-border-light dark:bg-theme-border-dark rounded-full overflow-hidden">
+                  <div className="h-full bg-status-success w-[54%] rounded-full"></div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between items-end mb-1">
+                  <span className="text-xs font-bold text-theme-text-primary-light dark:text-theme-text-primary-dark">Asian Session</span>
+                  <span className="text-xs font-bold text-status-danger">32% WR</span>
+                </div>
+                <div className="h-2 w-full bg-theme-border-light dark:bg-theme-border-dark rounded-full overflow-hidden">
+                  <div className="h-full bg-status-danger w-[32%] rounded-full"></div>
                 </div>
               </div>
             </div>
-            <div className="mt-8 pt-8 border-t border-white/10 text-center">
-              <p className="text-xs text-slate-400">
-                Strongest edge during <span className="text-emerald-400 font-bold">London overlap</span> with 1.4 RR average.
+            <div className="mt-8 pt-8 border-t border-theme-border-light dark:border-theme-border-dark text-center">
+              <p className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark">
+                Strongest edge during <span className="text-status-success font-bold">London overlap</span> with 1.4 RR average.
               </p>
             </div>
-          </div>
+          </Card>
         </div>
 
         {/* Bottom Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Drawdown Chart */}
-          <div className="bg-white/5 backdrop-blur-xl p-8 rounded-2xl border border-white/10 shadow-2xl">
+          <Card className="p-8">
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h4 className="text-lg font-bold text-white">Drawdown Relative to Equity</h4>
-                <p className="text-xs text-slate-400">Monitoring capital preservation efficiency</p>
+                <h4 className="heading-3">Drawdown Relative to Equity</h4>
+                <p className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark">Monitoring capital preservation efficiency</p>
               </div>
-              <Info className="w-4 h-4 text-slate-500" />
+              <Info className="w-4 h-4 text-theme-text-secondary-light dark:text-theme-text-secondary-dark" />
             </div>
             <div className="h-48 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={drawdownData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1e293b" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-theme-border-light/20 dark:text-theme-border-dark/20" />
                   <XAxis 
                     dataKey="day" 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{fontSize: 10, fill: '#64748b'}}
+                    tick={{fontSize: 10, fill: 'currentColor'}}
+                    className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark"
                     dy={10}
                   />
                   <YAxis 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{fontSize: 10, fill: '#64748b'}}
+                    tick={{fontSize: 10, fill: 'currentColor'}}
+                    className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark"
                     tickFormatter={(value) => `-${value}%`}
                     reversed
                   />
                   <Tooltip 
-                    cursor={{fill: '#1e293b'}}
-                    contentStyle={{ backgroundColor: '#0f172a', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}
+                    cursor={{fill: 'currentColor', className: 'text-theme-surface-light/20 dark:text-theme-surface-dark/20'}}
+                    contentStyle={{ backgroundColor: 'var(--color-theme-surface-dark)', borderRadius: '12px', border: '1px solid var(--color-theme-border-dark)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}
                     itemStyle={{ color: '#fff' }}
                     formatter={(value: number) => [`-${value}%`, 'Drawdown']}
                   />
                   <Bar dataKey="value" radius={[0, 0, 4, 4]}>
                     {drawdownData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.value > 3 ? '#ef4444' : '#f87171'} />
+                      <Cell key={`cell-${index}`} fill={entry.value > 3 ? 'var(--color-status-danger)' : 'var(--color-status-danger-light)'} />
                     ))}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
-          </div>
+          </Card>
 
           {/* Profit Factor by Symbol */}
-          <div className="bg-white/5 backdrop-blur-xl p-8 rounded-2xl border border-white/10 shadow-2xl">
-            <h4 className="text-lg font-bold text-white mb-2">Profit Factor by Symbol</h4>
-            <p className="text-xs text-slate-400 mb-6">Asset-specific profitability metrics</p>
+          <Card className="p-8">
+            <h4 className="heading-3 mb-2">Profit Factor by Symbol</h4>
+            <p className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark mb-6">Asset-specific profitability metrics</p>
             <div className="space-y-5">
               {symbolData.map((item, index) => (
                 <div key={index} className="flex items-center gap-4">
-                  <div className="w-20 text-xs font-bold text-slate-300">{item.symbol}</div>
-                  <div className="flex-1 h-8 bg-slate-800 rounded-lg flex items-center px-1">
+                  <div className="w-20 text-xs font-bold text-theme-text-secondary-light dark:text-theme-text-secondary-dark">{item.symbol}</div>
+                  <div className="flex-1 h-8 bg-theme-border-light dark:bg-theme-border-dark rounded-lg flex items-center px-1">
                     <div 
                       className="h-6 rounded-md flex items-center justify-end pr-2 transition-all duration-500"
                       style={{ 
                         width: `${(item.pf / 3) * 100}%`,
-                        backgroundColor: item.color,
+                        backgroundColor: 'var(--color-brand-primary)',
                         minWidth: '20%'
                       }}
                     >
@@ -357,49 +363,49 @@ export const AnalysisPage = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
         </div>
 
         {/* Data Table */}
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden mb-12">
-          <div className="p-8 border-b border-white/10">
-            <h4 className="text-lg font-bold text-white">Trade Breakdown Insights</h4>
+        <Card className="overflow-hidden mb-12 !p-0">
+          <div className="p-8 border-b border-theme-border-light dark:border-theme-border-dark">
+            <h4 className="heading-3">Trade Breakdown Insights</h4>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
-              <thead className="bg-white/5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+              <thead className="bg-theme-surface-light/50 dark:bg-theme-surface-dark/50 label-text">
                 <tr>
                   <th className="px-8 py-4">Metric Category</th>
                   <th className="px-8 py-4">Value</th>
                   <th className="px-8 py-4">Confidence Level</th>
-                  <th className="px-8 py-4">Recommendation</th>
+                  <th className="px-6 py-4">Recommendation</th>
                 </tr>
               </thead>
-              <tbody className="text-sm divide-y divide-white/5">
-                <tr className="hover:bg-white/5 transition-colors">
-                  <td className="px-8 py-5 font-semibold text-white">Expectancy per Trade</td>
-                  <td className="px-8 py-5 text-slate-300">${kpiMetrics.expectancy}</td>
+              <tbody className="text-sm divide-y divide-theme-border-light dark:divide-theme-border-dark">
+                <tr className="hover:bg-theme-surface-light/30 dark:hover:bg-theme-surface-dark/30 transition-colors">
+                  <td className="px-8 py-5 font-semibold text-theme-text-primary-light dark:text-theme-text-primary-dark">Expectancy per Trade</td>
+                  <td className="px-8 py-5 text-theme-text-secondary-light dark:text-theme-text-secondary-dark">${kpiMetrics.expectancy}</td>
                   <td className="px-8 py-5">
                     <div className="flex gap-1">
-                      {[1, 2, 3, 4].map((i) => <span key={i} className={`w-2 h-2 rounded-full ${parseFloat(kpiMetrics.expectancy) > 0 ? 'bg-emerald-500' : 'bg-slate-700'}`}></span>)}
+                      {[1, 2, 3, 4].map((i) => <span key={i} className={`w-2 h-2 rounded-full ${parseFloat(kpiMetrics.expectancy) > 0 ? 'bg-status-success' : 'bg-theme-border-light dark:bg-theme-border-dark'}`}></span>)}
                     </div>
                   </td>
-                  <td className="px-8 py-5 text-slate-400">{parseFloat(kpiMetrics.expectancy) > 0 ? 'Maintain current position sizing logic.' : 'Review trade entry criteria.'}</td>
+                  <td className="px-8 py-5 text-theme-text-secondary-light dark:text-theme-text-secondary-dark">{parseFloat(kpiMetrics.expectancy) > 0 ? 'Maintain current position sizing logic.' : 'Review trade entry criteria.'}</td>
                 </tr>
-                <tr className="hover:bg-white/5 transition-colors">
-                  <td className="px-8 py-5 font-semibold text-white">Average Win vs Loss</td>
-                  <td className="px-8 py-5 text-slate-300">{kpiMetrics.avgWinLossRatio}:1</td>
+                <tr className="hover:bg-theme-surface-light/30 dark:hover:bg-theme-surface-dark/30 transition-colors">
+                  <td className="px-8 py-5 font-semibold text-theme-text-primary-light dark:text-theme-text-primary-dark">Average Win vs Loss</td>
+                  <td className="px-8 py-5 text-theme-text-secondary-light dark:text-theme-text-secondary-dark">{kpiMetrics.avgWinLossRatio}:1</td>
                   <td className="px-8 py-5">
                     <div className="flex gap-1">
-                      {[1, 2, 3].map((i) => <span key={i} className={`w-2 h-2 rounded-full ${parseFloat(kpiMetrics.avgWinLossRatio) > 1 ? 'bg-emerald-500' : 'bg-slate-700'}`}></span>)}
+                      {[1, 2, 3].map((i) => <span key={i} className={`w-2 h-2 rounded-full ${parseFloat(kpiMetrics.avgWinLossRatio) > 1 ? 'bg-status-success' : 'bg-theme-border-light dark:bg-theme-border-dark'}`}></span>)}
                     </div>
                   </td>
-                  <td className="px-8 py-5 text-slate-400">{parseFloat(kpiMetrics.avgWinLossRatio) > 1 ? 'Healthy risk-reward ratio.' : 'Focus on cutting losing trades earlier.'}</td>
+                  <td className="px-8 py-5 text-theme-text-secondary-light dark:text-theme-text-secondary-dark">{parseFloat(kpiMetrics.avgWinLossRatio) > 1 ? 'Healthy risk-reward ratio.' : 'Focus on cutting losing trades earlier.'}</td>
                 </tr>
               </tbody>
             </table>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

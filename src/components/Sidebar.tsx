@@ -44,21 +44,21 @@ export const Sidebar = ({
   onNavigate: (id: string) => void
 }) => {
   return (
-    <aside className={`fixed lg:static inset-y-0 left-0 w-64 bg-[#020617] border-r border-white/5 flex flex-col justify-between h-full flex-shrink-0 z-50 transition-transform duration-300 lg:translate-x-0 ${
+    <aside className={`fixed lg:static inset-y-0 left-0 w-64 bg-theme-bg-light dark:bg-theme-bg-dark border-r border-theme-border-light dark:border-theme-border-dark flex flex-col justify-between h-full flex-shrink-0 z-50 transition-transform duration-300 lg:translate-x-0 ${
       isOpen ? 'translate-x-0' : '-translate-x-full'
     }`}>
       <div className="flex flex-col h-full overflow-y-auto">
         {/* Logo */}
-        <div className="h-20 flex items-center justify-between px-6 border-b border-white/5 flex-shrink-0">
+        <div className="h-20 flex items-center justify-between px-6 border-b border-theme-border-light dark:border-theme-border-dark flex-shrink-0">
           <div className="flex items-center gap-2 font-black text-xl tracking-tight cursor-pointer group" onClick={() => onNavigate('dashboard')}>
             <div className="w-8 h-8 rounded-xl bg-brand-primary flex items-center justify-center shadow-glow group-hover:scale-110 transition-transform">
               <span className="text-white text-xs font-black">AJ</span>
             </div>
-            <span className="font-black text-white text-lg tracking-tighter">Ai Journal</span>
+            <span className="font-black text-theme-text-primary-light dark:text-theme-text-primary-dark text-lg tracking-tighter">Ai Journal</span>
           </div>
           <button 
             onClick={onClose}
-            className="lg:hidden p-2 text-slate-400 hover:text-white"
+            className="lg:hidden p-2 text-theme-text-secondary-light dark:text-theme-text-secondary-dark hover:text-theme-text-primary-light dark:hover:text-theme-text-primary-dark"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
@@ -73,11 +73,11 @@ export const Sidebar = ({
               className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl font-bold text-sm transition-all group ${
                 currentPage === item.id
                   ? 'bg-brand-primary text-white shadow-glow' 
-                  : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                  : 'text-theme-text-secondary-light dark:text-theme-text-secondary-dark hover:bg-theme-surface-light dark:hover:bg-theme-surface-dark hover:text-theme-text-primary-light dark:hover:text-theme-text-primary-dark'
               }`}
             >
               <div className="flex items-center gap-3">
-                {item.icon && <item.icon className={`w-5 h-5 transition-colors ${currentPage === item.id ? 'text-white' : 'text-slate-500 group-hover:text-white'}`} />}
+                {item.icon && <item.icon className={`w-5 h-5 transition-colors ${currentPage === item.id ? 'text-white' : 'text-theme-text-secondary-light dark:text-theme-text-secondary-dark group-hover:text-theme-text-primary-light dark:group-hover:text-theme-text-primary-dark'}`} />}
                 <span>{item.label}</span>
               </div>
               {item.hasSubmenu && <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />}
@@ -86,15 +86,15 @@ export const Sidebar = ({
         </nav>
 
         {/* Bottom Links */}
-        <div className="px-4 py-6 border-t border-white/5 space-y-1 flex-shrink-0">
+        <div className="px-4 py-6 border-t border-theme-border-light dark:border-theme-border-dark space-y-1 flex-shrink-0">
           {bottomItems.map((item, index) => (
             <button
               key={index}
               onClick={() => onNavigate(item.id)}
               className={`w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold rounded-xl transition-all ${
                 currentPage === item.id
-                  ? 'bg-brand-primary/10 text-brand-primary'
-                  : 'text-slate-500 hover:text-white hover:bg-white/5'
+                  ? 'bg-brand-primary text-white'
+                  : 'text-theme-text-secondary-light dark:text-theme-text-secondary-dark hover:text-theme-text-primary-light dark:hover:text-theme-text-primary-dark hover:bg-theme-surface-light dark:hover:bg-theme-surface-dark'
               }`}
             >
               <item.icon className="w-4 h-4" />
@@ -107,7 +107,7 @@ export const Sidebar = ({
       </div>
 
       {/* Collapse Toggle */}
-      <button className="absolute -right-3 top-20 bg-slate-800 border border-white/10 rounded-full p-1 shadow-sm text-slate-400 hover:text-white transition-colors">
+      <button className="absolute -right-3 top-20 bg-theme-surface-light dark:bg-theme-surface-dark border border-theme-border-light dark:border-theme-border-dark rounded-full p-1 shadow-sm text-theme-text-secondary-light dark:text-theme-text-secondary-dark hover:text-theme-text-primary-light dark:hover:text-theme-text-primary-dark transition-colors">
         <ChevronLeft className="w-3 h-3" />
       </button>
     </aside>
