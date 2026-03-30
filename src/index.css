@@ -1,115 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
+@config "../tailwind.config.js";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Premium background */
-body {
-  background: #ffffff;
-  color: #000000;
-}
-
-.dark {
-  background: radial-gradient(circle at top, #0f172a, #020617);
-  color: white;
-}
-
-.light {
-  background: #ffffff;
-  color: #000000;
-}
-
-.light .glass {
-  background: rgba(0,0,0,0.05);
-  border: 1px solid rgba(0,0,0,0.1);
-}
-
-.light h1, .light h2, .light h3, .light h4, .light p, .light span, .light label, .light input, .light select {
-  color: #000000;
-}
-
-.light .text-slate-400 {
-  color: #64748b;
-}
-
-.light .bg-white\/5 {
-  background: rgba(0,0,0,0.05);
-}
-
-.light .bg-slate-800\/50 {
-  background-color: rgba(241, 245, 249, 0.5);
-}
-
-.light input, .light select, .light textarea, .light select option {
-  background-color: #ffffff !important;
-  color: #000000 !important;
-  border-color: #cbd5e1 !important;
-  cursor: text !important;
-}
-
-.light .bg-slate-900 {
-  background-color: #ffffff !important;
-}
-.light .bg-slate-900\/60 {
-  background-color: rgba(255, 255, 255, 0.6) !important;
-}
-.light .text-white {
-  color: #000000 !important;
-}
-
-.light .text-gray-400 {
-  color: #64748b !important;
-}
-
-.light .text-gray-500 {
-  color: #475569 !important;
-}
-
-.light input::placeholder, .light textarea::placeholder {
-  color: #94a3b8 !important;
-}
-
-.light .border-white\/10 {
-  border-color: rgba(0,0,0,0.1);
-}
-
-.light aside {
-  background: #ffffff !important;
-  border-right: 1px solid #e2e8f0 !important;
-}
-.light aside .text-white {
-  color: #000000 !important;
-}
-.light aside .text-slate-400 {
-  color: #64748b !important;
-}
-.light aside .border-white\/10 {
-  border-color: #e2e8f0 !important;
-}
-.light aside .hover\:bg-white\/5:hover {
-  background-color: #f1f5f9 !important;
-}
-.light aside .bg-white\/5 {
-  background-color: #f1f5f9 !important;
-}
-.light aside .text-blue-500 {
-  color: #2563eb !important;
-}
-.light aside .bg-blue-600 {
-  background-color: #2563eb !important;
-}
-.light aside .bg-slate-800 {
-  background-color: #e2e8f0 !important;
+/* smooth theme transition */
+* {
+  transition: background-color 0.3s, color 0.3s;
 }
 
 /* Glass card */
 .glass {
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: white;
+  border: 1px solid #e5e7eb; /* gray-200 */
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   border-radius: 20px;
+}
+.dark .glass {
+  background: rgba(31, 41, 55, 1); /* gray-800 */
+  border: 1px solid rgba(55, 65, 81, 1); /* gray-700 */
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
 /* Custom scrollbar */
@@ -134,6 +46,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
 .light input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(0);
 }

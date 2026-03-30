@@ -30,7 +30,6 @@ import { doc, onSnapshot } from 'firebase/firestore';
 
 export default function App() {
   const { user, loading, signIn, signUp, signInWithGoogle, signOut, verificationEmailSent, setVerificationEmailSent } = useAuth();
-  const [theme, setTheme] = useState('light');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAccountConnected, setIsAccountConnected] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -95,6 +94,8 @@ export default function App() {
     feedback: 'Feedback',
     settings: 'Settings'
   };
+
+  // Removed theme logic
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -167,7 +168,7 @@ export default function App() {
       case 'feedback':
         return <FeedbackPage />;
       case 'settings':
-        return <SettingsPage theme={theme} setTheme={setTheme} />;
+        return <SettingsPage />;
       default:
         return <div>Page Not Found</div>;
     }
@@ -272,7 +273,7 @@ export default function App() {
   return (
     <>
       <BackgroundAnimation />
-      <div className={`flex h-screen overflow-hidden bg-transparent text-white font-sans antialiased relative ${theme === 'light' ? 'light' : 'dark'}`}>
+      <div className={`flex h-screen overflow-hidden bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans antialiased relative`}>
         {isSyncing && (
           <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50 backdrop-blur-sm">
             <div className="animate-spin w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full"></div>

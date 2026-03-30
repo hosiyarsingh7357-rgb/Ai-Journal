@@ -19,7 +19,7 @@ export const KpiCard = ({
   iconColor = 'text-blue-400'
 }: KpiCardProps) => {
   return (
-    <div className="glass relative p-6 hover:scale-105 transition-all duration-300 shadow-xl flex flex-col justify-between">
+    <div className="p-4 rounded-2xl bg-white dark:bg-gray-800 shadow-md dark:shadow-lg border border-gray-200 dark:border-gray-700 relative hover:scale-105 transition-all duration-300 flex flex-col justify-between">
       <div>
         <p className="text-sm text-gray-400 mb-1">{title}</p>
         <h2 className="text-3xl font-bold text-white">{value}</h2>

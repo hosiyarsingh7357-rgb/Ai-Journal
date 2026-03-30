@@ -17,11 +17,12 @@ import {
   LogOut,
   ChevronDown
 } from 'lucide-react';
+import { toggleTheme } from '../utils/theme';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../lib/firebase';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 
-export const SettingsPage = ({ theme, setTheme }: { theme: string, setTheme: (theme: string) => void }) => {
+export const SettingsPage = () => {
   const { user, signOut } = useAuth();
   const [currency, setCurrency] = useState('USD ($)');
   const [language, setLanguage] = useState('English (US)');
@@ -29,14 +30,11 @@ export const SettingsPage = ({ theme, setTheme }: { theme: string, setTheme: (th
   const [isSaving, setIsSaving] = useState(false);
   const [fullName, setFullName] = useState(user?.displayName || '');
   const [isEditingName, setIsEditingName] = useState(false);
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
 
-  const toggleTheme = (newTheme: string) => {
+  const handleToggleTheme = (newTheme: string) => {
     setTheme(newTheme);
-    if (newTheme === 'light') {
-      document.documentElement.classList.remove('dark');
-    } else {
-      document.documentElement.classList.add('dark');
-    }
+    toggleTheme();
   };
 
   useEffect(() => {
@@ -223,10 +221,20 @@ export const SettingsPage = ({ theme, setTheme }: { theme: string, setTheme: (th
                 <span className="font-bold text-sm text-white">Theme Engine</span>
               </div>
               <div className="grid grid-cols-1 gap-3">
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-blue-500/20 border border-blue-500/50">
+                <button 
+                  onClick={() => handleToggleTheme('light')}
+                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-colors ${theme === 'light' ? 'bg-blue-500/20 border-blue-500/50' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                >
                   <Sun className="w-6 h-6 text-slate-500" />
-                  <span className="text-xs font-bold text-slate-300">Light Mode (Default)</span>
-                </div>
+                  <span className="text-xs font-bold text-slate-900 dark:text-slate-300">Light Mode</span>
+                </button>
+                <button 
+                  onClick={() => handleToggleTheme('dark')}
+                  className={`flex items-center gap-3 p-3 rounded-2xl border transition-colors ${theme === 'dark' ? 'bg-blue-500/20 border-blue-500/50' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                >
+                  <Moon className="w-6 h-6 text-slate-500" />
+                  <span className="text-xs font-bold text-slate-900 dark:text-slate-300">Dark Mode</span>
+                </button>
               </div>
             </div>
             <div className="glass rounded-2xl p-4 lg:p-6 shadow-2xl space-y-6">

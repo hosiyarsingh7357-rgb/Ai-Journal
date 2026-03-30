@@ -13,7 +13,6 @@ import {
   HelpCircle, 
   CreditCard, 
   MessageSquare,
-  Moon,
   DollarSign,
   Globe,
   ChevronDown,
@@ -82,7 +81,7 @@ export const Sidebar = ({
               }`}
             >
               <div className="flex items-center gap-3">
-                {item.icon && <item.icon className="w-5 h-5" />}
+                {item.icon && item.id !== 'analysis' && <item.icon className="w-5 h-5" />}
                 <span>{item.label}</span>
               </div>
               {item.hasSubmenu && <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />}
