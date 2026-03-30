@@ -271,9 +271,11 @@ export default function App() {
   }
 
   return (
-    <>
-      <BackgroundAnimation />
-      <div className={`flex h-screen overflow-hidden bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans antialiased relative`}>
+    <div className="relative min-h-screen bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+      <div className="absolute inset-0 -z-10">
+        <BackgroundAnimation />
+      </div>
+      <div className="relative z-10 flex h-screen overflow-hidden">
         {isSyncing && (
           <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50 backdrop-blur-sm">
             <div className="animate-spin w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full"></div>
@@ -322,7 +324,7 @@ export default function App() {
           onSuccess={handleConnectAccount}
         />
       </div>
-    </>
+    </div>
   );
 }
 

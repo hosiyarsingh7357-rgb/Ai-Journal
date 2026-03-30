@@ -9,6 +9,7 @@ import {
   ResponsiveContainer 
 } from 'recharts';
 import { Trade } from '../types';
+import { Card } from './ui/Card';
 
 export const PerformanceChart = ({ isConnected = false, trades = [] }: { isConnected?: boolean, trades?: Trade[] }) => {
   const [activeRange, setActiveRange] = React.useState('ALL');
@@ -69,25 +70,25 @@ export const PerformanceChart = ({ isConnected = false, trades = [] }: { isConne
   }, [trades, isConnected, activeRange]);
 
   return (
-    <div className="glass p-6 flex flex-col h-full relative">
+    <Card className="flex flex-col h-full relative">
       {!isConnected && trades.length === 0 && (
-        <div className="absolute inset-0 z-10 bg-black/40 backdrop-blur-[2px] flex items-center justify-center rounded-2xl">
+        <div className="absolute inset-0 z-20 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm flex items-center justify-center rounded-2xl">
           <div className="text-center p-4">
-            <p className="text-xs font-bold text-slate-300 uppercase tracking-widest">Connect MT5 to see performance</p>
+            <p className="text-sm font-bold text-gray-900 dark:text-gray-100 uppercase tracking-widest">Connect MT5 to see performance</p>
           </div>
         </div>
       )}
       <div className="flex items-center justify-between mb-6">
-        <h3 className="font-bold text-white">Performance</h3>
-        <div className="flex bg-white/10 p-1 rounded-lg text-xs font-medium text-slate-300">
+        <h3 className="font-bold text-gray-900 dark:text-white">Performance</h3>
+        <div className="flex bg-gray-100 dark:bg-gray-700 p-1 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-300">
           {ranges.map((range) => (
             <button
               key={range}
               onClick={() => setActiveRange(range)}
               className={`px-3 py-1.5 rounded-md transition-all ${
                 activeRange === range 
-                  ? 'bg-blue-600 text-white shadow-sm' 
-                  : 'hover:bg-white/10 hover:shadow-sm'
+                  ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm' 
+                  : 'hover:bg-gray-200 dark:hover:bg-gray-600'
               }`}
             >
               {range}
@@ -108,30 +109,29 @@ export const PerformanceChart = ({ isConnected = false, trades = [] }: { isConne
                 <stop offset="95%" stopColor="#3B82F6" stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.1)" />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(156, 163, 175, 0.2)" />
             <XAxis 
               dataKey="name" 
               axisLine={false} 
               tickLine={false} 
-              tick={{ fontSize: 10, fill: '#94a3b8' }}
+              tick={{ fontSize: 10, fill: '#9ca3af' }}
               dy={10}
             />
             <YAxis 
               axisLine={false} 
               tickLine={false} 
-              tick={{ fontSize: 10, fill: '#94a3b8' }}
+              tick={{ fontSize: 10, fill: '#9ca3af' }}
               tickFormatter={(value) => `$${value}`}
             />
             <Tooltip 
               formatter={(value: number) => [`$${value.toFixed(2)}`, 'Cumulative P&L']}
               contentStyle={{ 
                 borderRadius: '12px', 
-                border: '1px solid rgba(255,255,255,0.1)', 
-                backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                color: '#fff',
-                boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.5)' 
+                border: '1px solid #e5e7eb', 
+                backgroundColor: '#ffffff',
+                color: '#111827',
+                boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' 
               }}
-              itemStyle={{ color: '#3B82F6' }}
             />
             <Area 
               type="monotone" 
@@ -144,6 +144,6 @@ export const PerformanceChart = ({ isConnected = false, trades = [] }: { isConne
           </AreaChart>
         </ResponsiveContainer>
       </div>
-    </div>
+    </Card>
   );
 };

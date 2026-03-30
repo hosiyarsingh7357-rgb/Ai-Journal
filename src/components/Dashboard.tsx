@@ -5,6 +5,7 @@ import { OpenPositions } from './OpenPositions';
 import { RecentActivity } from './RecentActivity';
 import { MonthlyPnL } from './MonthlyPnL';
 import { QuickStats } from './QuickStats';
+import { Card } from './ui/Card';
 import { ArrowUpRight, PieChart, BrainCircuit } from 'lucide-react';
 import { useTrades } from '../context/TradeContext';
 import { Trade } from '../types';
@@ -79,13 +80,14 @@ export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) =>
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="glass p-6 rounded-2xl shadow-2xl"
           >
-            <div className="flex items-center gap-2 mb-2">
-              <BrainCircuit className="w-5 h-5 text-blue-400" />
-              <h3 className="text-blue-400 font-bold uppercase tracking-widest text-xs">AI Insight</h3>
-            </div>
-            <p className="text-sm font-semibold text-slate-300 leading-relaxed">{report}</p>
+            <Card className="p-6 shadow-2xl">
+              <div className="flex items-center gap-2 mb-2">
+                <BrainCircuit className="w-5 h-5 text-blue-500 dark:text-blue-400" />
+                <h3 className="text-blue-500 dark:text-blue-400 font-bold uppercase tracking-widest text-xs">AI Insight</h3>
+              </div>
+              <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 leading-relaxed">{report}</p>
+            </Card>
           </motion.div>
         )}
 

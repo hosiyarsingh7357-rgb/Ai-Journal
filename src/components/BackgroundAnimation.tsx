@@ -190,7 +190,7 @@ export const BackgroundAnimation: React.FC = () => {
   return (
     <div 
       ref={containerRef} 
-      className="fixed inset-0 -z-10 pointer-events-none overflow-hidden w-screen h-screen"
+      className="w-full h-full overflow-hidden"
     />
   );
 };

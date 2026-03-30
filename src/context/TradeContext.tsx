@@ -1,6 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { db } from "../lib/firebase";
-import { collection, onSnapshot, query, where, addDoc, serverTimestamp, orderBy, setDoc, doc, deleteDoc } from "firebase/firestore";
 import { useAuth } from "./AuthContext";
 import { Trade } from "../types";
 
@@ -22,32 +20,39 @@ export const TradeProvider = ({ children }: any) => {
       return;
     }
 
-    const q = query(
-      collection(db, "users", user.uid, "trades"),
-      orderBy("tradeDate", "desc")
-    );
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const tradesData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Trade[];
-      setTrades(tradesData);
-    }, (error) => {
-      console.error("Error fetching trades:", error);
-    });
-
-    return unsubscribe;
+    const fetchTrades = async () => {
+      try {
+        const response = await fetch("/api/trades");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("API response:", data);
+        if (Array.isArray(data)) {
+          setTrades(data.filter((t: any) => t.userId === user.uid));
+        } else {
+          console.error("Fetched data is not an array:", data);
+          setTrades([]);
+        }
+      } catch (error) {
+        console.error("Error fetching trades:", error);
+      }
+    };
+    fetchTrades();
   }, [user]);
 
   const addTrade = async (trade: Trade) => {
     if (!user) return;
     try {
-      await addDoc(collection(db, "users", user.uid, "trades"), {
-        ...trade,
-        userId: user.uid,
-        createdAt: serverTimestamp()
+      const response = await fetch("/api/trades", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...trade, userId: user.uid }),
       });
+      const data = await response.json();
+      if (data.success) {
+        setTrades(prev => [...prev, data.trade]);
+      }
     } catch (error) {
       console.error("Error adding trade:", error);
     }
@@ -56,7 +61,15 @@ export const TradeProvider = ({ children }: any) => {
   const updateTrade = async (tradeId: string, updates: Partial<Trade>) => {
     if (!user) return;
     try {
-      await setDoc(doc(db, "users", user.uid, "trades", tradeId), updates, { merge: true });
+      const response = await fetch(`/api/trades/${tradeId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setTrades(prev => prev.map(t => (t.id === tradeId || (t as any)._id === tradeId ? data.trade : t)));
+      }
     } catch (error) {
       console.error("Error updating trade:", error);
     }
@@ -65,7 +78,13 @@ export const TradeProvider = ({ children }: any) => {
   const deleteTrade = async (tradeId: string) => {
     if (!user) return;
     try {
-      await deleteDoc(doc(db, "users", user.uid, "trades", tradeId));
+      const response = await fetch(`/api/trades/${tradeId}`, {
+        method: "DELETE",
+      });
+      const data = await response.json();
+      if (data.success) {
+        setTrades(prev => prev.filter(t => t.id !== tradeId && (t as any)._id !== tradeId));
+      }
     } catch (error) {
       console.error("Error deleting trade:", error);
     }

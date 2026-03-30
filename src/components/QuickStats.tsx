@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Trade } from '../types';
+import { Card } from './ui/Card';
 
 export const QuickStats = ({ isConnected = false, trades = [] }: { isConnected?: boolean, trades?: Trade[] }) => {
   const displayStats = useMemo(() => {
@@ -37,23 +38,23 @@ export const QuickStats = ({ isConnected = false, trades = [] }: { isConnected?:
   }, [trades, isConnected]);
 
   return (
-    <div className="glass p-6">
-      <h3 className="font-bold text-white mb-4">Quick Stats</h3>
+    <Card className="p-6">
+      <h3 className="font-bold text-gray-900 dark:text-white mb-4">Quick Stats</h3>
       <div className="grid grid-cols-2 gap-3">
         {displayStats.map((stat, index) => (
           <div 
             key={index} 
-            className={`bg-white/5 border border-white/10 rounded-xl p-3 ${stat.colSpan ? 'col-span-2' : ''}`}
+            className={`bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-3 ${stat.colSpan ? 'col-span-2' : ''}`}
           >
-            <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-1">
+            <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
               {stat.label}
             </p>
-            <p className={`font-bold ${stat.variant === 'danger' ? 'text-red-400' : stat.variant === 'success' ? 'text-emerald-400' : 'text-white'}`}>
+            <p className={`font-bold ${stat.variant === 'danger' ? 'text-red-600 dark:text-red-400' : stat.variant === 'success' ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-900 dark:text-white'}`}>
               {stat.value}
             </p>
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   );
 };
