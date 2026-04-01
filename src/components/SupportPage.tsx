@@ -66,8 +66,8 @@ export const SupportPage = () => {
         </header>
 
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16 lg:mb-20">
-          {categories.map((cat, i) => (
-            <Card className="p-6 lg:p-8 cursor-pointer group">
+          {categories.map((cat) => (
+            <Card key={cat.title} className="p-6 lg:p-8 cursor-pointer group">
               <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-brand-primary/20 transition-colors border border-brand-primary/20">
                 <cat.icon className="w-6 h-6 text-brand-primary" />
               </div>
@@ -86,8 +86,8 @@ export const SupportPage = () => {
             <button className="text-brand-primary font-bold text-sm hover:underline">View All FAQ</button>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-2">
-            {faqs.map((faq, i) => (
-              <div key={i} className="group border-b border-border py-6">
+            {faqs.map((faq) => (
+              <div key={faq} className="group border-b border-border py-6">
                 <div className="flex justify-between items-center cursor-pointer">
                   <span className="font-semibold text-text-secondary group-hover:text-text-primary transition-colors">{faq}</span>
                   <Plus className="w-5 h-5 text-text-secondary/50 group-hover:text-brand-primary transition-colors" />

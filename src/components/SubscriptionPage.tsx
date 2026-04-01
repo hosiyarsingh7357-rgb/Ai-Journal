@@ -108,9 +108,9 @@ export const SubscriptionPage = () => {
 
           {/* Pricing Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {plans.map((plan, i) => (
+            {plans.map((plan) => (
               <Card 
-                key={i} 
+                key={plan.name} 
                 className={cn(
                   "flex flex-col relative overflow-hidden transition-all duration-500 p-6 lg:p-8",
                   plan.variant === 'primary' 
@@ -136,8 +136,8 @@ export const SubscriptionPage = () => {
                     <span className="text-text-muted font-medium text-sm">{plan.period}</span>
                   </div>
                   <ul className="space-y-4 mb-10">
-                    {plan.features.map((feature, idx) => (
-                      <li key={idx} className={cn(
+                    {plan.features.map((feature) => (
+                      <li key={feature.text} className={cn(
                         "flex items-center gap-3 text-sm transition-colors",
                         feature.included 
                           ? "text-text-secondary" 
@@ -184,8 +184,8 @@ export const SubscriptionPage = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
-                    {billingHistory.map((item, i) => (
-                      <tr key={i} className="group hover:bg-surface-muted transition-colors">
+                    {billingHistory.map((item) => (
+                      <tr key={`${item.date}-${item.amount}`} className="group hover:bg-surface-muted transition-colors">
                         <td className="py-5 text-sm font-medium text-text-primary">{item.date}</td>
                         <td className="py-5 text-sm text-text-secondary">{item.description}</td>
                         <td className="py-5 text-sm font-bold text-text-primary">{item.amount}</td>

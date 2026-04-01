@@ -4,11 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx server.ts",
-    "build": "vite build",
-    "preview": "vite preview",
+    "dev": "tsx server/server.ts",
+    "build": "vite build client",
+    "preview": "vite preview client",
     "clean": "rm -rf dist",
-    "lint": "tsc --noEmit"
+    "lint": "tsc -p client/tsconfig.json --noEmit && tsc server/server.ts --noEmit --esModuleInterop --module Node16 --target esnext --moduleResolution Node16"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",

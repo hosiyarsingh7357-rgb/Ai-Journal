@@ -149,8 +149,8 @@ export const FeedbackPage = () => {
                 <CheckCircle2 className="w-5 h-5 text-status-success" />
               </div>
               <div className="space-y-6">
-                {resolvedBuilds.map((item, i) => (
-                  <div key={i} className={cn(
+                {resolvedBuilds.map((item) => (
+                  <div key={item.build} className={cn(
                     "bg-background rounded-xl p-5 shadow-sm space-y-3 border border-border transition-all hover:bg-surface-muted",
                     item.opacity
                   )}>
