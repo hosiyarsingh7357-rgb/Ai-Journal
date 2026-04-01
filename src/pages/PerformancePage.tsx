@@ -179,10 +179,30 @@ export const PerformancePage = ({
   }, [stats.equityData, activeRange]);
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 lg:p-8">
-      <div className="max-w-7xl mx-auto space-y-6 lg:space-y-8">
-        
-        {/* Top Tier Metrics - Bento Style */}
+    <div className="flex-1 overflow-y-auto p-4 lg:p-8 bg-background">
+      {(!tradesList || tradesList.length === 0) ? (
+        <div className="flex flex-col items-center justify-center h-[80vh] text-center space-y-6">
+          <div className="w-20 h-20 bg-brand-primary/10 text-brand-primary rounded-full flex items-center justify-center mx-auto shadow-premium border border-brand-primary/30">
+            <BarChart3 className="w-10 h-10" />
+          </div>
+          <div>
+            <h3 className="text-2xl font-black text-text-primary">No Performance Data</h3>
+            <p className="text-text-secondary mt-2 font-medium max-w-md mx-auto">
+              Record your first trade to unlock advanced analytics, equity curves, and AI-driven insights.
+            </p>
+          </div>
+          <button 
+            onClick={() => onNavigate('TRADES')}
+            className="px-8 py-4 rounded-2xl bg-brand-primary text-white font-black text-xs uppercase tracking-widest hover:scale-105 transition-transform shadow-premium flex items-center gap-2"
+          >
+            Go to Trades
+            <ArrowUpRight className="w-4 h-4" />
+          </button>
+        </div>
+      ) : (
+        <div className="max-w-7xl mx-auto space-y-6 lg:space-y-8">
+          
+          {/* Top Tier Metrics - Bento Style */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           <Card className="p-6 flex flex-col justify-between">
             <div className="flex items-center justify-between">
@@ -191,11 +211,11 @@ export const PerformancePage = ({
               </div>
               <div className="text-right">
                 <span className="label-text block">Profit Factor</span>
-                <span className="text-2xl font-black text-theme-text-primary-light dark:text-theme-text-primary-dark">{stats.profitFactor}</span>
+                <span className="text-2xl font-black text-text-primary">{stats.profitFactor}</span>
               </div>
             </div>
-            <div className="mt-4 pt-4 border-t border-theme-border-light dark:border-theme-border-dark flex items-center justify-between">
-              <span className="text-[10px] font-bold text-theme-text-secondary-light dark:text-theme-text-secondary-dark uppercase tracking-tight">Efficiency</span>
+            <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
+              <span className="text-[10px] font-bold text-text-secondary uppercase tracking-tight">Efficiency</span>
               <span className="text-xs font-black text-status-success">Optimal</span>
             </div>
           </Card>
@@ -207,11 +227,11 @@ export const PerformancePage = ({
               </div>
               <div className="text-right">
                 <span className="label-text block">Win Rate</span>
-                <span className="text-2xl font-black text-theme-text-primary-light dark:text-theme-text-primary-dark">{stats.winRate}</span>
+                <span className="text-2xl font-black text-text-primary">{stats.winRate}</span>
               </div>
             </div>
-            <div className="mt-4 pt-4 border-t border-theme-border-light dark:border-theme-border-dark flex items-center justify-between">
-              <span className="text-[10px] font-bold text-theme-text-secondary-light dark:text-theme-text-secondary-dark uppercase tracking-tight">Consistency</span>
+            <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
+              <span className="text-[10px] font-bold text-text-secondary uppercase tracking-tight">Consistency</span>
               <div className="flex gap-1">
                 {[1,1,1,0,1].map((v, i) => (
                   <div key={i} className={`w-1.5 h-3 rounded-full ${v ? 'bg-status-success' : 'bg-status-danger'}`} />
@@ -222,17 +242,17 @@ export const PerformancePage = ({
 
           <Card className="p-6 flex flex-col justify-between">
             <div className="flex items-center justify-between">
-              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-400">
+              <div className="w-12 h-12 rounded-2xl bg-status-warning/10 flex items-center justify-center text-status-warning">
                 <Target className="w-6 h-6" />
               </div>
               <div className="text-right">
                 <span className="label-text block">Avg. RR</span>
-                <span className="text-2xl font-black text-theme-text-primary-light dark:text-theme-text-primary-dark">{stats.avgRR}</span>
+                <span className="text-2xl font-black text-text-primary">{stats.avgRR}</span>
               </div>
             </div>
-            <div className="mt-4 pt-4 border-t border-theme-border-light dark:border-theme-border-dark flex items-center justify-between">
-              <span className="text-[10px] font-bold text-theme-text-secondary-light dark:text-theme-text-secondary-dark uppercase tracking-tight">Risk Reward</span>
-              <span className="text-xs font-black text-amber-400">Optimal</span>
+            <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
+              <span className="text-[10px] font-bold text-text-secondary uppercase tracking-tight">Risk Reward</span>
+              <span className="text-xs font-black text-status-warning">Optimal</span>
             </div>
           </Card>
 
@@ -243,11 +263,11 @@ export const PerformancePage = ({
               </div>
               <div className="text-right">
                 <span className="label-text block">Max DD</span>
-                <span className="text-2xl font-black text-theme-text-primary-light dark:text-theme-text-primary-dark">{stats.maxDD}</span>
+                <span className="text-2xl font-black text-text-primary">{stats.maxDD}</span>
               </div>
             </div>
-            <div className="mt-4 pt-4 border-t border-theme-border-light dark:border-theme-border-dark flex items-center justify-between">
-              <span className="text-[10px] font-bold text-theme-text-secondary-light dark:text-theme-text-secondary-dark uppercase tracking-tight">Drawdown</span>
+            <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
+              <span className="text-[10px] font-bold text-text-secondary uppercase tracking-tight">Drawdown</span>
               <span className="text-xs font-black text-status-success">Low Risk</span>
             </div>
           </Card>
@@ -263,7 +283,7 @@ export const PerformancePage = ({
                 <h3 className="heading-2">Equity Curve</h3>
                 <p className="label-text mt-1">Portfolio Growth Intelligence</p>
               </div>
-              <div className="flex bg-theme-surface-light dark:bg-theme-surface-dark p-1 rounded-2xl border border-theme-border-light dark:border-theme-border-dark">
+              <div className="flex bg-surface p-1 rounded-2xl border border-border">
                 {['1D', '1W', '1M', '3M', 'ALL'].map((range) => (
                   <button
                     key={range}
@@ -271,7 +291,7 @@ export const PerformancePage = ({
                     className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                       activeRange === range
                         ? 'bg-brand-primary shadow-premium text-white'
-                        : 'text-theme-text-secondary-light dark:text-theme-text-secondary-dark hover:text-theme-text-primary-light dark:hover:text-theme-text-primary-dark'
+                        : 'text-text-secondary hover:text-text-primary'
                     }`}
                   >
                     {range}
@@ -284,31 +304,33 @@ export const PerformancePage = ({
                 <AreaChart data={filteredEquityData}>
                   <defs>
                     <linearGradient id="colorEquity" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#6366f1" stopOpacity={0.15}/>
-                      <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="var(--brand-primary)" stopOpacity={0.15}/>
+                      <stop offset="95%" stopColor="var(--brand-primary)" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-border/10" />
                   <XAxis 
                     dataKey="name" 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{ fontSize: 10, fontWeight: 800, fill: '#94A3B8' }}
+                    tick={{ fontSize: 10, fontWeight: 800, fill: 'currentColor' }}
+                    className="text-text-secondary"
                     dy={15}
                   />
                   <YAxis 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{ fontSize: 10, fontWeight: 800, fill: '#94A3B8' }}
+                    tick={{ fontSize: 10, fontWeight: 800, fill: 'currentColor' }}
+                    className="text-text-secondary"
                     tickFormatter={(value) => `$${value}`}
                   />
                   <Tooltip 
                     content={({ active, payload }) => {
                       if (active && payload && payload.length) {
                         return (
-                          <div className="bg-theme-surface-dark p-4 rounded-2xl shadow-premium border border-theme-border-dark">
+                          <div className="bg-surface p-4 rounded-2xl shadow-premium border border-border">
                             <p className="label-text mb-1">{payload[0].payload.name}</p>
-                            <p className="text-lg font-black text-white">${payload[0].value.toLocaleString()}</p>
+                            <p className="text-lg font-black text-text-primary">${payload[0].value.toLocaleString()}</p>
                           </div>
                         );
                       }
@@ -318,7 +340,7 @@ export const PerformancePage = ({
                   <Area 
                     type="monotone" 
                     dataKey="value" 
-                    stroke="#6366f1" 
+                    stroke="var(--brand-primary)" 
                     strokeWidth={5}
                     fillOpacity={1} 
                     fill="url(#colorEquity)" 
@@ -338,15 +360,15 @@ export const PerformancePage = ({
                 <div>
                   <span className="label-text text-status-success">Best Trade</span>
                   <div className="flex items-baseline gap-2 mt-1">
-                    <span className="text-3xl font-black text-theme-text-primary-light dark:text-theme-text-primary-dark">{stats.bestTrade.val > 0 ? `+$${stats.bestTrade.val.toLocaleString()}` : '$0'}</span>
+                    <span className="text-3xl font-black text-text-primary">{stats.bestTrade.val > 0 ? `+$${stats.bestTrade.val.toLocaleString()}` : '$0'}</span>
                     <span className="text-xs font-bold text-status-success">{stats.bestTrade.symbol}</span>
                   </div>
                 </div>
-                <div className="h-px bg-theme-border-light dark:bg-theme-border-dark" />
+                <div className="h-px bg-border" />
                 <div>
                   <span className="label-text text-status-danger">Worst Trade</span>
                   <div className="flex items-baseline gap-2 mt-1">
-                    <span className="text-3xl font-black text-theme-text-primary-light dark:text-theme-text-primary-dark">{stats.worstTrade.val < 0 ? `-$${Math.abs(stats.worstTrade.val).toLocaleString()}` : '$0'}</span>
+                    <span className="text-3xl font-black text-text-primary">{stats.worstTrade.val < 0 ? `-$${Math.abs(stats.worstTrade.val).toLocaleString()}` : '$0'}</span>
                     <span className="text-xs font-bold text-status-danger">{stats.worstTrade.symbol}</span>
                   </div>
                 </div>
@@ -362,7 +384,7 @@ export const PerformancePage = ({
                     <div className="w-8 h-8 rounded-xl bg-status-success/10 flex items-center justify-center text-status-success">
                       <ArrowUpRight className="w-4 h-4" />
                     </div>
-                    <span className="text-xs font-bold text-theme-text-secondary-light dark:text-theme-text-secondary-dark">Average Win</span>
+                    <span className="text-xs font-bold text-text-secondary">Average Win</span>
                   </div>
                   <span className="text-sm font-black text-status-success">+${stats.avgWin.toFixed(2)}</span>
                 </div>
@@ -371,7 +393,7 @@ export const PerformancePage = ({
                     <div className="w-8 h-8 rounded-xl bg-status-danger/10 flex items-center justify-center text-status-danger">
                       <ArrowDownRight className="w-4 h-4" />
                     </div>
-                    <span className="text-xs font-bold text-theme-text-secondary-light dark:text-theme-text-secondary-dark">Average Loss</span>
+                    <span className="text-xs font-bold text-text-secondary">Average Loss</span>
                   </div>
                   <span className="text-sm font-black text-status-danger">-${Math.abs(stats.avgLoss).toFixed(2)}</span>
                 </div>
@@ -380,9 +402,9 @@ export const PerformancePage = ({
                     <div className="w-8 h-8 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary">
                       <BarChart3 className="w-4 h-4" />
                     </div>
-                    <span className="text-xs font-bold text-theme-text-secondary-light dark:text-theme-text-secondary-dark">Avg. Duration</span>
+                    <span className="text-xs font-bold text-text-secondary">Avg. Duration</span>
                   </div>
-                  <span className="text-sm font-black text-theme-text-primary-light dark:text-theme-text-primary-dark">{stats.avgDuration}</span>
+                  <span className="text-sm font-black text-text-primary">{stats.avgDuration}</span>
                 </div>
               </div>
             </Card>
@@ -408,10 +430,10 @@ export const PerformancePage = ({
                 <div key={index} className={`p-4 rounded-3xl border transition-all hover:scale-[1.05] cursor-default flex flex-col items-center justify-center text-center ${
                   item.pnl > 0 
                     ? 'bg-status-success/10 border-status-success/20' 
-                    : item.pnl < 0 ? 'bg-status-danger/10 border-status-danger/20' : 'bg-theme-surface-light dark:bg-theme-surface-dark border-theme-border-light dark:border-theme-border-dark'
+                    : item.pnl < 0 ? 'bg-status-danger/10 border-status-danger/20' : 'bg-surface border-border'
                 }`}>
-                  <span className="text-[9px] font-black uppercase tracking-widest text-theme-text-secondary-light dark:text-theme-text-secondary-dark block mb-1">{item.month}</span>
-                  <span className={`text-sm font-black ${item.pnl > 0 ? 'text-status-success' : item.pnl < 0 ? 'text-status-danger' : 'text-theme-text-secondary-light dark:text-theme-text-secondary-dark'}`}>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-text-secondary block mb-1">{item.month}</span>
+                  <span className={`text-sm font-black ${item.pnl > 0 ? 'text-status-success' : item.pnl < 0 ? 'text-status-danger' : 'text-text-secondary'}`}>
                     {item.pnl > 0 ? '+' : ''}{item.pnl}%
                   </span>
                 </div>
@@ -426,7 +448,7 @@ export const PerformancePage = ({
                 <h3 className="heading-3">Assets</h3>
                 <p className="label-text mt-0.5">Volume Split</p>
               </div>
-              <PieChartIcon className="w-5 h-5 text-theme-text-secondary-light dark:text-theme-text-secondary-dark" />
+              <PieChartIcon className="w-5 h-5 text-text-secondary" />
             </div>
             <div className="h-[220px] w-full relative">
               <ResponsiveContainer width="100%" height="100%">
@@ -445,22 +467,22 @@ export const PerformancePage = ({
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#161b26', border: '1px solid #232936', borderRadius: '1rem' }}
-                    itemStyle={{ color: '#fff' }}
+                    contentStyle={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '1rem' }}
+                    itemStyle={{ color: 'var(--text-primary)' }}
                   />
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-3xl font-black text-theme-text-primary-light dark:text-theme-text-primary-dark">{stats.instrumentData.length}</span>
-                <span className="text-[8px] font-black text-theme-text-secondary-light dark:text-theme-text-secondary-dark uppercase tracking-widest">Instruments</span>
+                <span className="text-3xl font-black text-text-primary">{stats.instrumentData.length}</span>
+                <span className="text-[8px] font-black text-text-secondary uppercase tracking-widest">Instruments</span>
               </div>
             </div>
             <div className="mt-6 grid grid-cols-2 gap-4">
               {stats.instrumentData.map((item: any, index: number) => (
                 <div key={index} className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
-                  <span className="text-[10px] font-black text-theme-text-secondary-light dark:text-theme-text-secondary-dark uppercase tracking-tight">{item.name}</span>
-                  <span className="text-[10px] font-black text-theme-text-primary-light dark:text-theme-text-primary-dark ml-auto">{item.value}%</span>
+                  <span className="text-[10px] font-black text-text-secondary uppercase tracking-tight">{item.name}</span>
+                  <span className="text-[10px] font-black text-text-primary ml-auto">{item.value}%</span>
                 </div>
               ))}
             </div>
@@ -469,17 +491,17 @@ export const PerformancePage = ({
 
         {/* AI Insight Footer */}
         <div className="bg-brand-primary rounded-[2.5rem] p-10 text-white relative overflow-hidden shadow-premium">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-theme-surface-light/10 dark:bg-theme-surface-dark/10 blur-[120px] -mr-48 -mt-48" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-theme-surface-light/5 dark:bg-theme-surface-dark/5 blur-[100px] -ml-32 -mb-32" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 blur-[120px] -mr-48 -mt-48" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 blur-[100px] -ml-32 -mb-32" />
           
           <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
             <div className="flex items-center gap-6">
-              <div className="w-16 h-16 rounded-3xl bg-theme-surface-light/20 dark:bg-theme-surface-dark/20 backdrop-blur-xl flex items-center justify-center shadow-inner">
+              <div className="w-16 h-16 rounded-3xl bg-white/20 backdrop-blur-xl flex items-center justify-center shadow-inner">
                 <Zap className="w-8 h-8 text-white" />
               </div>
               <div>
                 <h4 className="text-2xl font-black tracking-tight">Strategy Optimization Detected</h4>
-                <p className="text-theme-text-secondary-dark font-medium max-w-xl mt-1">
+                <p className="text-white/80 font-medium max-w-xl mt-1">
                   Your performance on {stats.bestTrade.symbol} has improved by 14% since you started using hard stops. AI recommends increasing position size by 0.25 lots.
                 </p>
               </div>
@@ -493,7 +515,8 @@ export const PerformancePage = ({
           </div>
         </div>
 
-      </div>
+        </div>
+      )}
     </div>
   );
 };

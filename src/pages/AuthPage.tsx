@@ -44,20 +44,20 @@ export const AuthPage = ({ onBack }: AuthPageProps) => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background dark:bg-background-dark text-text-primary dark:text-text-primary-dark overflow-hidden relative">
+    <div className="flex items-center justify-center min-h-screen bg-background text-text-primary overflow-hidden relative">
       <BackgroundAnimation />
       
       <button 
         onClick={onBack}
-        className="absolute top-8 left-8 text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:hover:text-text-primary-dark flex items-center gap-2 font-bold transition-colors z-20"
+        className="absolute top-8 left-8 text-text-secondary hover:text-text-primary flex items-center gap-2 font-bold transition-colors z-20"
       >
         <X className="w-5 h-5" /> Back to Home
       </button>
 
-      <Card className="w-full max-w-md relative z-10 border border-border dark:border-border-dark backdrop-blur-3xl p-10 rounded-3xl" hoverable={false}>
+      <Card className="w-full max-w-md relative z-10 border border-border backdrop-blur-3xl p-10 rounded-3xl" hoverable={false}>
         <div className="text-center space-y-2 mb-8">
           <h1 className="text-4xl font-black bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">Ai Journal</h1>
-          <p className="body-text font-medium">
+          <p className="text-text-secondary font-medium">
             {isSignUp ? 'Create your professional trading account' : 'Welcome back, Master your mind'}
           </p>
         </div>
@@ -66,7 +66,7 @@ export const AuthPage = ({ onBack }: AuthPageProps) => {
           <motion.div 
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="w-full bg-danger/10 border border-danger/20 text-danger p-4 rounded-2xl text-xs font-bold text-center mb-6"
+            className="w-full bg-status-danger/10 border border-status-danger/20 text-status-danger p-4 rounded-2xl text-xs font-bold text-center mb-6"
           >
             {error}
           </motion.div>
@@ -112,9 +112,9 @@ export const AuthPage = ({ onBack }: AuthPageProps) => {
         </form>
 
         <div className="w-full flex items-center gap-4 py-6">
-          <div className="h-px bg-border dark:bg-border-dark flex-1" />
-          <span className="label-text">OR</span>
-          <div className="h-px bg-border dark:bg-border-dark flex-1" />
+          <div className="h-px bg-border flex-1" />
+          <span className="text-text-muted text-xs font-bold uppercase tracking-widest">OR</span>
+          <div className="h-px bg-border flex-1" />
         </div>
 
         <Button
@@ -133,7 +133,7 @@ export const AuthPage = ({ onBack }: AuthPageProps) => {
 
         <button
           onClick={() => setIsSignUp(!isSignUp)}
-          className="mt-6 text-text-secondary dark:text-text-secondary-dark text-xs font-bold hover:text-text-primary dark:hover:text-text-primary-dark transition-colors w-full text-center"
+          className="mt-6 text-text-secondary text-xs font-bold hover:text-text-primary transition-colors w-full text-center"
         >
           {isSignUp ? 'Already have an account? Sign In' : 'New to AJ Journal? Create an account'}
         </button>

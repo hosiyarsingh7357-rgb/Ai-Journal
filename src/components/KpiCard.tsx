@@ -31,7 +31,7 @@ export const KpiCard = ({
         <div className="h-1 w-8 rounded-full bg-brand-primary/20 overflow-hidden">
           <div className="h-full w-2/3 bg-brand-primary rounded-full" />
         </div>
-        <p className="label-text text-theme-text-secondary-light dark:text-theme-text-secondary-dark">{subtitle}</p>
+        <p className="label-text text-text-secondary">{subtitle}</p>
       </div>
 
       <div className={`absolute top-6 right-6 w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 group-hover:rotate-3 ${iconBg} ${iconColor} shadow-premium`}>

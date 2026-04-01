@@ -119,9 +119,22 @@ export const AnalysisPage = () => {
   }, [filteredData]);
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 lg:p-8 no-scrollbar">
-      <div className="max-w-7xl mx-auto space-y-8 lg:space-y-10">
-        {/* Analysis Hero Section */}
+    <div className="flex-1 overflow-y-auto p-4 lg:p-8 no-scrollbar bg-background">
+      {(!trades || trades.length === 0) ? (
+        <div className="flex flex-col items-center justify-center h-[80vh] text-center space-y-6">
+          <div className="w-20 h-20 bg-brand-primary/10 text-brand-primary rounded-full flex items-center justify-center mx-auto shadow-premium border border-brand-primary/30">
+            <Activity className="w-10 h-10" />
+          </div>
+          <div>
+            <h3 className="text-2xl font-black text-text-primary">No Analysis Available</h3>
+            <p className="text-text-secondary mt-2 font-medium max-w-md mx-auto">
+              Record your first trade to unlock advanced analytics, equity curves, and AI-driven insights.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="max-w-7xl mx-auto space-y-8 lg:space-y-10">
+          {/* Analysis Hero Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div>
             <h2 className="heading-1">Advanced Analysis</h2>
@@ -129,7 +142,7 @@ export const AnalysisPage = () => {
               Deep-dive into your trading performance metrics. Institutional-grade quantitative analysis of your equity growth and risk management.
             </p>
           </div>
-          <div className="flex gap-3 bg-theme-surface-light/50 dark:bg-theme-surface-dark/50 border border-theme-border-light dark:border-theme-border-dark p-1.5 rounded-xl backdrop-blur-sm">
+          <div className="flex gap-3 bg-surface border border-border p-1.5 rounded-xl backdrop-blur-sm">
             {['All Time', 'Last 30D', 'Last 7D'].map((range) => (
               <button
                 key={range}
@@ -137,7 +150,7 @@ export const AnalysisPage = () => {
                 className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                   activeRange === range
                     ? 'bg-brand-primary text-white shadow-sm'
-                    : 'text-theme-text-secondary-light dark:text-theme-text-secondary-dark hover:text-theme-text-primary-light dark:hover:text-theme-text-primary-dark'
+                    : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 {range}
@@ -175,7 +188,7 @@ export const AnalysisPage = () => {
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
               <p className="label-text">Total Trades</p>
-              <Clock className="w-4 h-4 text-theme-text-secondary-light dark:text-theme-text-secondary-dark" />
+              <Clock className="w-4 h-4 text-text-secondary" />
             </div>
             <h3 className="heading-2">{kpiMetrics.tradesCount}</h3>
           </Card>
@@ -188,7 +201,7 @@ export const AnalysisPage = () => {
             <div className="flex justify-between items-center mb-10">
               <div>
                 <h4 className="heading-3">Cumulative Equity Curve</h4>
-                <p className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark">Performance trajectory over {filteredData.trades.length} executed trades</p>
+                <p className="text-xs text-text-secondary">Performance trajectory over {filteredData.trades.length} executed trades</p>
               </div>
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1.5">
@@ -196,7 +209,7 @@ export const AnalysisPage = () => {
                   <span className="label-text">Equity</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="w-3 h-3 rounded-full bg-theme-border-light dark:bg-theme-border-dark"></span>
+                  <span className="w-3 h-3 rounded-full bg-border"></span>
                   <span className="label-text">Balance</span>
                 </div>
               </div>
@@ -206,35 +219,35 @@ export const AnalysisPage = () => {
                 <AreaChart data={equityData}>
                   <defs>
                     <linearGradient id="colorEquity" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--color-brand-primary)" stopOpacity={0.2}/>
-                      <stop offset="95%" stopColor="var(--color-brand-primary)" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="var(--brand-primary)" stopOpacity={0.2}/>
+                      <stop offset="95%" stopColor="var(--brand-primary)" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-theme-border-light/20 dark:text-theme-border-dark/20" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-border/20" />
                   <XAxis 
                     dataKey="trade" 
                     axisLine={false} 
                     tickLine={false} 
                     tick={{fontSize: 10, fill: 'currentColor'}}
-                    className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark"
+                    className="text-text-secondary"
                     dy={10}
                   />
                   <YAxis 
                     axisLine={false} 
                     tickLine={false} 
                     tick={{fontSize: 10, fill: 'currentColor'}}
-                    className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark"
+                    className="text-text-secondary"
                     tickFormatter={(value) => `$${value/1000}k`}
                   />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--color-theme-surface-dark)', borderRadius: '12px', border: '1px solid var(--color-theme-border-dark)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}
-                    itemStyle={{ color: '#fff' }}
+                    contentStyle={{ backgroundColor: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}
+                    itemStyle={{ color: 'var(--text-primary)' }}
                     formatter={(value: number) => [`$${value.toLocaleString()}`, '']}
                   />
                   <Area 
                     type="monotone" 
                     dataKey="equity" 
-                    stroke="var(--color-brand-primary)" 
+                    stroke="var(--brand-primary)" 
                     strokeWidth={3} 
                     fillOpacity={1} 
                     fill="url(#colorEquity)" 
@@ -242,7 +255,7 @@ export const AnalysisPage = () => {
                   <Area 
                     type="monotone" 
                     dataKey="balance" 
-                    stroke="var(--color-theme-border-dark)" 
+                    stroke="var(--border)" 
                     strokeWidth={2} 
                     fill="transparent" 
                     strokeDasharray="5 5"
@@ -255,38 +268,38 @@ export const AnalysisPage = () => {
           {/* Session Performance */}
           <Card className="p-8 flex flex-col">
             <h4 className="heading-3 mb-2">Session Performance</h4>
-            <p className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark mb-8">Win percentage across global markets</p>
+            <p className="text-xs text-text-secondary mb-8">Win percentage across global markets</p>
             <div className="flex-1 flex flex-col justify-center space-y-8">
               <div className="space-y-2">
                 <div className="flex justify-between items-end mb-1">
-                  <span className="text-xs font-bold text-theme-text-primary-light dark:text-theme-text-primary-dark">London Open</span>
+                  <span className="text-xs font-bold text-text-primary">London Open</span>
                   <span className="text-xs font-bold text-status-success">68% WR</span>
                 </div>
-                <div className="h-2 w-full bg-theme-border-light dark:bg-theme-border-dark rounded-full overflow-hidden">
+                <div className="h-2 w-full bg-border rounded-full overflow-hidden">
                   <div className="h-full bg-status-success w-[68%] rounded-full"></div>
                 </div>
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between items-end mb-1">
-                  <span className="text-xs font-bold text-theme-text-primary-light dark:text-theme-text-primary-dark">New York Session</span>
+                  <span className="text-xs font-bold text-text-primary">New York Session</span>
                   <span className="text-xs font-bold text-status-success">54% WR</span>
                 </div>
-                <div className="h-2 w-full bg-theme-border-light dark:bg-theme-border-dark rounded-full overflow-hidden">
+                <div className="h-2 w-full bg-border rounded-full overflow-hidden">
                   <div className="h-full bg-status-success w-[54%] rounded-full"></div>
                 </div>
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between items-end mb-1">
-                  <span className="text-xs font-bold text-theme-text-primary-light dark:text-theme-text-primary-dark">Asian Session</span>
+                  <span className="text-xs font-bold text-text-primary">Asian Session</span>
                   <span className="text-xs font-bold text-status-danger">32% WR</span>
                 </div>
-                <div className="h-2 w-full bg-theme-border-light dark:bg-theme-border-dark rounded-full overflow-hidden">
+                <div className="h-2 w-full bg-border rounded-full overflow-hidden">
                   <div className="h-full bg-status-danger w-[32%] rounded-full"></div>
                 </div>
               </div>
             </div>
-            <div className="mt-8 pt-8 border-t border-theme-border-light dark:border-theme-border-dark text-center">
-              <p className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark">
+            <div className="mt-8 pt-8 border-t border-border text-center">
+              <p className="text-xs text-text-secondary">
                 Strongest edge during <span className="text-status-success font-bold">London overlap</span> with 1.4 RR average.
               </p>
             </div>
@@ -300,39 +313,39 @@ export const AnalysisPage = () => {
             <div className="flex justify-between items-center mb-6">
               <div>
                 <h4 className="heading-3">Drawdown Relative to Equity</h4>
-                <p className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark">Monitoring capital preservation efficiency</p>
+                <p className="text-xs text-text-secondary">Monitoring capital preservation efficiency</p>
               </div>
-              <Info className="w-4 h-4 text-theme-text-secondary-light dark:text-theme-text-secondary-dark" />
+              <Info className="w-4 h-4 text-text-secondary" />
             </div>
             <div className="h-48 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={drawdownData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-theme-border-light/20 dark:text-theme-border-dark/20" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-border/20" />
                   <XAxis 
                     dataKey="day" 
                     axisLine={false} 
                     tickLine={false} 
                     tick={{fontSize: 10, fill: 'currentColor'}}
-                    className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark"
+                    className="text-text-secondary"
                     dy={10}
                   />
                   <YAxis 
                     axisLine={false} 
                     tickLine={false} 
                     tick={{fontSize: 10, fill: 'currentColor'}}
-                    className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark"
+                    className="text-text-secondary"
                     tickFormatter={(value) => `-${value}%`}
                     reversed
                   />
                   <Tooltip 
-                    cursor={{fill: 'currentColor', className: 'text-theme-surface-light/20 dark:text-theme-surface-dark/20'}}
-                    contentStyle={{ backgroundColor: 'var(--color-theme-surface-dark)', borderRadius: '12px', border: '1px solid var(--color-theme-border-dark)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}
-                    itemStyle={{ color: '#fff' }}
+                    cursor={{fill: 'currentColor', className: 'text-surface-muted/20'}}
+                    contentStyle={{ backgroundColor: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}
+                    itemStyle={{ color: 'var(--text-primary)' }}
                     formatter={(value: number) => [`-${value}%`, 'Drawdown']}
                   />
                   <Bar dataKey="value" radius={[0, 0, 4, 4]}>
                     {drawdownData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.value > 3 ? 'var(--color-status-danger)' : 'var(--color-status-danger-light)'} />
+                      <Cell key={`cell-${index}`} fill={entry.value > 3 ? 'var(--status-danger)' : 'var(--status-danger-light)'} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -343,17 +356,17 @@ export const AnalysisPage = () => {
           {/* Profit Factor by Symbol */}
           <Card className="p-8">
             <h4 className="heading-3 mb-2">Profit Factor by Symbol</h4>
-            <p className="text-xs text-theme-text-secondary-light dark:text-theme-text-secondary-dark mb-6">Asset-specific profitability metrics</p>
+            <p className="text-xs text-text-secondary mb-6">Asset-specific profitability metrics</p>
             <div className="space-y-5">
               {symbolData.map((item, index) => (
                 <div key={index} className="flex items-center gap-4">
-                  <div className="w-20 text-xs font-bold text-theme-text-secondary-light dark:text-theme-text-secondary-dark">{item.symbol}</div>
-                  <div className="flex-1 h-8 bg-theme-border-light dark:bg-theme-border-dark rounded-lg flex items-center px-1">
+                  <div className="w-20 text-xs font-bold text-text-secondary">{item.symbol}</div>
+                  <div className="flex-1 h-8 bg-border rounded-lg flex items-center px-1">
                     <div 
                       className="h-6 rounded-md flex items-center justify-end pr-2 transition-all duration-500"
                       style={{ 
                         width: `${(item.pf / 3) * 100}%`,
-                        backgroundColor: 'var(--color-brand-primary)',
+                        backgroundColor: 'var(--brand-primary)',
                         minWidth: '20%'
                       }}
                     >
@@ -368,12 +381,12 @@ export const AnalysisPage = () => {
 
         {/* Data Table */}
         <Card className="overflow-hidden mb-12 !p-0">
-          <div className="p-8 border-b border-theme-border-light dark:border-theme-border-dark">
+          <div className="p-8 border-b border-border">
             <h4 className="heading-3">Trade Breakdown Insights</h4>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
-              <thead className="bg-theme-surface-light/50 dark:bg-theme-surface-dark/50 label-text">
+              <thead className="bg-surface-muted label-text">
                 <tr>
                   <th className="px-8 py-4">Metric Category</th>
                   <th className="px-8 py-4">Value</th>
@@ -381,32 +394,33 @@ export const AnalysisPage = () => {
                   <th className="px-6 py-4">Recommendation</th>
                 </tr>
               </thead>
-              <tbody className="text-sm divide-y divide-theme-border-light dark:divide-theme-border-dark">
-                <tr className="hover:bg-theme-surface-light/30 dark:hover:bg-theme-surface-dark/30 transition-colors">
-                  <td className="px-8 py-5 font-semibold text-theme-text-primary-light dark:text-theme-text-primary-dark">Expectancy per Trade</td>
-                  <td className="px-8 py-5 text-theme-text-secondary-light dark:text-theme-text-secondary-dark">${kpiMetrics.expectancy}</td>
+              <tbody className="text-sm divide-y divide-border">
+                <tr className="hover:bg-surface-muted/30 transition-colors">
+                  <td className="px-8 py-5 font-semibold text-text-primary">Expectancy per Trade</td>
+                  <td className="px-8 py-5 text-text-secondary">${kpiMetrics.expectancy}</td>
                   <td className="px-8 py-5">
                     <div className="flex gap-1">
-                      {[1, 2, 3, 4].map((i) => <span key={i} className={`w-2 h-2 rounded-full ${parseFloat(kpiMetrics.expectancy) > 0 ? 'bg-status-success' : 'bg-theme-border-light dark:bg-theme-border-dark'}`}></span>)}
+                      {[1, 2, 3, 4].map((i) => <span key={i} className={`w-2 h-2 rounded-full ${parseFloat(kpiMetrics.expectancy) > 0 ? 'bg-status-success' : 'bg-border'}`}></span>)}
                     </div>
                   </td>
-                  <td className="px-8 py-5 text-theme-text-secondary-light dark:text-theme-text-secondary-dark">{parseFloat(kpiMetrics.expectancy) > 0 ? 'Maintain current position sizing logic.' : 'Review trade entry criteria.'}</td>
+                  <td className="px-8 py-5 text-text-secondary">{parseFloat(kpiMetrics.expectancy) > 0 ? 'Maintain current position sizing logic.' : 'Review trade entry criteria.'}</td>
                 </tr>
-                <tr className="hover:bg-theme-surface-light/30 dark:hover:bg-theme-surface-dark/30 transition-colors">
-                  <td className="px-8 py-5 font-semibold text-theme-text-primary-light dark:text-theme-text-primary-dark">Average Win vs Loss</td>
-                  <td className="px-8 py-5 text-theme-text-secondary-light dark:text-theme-text-secondary-dark">{kpiMetrics.avgWinLossRatio}:1</td>
+                <tr className="hover:bg-surface-muted/30 transition-colors">
+                  <td className="px-8 py-5 font-semibold text-text-primary">Average Win vs Loss</td>
+                  <td className="px-8 py-5 text-text-secondary">{kpiMetrics.avgWinLossRatio}:1</td>
                   <td className="px-8 py-5">
                     <div className="flex gap-1">
-                      {[1, 2, 3].map((i) => <span key={i} className={`w-2 h-2 rounded-full ${parseFloat(kpiMetrics.avgWinLossRatio) > 1 ? 'bg-status-success' : 'bg-theme-border-light dark:bg-theme-border-dark'}`}></span>)}
+                      {[1, 2, 3].map((i) => <span key={i} className={`w-2 h-2 rounded-full ${parseFloat(kpiMetrics.avgWinLossRatio) > 1 ? 'bg-status-success' : 'bg-border'}`}></span>)}
                     </div>
                   </td>
-                  <td className="px-8 py-5 text-theme-text-secondary-light dark:text-theme-text-secondary-dark">{parseFloat(kpiMetrics.avgWinLossRatio) > 1 ? 'Healthy risk-reward ratio.' : 'Focus on cutting losing trades earlier.'}</td>
+                  <td className="px-8 py-5 text-text-secondary">{parseFloat(kpiMetrics.avgWinLossRatio) > 1 ? 'Healthy risk-reward ratio.' : 'Focus on cutting losing trades earlier.'}</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </Card>
       </div>
+      )}
     </div>
   );
 };

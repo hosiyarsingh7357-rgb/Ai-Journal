@@ -24,12 +24,12 @@ export const RecentActivity = ({ isConnected = false, trades = [] }: { isConnect
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-gray-900 dark:text-white">Recent Activity</h3>
-        <span className="text-xs text-gray-500 dark:text-gray-400">{displayActivities.length} trades</span>
+        <h3 className="font-bold text-text-primary">Recent Activity</h3>
+        <span className="text-xs text-text-secondary">{displayActivities.length} trades</span>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left">
-          <thead className="text-xs text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700">
+          <thead className="text-xs text-text-secondary uppercase border-b border-border">
             <tr>
               <th className="py-3 font-medium">Status</th>
               <th className="py-3 font-medium">Instrument</th>
@@ -37,32 +37,32 @@ export const RecentActivity = ({ isConnected = false, trades = [] }: { isConnect
               <th className="py-3 font-medium text-right">Time</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+          <tbody className="divide-y divide-border">
             {displayActivities.length === 0 ? (
               <tr>
-                <td colSpan={4} className="py-10 text-center text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-widest">
+                <td colSpan={4} className="py-10 text-center text-text-secondary text-xs font-bold uppercase tracking-widest">
                   No activity recorded
                 </td>
               </tr>
             ) : (
               displayActivities.map((activity, index) => (
-                <tr key={index} className="hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors">
+                <tr key={index} className="hover:bg-surface-muted transition-colors">
                   <td className="py-3">
                     <div className={`w-6 h-6 rounded-md flex items-center justify-center ${
-                      activity.status === 'profit' ? 'bg-emerald-100 dark:bg-emerald-900/20' : 'bg-red-100 dark:bg-red-900/20'
+                      activity.status === 'profit' ? 'bg-status-success/10' : 'bg-status-danger/10'
                     }`}>
                       <div className={`w-2 h-2 rounded-full ${
-                        activity.status === 'profit' ? 'bg-emerald-500 dark:bg-emerald-400' : 'bg-red-500 dark:bg-red-400'
+                        activity.status === 'profit' ? 'bg-status-success' : 'bg-status-danger'
                       }`} />
                     </div>
                   </td>
-                  <td className="py-3 text-gray-900 dark:text-white font-medium">{activity.instrument}</td>
+                  <td className="py-3 text-text-primary font-medium">{activity.instrument}</td>
                   <td className={`py-3 text-right font-black ${
-                    activity.status === 'profit' ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-700 dark:text-red-400'
+                    activity.status === 'profit' ? 'text-status-success' : 'text-status-danger'
                   }`}>
                     {activity.pnl}
                   </td>
-                  <td className="py-3 text-right text-gray-500 dark:text-gray-400 text-[10px] font-bold">{activity.time}</td>
+                  <td className="py-3 text-right text-text-secondary text-[10px] font-bold">{activity.time}</td>
                 </tr>
               ))
             )}

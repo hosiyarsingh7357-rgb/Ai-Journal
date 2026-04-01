@@ -6,35 +6,68 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
+@layer base {
+  :root {
+    --background: #FFFFFF;
+    --foreground: #111827;
+    --surface: #F9FAFB;
+    --surface-muted: #F3F4F6;
+    --border: #E5E7EB;
+    --border-strong: #D1D5DB;
+    --text-primary: #111827;
+    --text-secondary: #4B5563;
+    --text-muted: #6B7280;
+    --brand-primary: #4F46E5;
+    --status-success: #22C55E;
+    --status-danger: #EF4444;
+    --status-warning: #F59E0B;
+    --status-info: #3B82F6;
+  }
+
+  .dark {
+    --background: #0B0F19;
+    --foreground: #F9FAFB;
+    --surface: #111827;
+    --surface-muted: #1F2937;
+    --border: #374151;
+    --border-strong: #4B5563;
+    --text-primary: #F9FAFB;
+    --text-secondary: #9CA3AF;
+    --text-muted: #6B7280;
+    --status-warning: #FBBF24;
+    --status-info: #60A5FA;
+  }
+}
+
 /* Global Styles */
 @layer base {
   body {
-    @apply bg-background dark:bg-background-dark text-text-primary dark:text-text-primary-dark transition-colors duration-300 antialiased;
+    @apply bg-background text-foreground transition-colors duration-300 antialiased;
   }
 }
 
 /* Typography System */
 @layer components {
   .heading-1 {
-    @apply text-3xl lg:text-4xl font-bold tracking-tight text-text-primary dark:text-text-primary-dark;
+    @apply text-3xl lg:text-4xl font-bold tracking-tight text-text-primary;
   }
   .heading-2 {
-    @apply text-xl lg:text-2xl font-semibold tracking-tight text-text-primary dark:text-text-primary-dark;
+    @apply text-xl lg:text-2xl font-semibold tracking-tight text-text-primary;
   }
   .heading-3 {
-    @apply text-lg font-semibold text-text-primary dark:text-text-primary-dark;
+    @apply text-lg font-semibold text-text-primary;
   }
   .body-text {
-    @apply text-sm text-text-secondary dark:text-text-secondary-dark leading-relaxed;
+    @apply text-sm text-text-secondary leading-relaxed;
   }
   .label-text {
-    @apply text-[10px] font-bold uppercase tracking-widest text-text-muted dark:text-text-muted-dark;
+    @apply text-[10px] font-bold uppercase tracking-widest text-text-muted;
   }
 }
 
 /* Standardized Card System */
 .glass {
-  @apply bg-surface dark:bg-surface-dark border border-border dark:border-border-dark shadow-premium rounded-2xl p-6 transition-all duration-300;
+  @apply bg-surface border border-border shadow-premium rounded-2xl p-6 transition-all duration-300;
 }
 
 .glass-hover {

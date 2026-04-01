@@ -72,7 +72,7 @@ export const PerformanceChart = ({ isConnected = false, trades = [] }: { isConne
   return (
     <Card className="flex flex-col h-full relative p-8">
       {!isConnected && trades.length === 0 && (
-        <div className="absolute inset-0 z-20 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-md flex items-center justify-center rounded-[2rem]">
+        <div className="absolute inset-0 z-20 bg-background/80 backdrop-blur-md flex items-center justify-center rounded-[2rem]">
           <div className="text-center p-6 bg-surface border border-brand-primary/20 shadow-premium rounded-2xl">
             <p className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em]">Connect MT5 to see performance</p>
           </div>
@@ -83,7 +83,7 @@ export const PerformanceChart = ({ isConnected = false, trades = [] }: { isConne
           <div className="w-2 h-8 bg-brand-primary rounded-full" />
           <h3 className="label-text">Performance Analytics</h3>
         </div>
-        <div className="flex bg-theme-surface-light/50 dark:bg-theme-surface-dark/50 p-1 rounded-2xl label-text">
+        <div className="flex bg-surface-muted p-1 rounded-2xl label-text">
           {ranges.map((range) => (
             <button
               key={range}
@@ -91,7 +91,7 @@ export const PerformanceChart = ({ isConnected = false, trades = [] }: { isConne
               className={`px-4 py-2 rounded-xl transition-all ${
                 activeRange === range 
                   ? 'bg-brand-primary text-white shadow-premium' 
-                  : 'hover:text-theme-text-primary-light dark:hover:text-theme-text-primary-dark'
+                  : 'hover:text-text-primary'
               }`}
             >
               {range}
@@ -108,45 +108,45 @@ export const PerformanceChart = ({ isConnected = false, trades = [] }: { isConne
           >
             <defs>
               <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#6366F1" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#6366F1" stopOpacity={0}/>
+                <stop offset="5%" stopColor="var(--brand-primary)" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="var(--brand-primary)" stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-theme-border-light/20 dark:text-theme-border-dark/20" />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-border/20" />
             <XAxis 
               dataKey="name" 
               axisLine={false} 
               tickLine={false} 
               tick={{ fontSize: 10, fill: 'currentColor', fontWeight: 700 }}
-              className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark"
+              className="text-text-secondary"
               dy={15}
             />
             <YAxis 
               axisLine={false} 
               tickLine={false} 
               tick={{ fontSize: 10, fill: 'currentColor', fontWeight: 700 }}
-              className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark"
+              className="text-text-secondary"
               tickFormatter={(value) => `$${value}`}
             />
             <Tooltip 
               formatter={(value: number) => [`$${value.toLocaleString()}`, 'Cumulative P&L']}
               contentStyle={{ 
                 borderRadius: '20px', 
-                border: '1px solid var(--color-theme-border-dark)', 
-                backgroundColor: 'var(--color-theme-surface-dark)',
+                border: '1px solid var(--border)', 
+                backgroundColor: 'var(--surface)',
                 backdropFilter: 'blur(12px)',
-                color: '#f8fafc',
+                color: 'var(--text-primary)',
                 boxShadow: '0 20px 40px -15px rgba(0, 0, 0, 0.5)',
                 padding: '12px 16px',
                 fontSize: '12px',
                 fontWeight: 'bold'
               }}
-              itemStyle={{ color: '#6366f1' }}
+              itemStyle={{ color: 'var(--brand-primary)' }}
             />
             <Area 
               type="monotone" 
               dataKey="value" 
-              stroke="#6366F1" 
+              stroke="var(--brand-primary)" 
               strokeWidth={4}
               fillOpacity={1} 
               fill="url(#colorValue)" 

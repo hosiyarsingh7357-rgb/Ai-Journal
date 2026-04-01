@@ -72,21 +72,34 @@ export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) =>
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="flex-1 overflow-y-auto p-4 lg:p-8 bg-background dark:bg-background-dark"
+      className="flex-1 overflow-y-auto p-4 lg:p-8 bg-background"
     >
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header Section */}
+      {(!trades || trades.length === 0) ? (
+        <div className="flex flex-col items-center justify-center h-[80vh] text-center space-y-6">
+          <div className="w-20 h-20 bg-brand-primary/10 text-brand-primary rounded-full flex items-center justify-center mx-auto shadow-premium border border-brand-primary/30">
+            <PieChart className="w-10 h-10" />
+          </div>
+          <div>
+            <h3 className="text-2xl font-black text-text-primary">Welcome to Your Dashboard</h3>
+            <p className="text-text-secondary mt-2 font-medium max-w-md mx-auto">
+              You don't have any trades yet. Connect your broker or add a trade manually to start seeing your analytics.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="max-w-7xl mx-auto space-y-8">
+          {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <h1 className="text-3xl font-bold text-text-primary dark:text-text-primary-dark">Welcome back, <span className="text-brand-primary">Trader</span></h1>
-            <p className="text-text-secondary dark:text-text-secondary-dark mt-1">Your psychological edge is being analyzed in real-time.</p>
+            <h1 className="text-3xl font-bold text-text-primary">Welcome back, <span className="text-brand-primary">Trader</span></h1>
+            <p className="text-text-secondary mt-1">Your psychological edge is being analyzed in real-time.</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="bg-surface dark:bg-surface-dark text-orange-500 px-5 py-2.5 rounded-2xl flex items-center gap-2 border border-orange-500/20 shadow-premium">
-              <Flame className="w-5 h-5 fill-orange-500" />
+            <div className="bg-surface text-status-warning px-5 py-2.5 rounded-2xl flex items-center gap-2 border border-status-warning/20 shadow-premium">
+              <Flame className="w-5 h-5 fill-status-warning" />
               <span className="font-black text-xs uppercase tracking-widest">12 DAY STREAK</span>
             </div>
-            <div className="bg-surface dark:bg-surface-dark text-brand-primary px-5 py-2.5 rounded-2xl flex items-center gap-2 border border-brand-primary/20 shadow-premium">
+            <div className="bg-surface text-brand-primary px-5 py-2.5 rounded-2xl flex items-center gap-2 border border-brand-primary/20 shadow-premium">
               <Calendar className="w-5 h-5" />
               <span className="font-black text-xs uppercase tracking-widest">MAR 30</span>
             </div>
@@ -100,7 +113,7 @@ export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) =>
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <Card className="p-10 relative overflow-hidden group border-brand-primary/30 bg-surface dark:bg-surface-dark shadow-premium">
+            <Card className="p-10 relative overflow-hidden group border-brand-primary/30 bg-surface shadow-premium">
               <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 blur-[100px] -mr-32 -mt-32 rounded-full group-hover:bg-brand-primary/10 transition-colors" />
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-6">
@@ -109,7 +122,7 @@ export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) =>
                   </div>
                   <h3 className="text-xs font-bold uppercase tracking-widest text-brand-primary">AI Intelligence Summary</h3>
                 </div>
-                <p className="text-xl font-bold text-text-primary dark:text-text-primary-dark leading-relaxed max-w-4xl">{report}</p>
+                <p className="text-xl font-bold text-text-primary leading-relaxed max-w-4xl">{report}</p>
                 <div className="mt-8 flex items-center gap-4">
                   <button className="text-[10px] font-black text-brand-primary flex items-center gap-2 hover:gap-3 transition-all uppercase tracking-widest">
                     VIEW FULL PSYCHOLOGY REPORT <ArrowRight className="w-4 h-4" />
@@ -158,8 +171,8 @@ export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) =>
             {/* Mood Tracker */}
             <Card className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-text-secondary dark:text-text-secondary-dark">Current Mood</h3>
-                <Smile className="w-4 h-4 text-text-secondary dark:text-text-secondary-dark" />
+                <h3 className="text-xs font-bold uppercase tracking-widest text-text-secondary">Current Mood</h3>
+                <Smile className="w-4 h-4 text-text-secondary" />
               </div>
               <div className="flex justify-between items-center mb-6">
                 {['😫', '😕', '😐', '🙂', '🤩'].map((emoji, i) => (
@@ -169,29 +182,29 @@ export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) =>
                       "w-10 h-10 rounded-2xl flex items-center justify-center text-xl transition-all hover:scale-110 active:scale-95",
                       i === 3 
                         ? "bg-brand-primary text-white shadow-premium" 
-                        : "bg-surface-muted dark:bg-surface-muted-dark hover:bg-border dark:hover:bg-border-dark"
+                        : "bg-surface-muted hover:bg-border"
                     )}
                   >
                     {emoji}
                   </button>
                 ))}
               </div>
-              <p className="text-[10px] text-text-secondary dark:text-text-secondary-dark font-medium text-center italic">"Your mood is 15% more positive than last week."</p>
+              <p className="text-[10px] text-text-secondary font-medium text-center italic">"Your mood is 15% more positive than last week."</p>
             </Card>
 
             {/* AI Suggestions */}
             <Card className="p-6 bg-brand-primary text-white border-none shadow-premium relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-theme-surface-light/10 dark:bg-theme-surface-dark/10 blur-3xl -mr-16 -mt-16" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-3xl -mr-16 -mt-16" />
               <div className="relative z-10">
                 <div className="flex items-center gap-2 mb-4">
-                  <Sparkles className="w-4 h-4 text-theme-text-secondary-dark" />
-                  <h3 className="text-xs font-bold uppercase tracking-widest text-theme-text-primary-dark">AI Suggestions</h3>
+                  <Sparkles className="w-4 h-4 text-white/70" />
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-white">AI Suggestions</h3>
                 </div>
                 <div className="space-y-4">
-                  <div className="p-3 rounded-xl bg-theme-surface-light/10 dark:bg-theme-surface-dark/10 border border-theme-border-light/20 dark:border-theme-border-dark/20 text-xs font-bold leading-relaxed">
+                  <div className="p-3 rounded-xl bg-white/10 border border-white/20 text-xs font-bold leading-relaxed">
                     Reduce position size on GBPUSD. Your win rate drops significantly after 3 consecutive wins.
                   </div>
-                  <div className="p-3 rounded-xl bg-theme-surface-light/10 dark:bg-theme-surface-dark/10 border border-theme-border-light/20 dark:border-theme-border-dark/20 text-xs font-bold leading-relaxed">
+                  <div className="p-3 rounded-xl bg-white/10 border border-white/20 text-xs font-bold leading-relaxed">
                     Take a 15-minute break. You've been staring at the charts for 4 hours.
                   </div>
                 </div>
@@ -205,6 +218,7 @@ export const Dashboard = ({ isConnected = false }: { isConnected?: boolean }) =>
           </div>
         </div>
       </div>
+      )}
     </motion.div>
   );
 };

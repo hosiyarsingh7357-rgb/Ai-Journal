@@ -154,7 +154,7 @@ export default function App() {
 
   if (loading || isAppLoading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-background dark:bg-background-dark text-text-primary dark:text-text-primary-dark">
+      <div className="flex items-center justify-center h-screen bg-background text-text-primary">
         <BackgroundAnimation />
         <div className="animate-spin w-12 h-12 border-4 border-brand-primary border-t-transparent rounded-full"></div>
       </div>
@@ -163,11 +163,11 @@ export default function App() {
 
   if (verificationEmailSent || (user && !user.emailVerified)) {
     return (
-      <div className="flex items-center justify-center h-screen bg-background dark:bg-background-dark text-text-primary dark:text-text-primary-dark">
+      <div className="flex items-center justify-center h-screen bg-background text-text-primary">
         <BackgroundAnimation />
         <Card className="p-8 flex flex-col items-center gap-6 w-full max-w-sm relative z-10 text-center" hoverable={false}>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">Ai Journal</h1>
-          <p className="body-text">
+          <p className="text-text-secondary">
             {verificationEmailSent 
               ? `We have sent you a verification email. Please verify it and log in.`
               : `Your email is not verified. Please check your inbox for a verification email.`
@@ -195,20 +195,20 @@ export default function App() {
   }
 
   return (
-    <div className="relative min-h-screen bg-background dark:bg-background-dark text-text-primary dark:text-text-primary-dark transition-colors duration-300">
+    <div className="relative min-h-screen bg-background text-text-primary transition-colors duration-300">
       <div className="absolute inset-0 -z-10">
         <BackgroundAnimation />
       </div>
       <div className="relative z-10 flex h-screen overflow-hidden">
         {isSyncing && (
-          <div className="fixed inset-0 flex items-center justify-center bg-background/60 dark:bg-background-dark/60 z-50 backdrop-blur-sm">
+          <div className="fixed inset-0 flex items-center justify-center bg-background/60 z-50 backdrop-blur-sm">
             <div className="animate-spin w-16 h-16 border-4 border-brand-primary border-t-transparent rounded-full"></div>
           </div>
         )}
 
         {isSidebarOpen && (
           <div 
-            className="fixed inset-0 bg-background-dark/50 backdrop-blur-sm z-40 lg:hidden transition-opacity"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden transition-opacity"
             onClick={() => setSidebarOpen(false)}
           />
         )}

@@ -42,11 +42,16 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showDetail, setShowDetail] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>(''); // YYYY-MM-DD
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setIsLoading(false);
+      return;
+    }
     const unsubscribe = subscribeToJournals(user.uid, (data) => {
       setJournals(data);
+      setIsLoading(false);
     });
     return unsubscribe;
   }, [user]);
@@ -240,7 +245,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                 onChange={(e) => setSelectedDate(e.target.value)}
                 className="absolute inset-0 opacity-0 cursor-pointer z-10"
               />
-              <button className="p-2 bg-secondary border border-border rounded-xl text-muted-foreground hover:text-brand-primary transition-all shadow-sm">
+              <button className="p-2 bg-surface-muted border border-border rounded-xl text-text-muted hover:text-brand-primary transition-all shadow-sm">
                 <CalendarIcon className="w-4 h-4" />
               </button>
               {selectedDate && (
@@ -265,7 +270,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                   "px-4 py-1.5 text-[10px] font-black rounded-lg uppercase tracking-wider transition-all",
                   activeTab === tab
                     ? "bg-brand-primary text-white shadow-premium"
-                    : "bg-secondary text-muted-foreground border border-border hover:text-foreground"
+                    : "bg-surface-muted text-text-muted border border-border hover:text-text-primary"
                 )}
               >
                 {tab}
@@ -285,7 +290,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                       "px-3 py-1 text-[10px] font-bold rounded uppercase transition-all",
                       activeFilter === filter
                         ? "bg-brand-primary text-white shadow-premium"
-                        : "bg-secondary text-muted-foreground border border-border hover:text-foreground"
+                        : "bg-surface-muted text-text-muted border border-border hover:text-text-primary"
                     )}
                   >
                     {filter}
@@ -297,14 +302,19 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
         </div>
 
         <div className="flex-1 overflow-y-auto custom-scrollbar">
-          {activeTab === 'JOURNAL' ? (
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center h-full p-8 space-y-4">
+              <div className="w-10 h-10 border-4 border-border border-t-brand-primary rounded-full animate-spin" />
+              <p className="text-xs text-text-muted font-medium animate-pulse">Loading entries...</p>
+            </div>
+          ) : activeTab === 'JOURNAL' ? (
             filteredEntries.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4">
-                <div className="w-16 h-16 rounded-3xl bg-secondary border border-border flex items-center justify-center mb-2">
-                  <BookOpen className="w-8 h-8 text-muted-foreground" />
+                <div className="w-16 h-16 rounded-3xl bg-surface-muted border border-border flex items-center justify-center mb-2">
+                  <BookOpen className="w-8 h-8 text-text-muted" />
                 </div>
-                <h3 className="text-sm font-bold text-foreground">Your journal is waiting...</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">"The first step to mastery is awareness. Start writing your first thought about the markets today."</p>
+                <h3 className="text-sm font-bold text-text-primary">No entries yet.</h3>
+                <p className="text-xs text-text-muted leading-relaxed">Start writing your first thought.</p>
                 <button 
                   onClick={() => { setEditingEntry(null); setIsModalOpen(true); }}
                   className="text-xs font-black text-brand-primary uppercase tracking-widest hover:text-brand-secondary transition-colors"
@@ -318,47 +328,47 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                   key={entry.id}
                   onClick={() => handleSelectEntry(entry.id)}
                   className={cn(
-                    "p-4 lg:p-5 cursor-pointer transition-all border-b border-border hover:bg-secondary",
-                    selectedId === entry.id ? "bg-secondary shadow-premium border-l-4 border-l-brand-primary" : ""
+                    "p-4 lg:p-5 cursor-pointer transition-all border-b border-border hover:bg-surface-muted",
+                    selectedId === entry.id ? "bg-surface-muted shadow-premium border-l-4 border-l-brand-primary" : ""
                   )}
                 >
                   <div className="flex justify-between items-start mb-1">
                     <span className={cn(
                       "text-sm font-bold",
-                      selectedId === entry.id ? "text-brand-primary" : "text-foreground"
+                      selectedId === entry.id ? "text-brand-primary" : "text-text-primary"
                     )}>
                       {entry.instrument}
                     </span>
                     <span className={cn(
                       "text-xs font-bold",
                       entry.status === 'won' ? "text-status-success" : 
-                      entry.status === 'lost' ? "text-status-danger" : "text-muted-foreground"
+                      entry.status === 'lost' ? "text-status-danger" : "text-text-muted"
                     )}>
                       {entry.pnl || 'N/A'}
                     </span>
                   </div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-[11px] text-muted-foreground font-medium">{entry.date} • {entry.time}</span>
+                    <span className="text-[11px] text-text-muted font-medium">{entry.date} • {entry.time}</span>
                     <span className={cn(
                       "px-1.5 py-0.5 text-[9px] font-bold rounded uppercase",
                       entry.status === 'won' ? "bg-status-success/10 text-status-success" : 
-                      entry.status === 'lost' ? "bg-status-danger/10 text-status-danger" : "bg-secondary text-muted-foreground border border-border"
+                      entry.status === 'lost' ? "bg-status-danger/10 text-status-danger" : "bg-surface-muted text-text-muted border border-border"
                     )}>
                       {entry.status === 'won' ? 'Trade Won' : entry.status === 'lost' ? 'Trade Lost' : 'No Trade'}
                     </span>
                   </div>
-                  <p className="text-[11px] text-muted-foreground line-clamp-1 italic">"{entry.tradeNotes || 'No notes provided.'}"</p>
+                  <p className="text-[11px] text-text-muted line-clamp-1 italic">"{entry.tradeNotes || 'No notes provided.'}"</p>
                 </div>
               ))
             )
           ) : (
             filteredTrades.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4">
-                <div className="w-16 h-16 rounded-3xl bg-secondary border border-border flex items-center justify-center mb-2">
-                  <TrendingUp className="w-8 h-8 text-muted-foreground" />
+                <div className="w-16 h-16 rounded-3xl bg-surface-muted border border-border flex items-center justify-center mb-2">
+                  <TrendingUp className="w-8 h-8 text-text-muted" />
                 </div>
-                <h3 className="text-sm font-bold text-foreground">No trades recorded yet</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">Sync your account or manually add your first trade to see the analysis.</p>
+                <h3 className="text-sm font-bold text-text-primary">No trades recorded yet</h3>
+                <p className="text-xs text-text-muted leading-relaxed">Sync your account or manually add your first trade to see the analysis.</p>
               </div>
             ) : (
               filteredTrades.map((trade, index) => (
@@ -366,14 +376,14 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                 key={trade.id || index}
                 onClick={() => handleSelectEntry(trade.id)}
                 className={cn(
-                  "p-4 lg:p-5 border-b border-border hover:bg-secondary transition-all cursor-pointer",
-                  selectedId === trade.id ? "bg-secondary shadow-premium border-l-4 border-l-brand-primary" : ""
+                  "p-4 lg:p-5 border-b border-border hover:bg-surface-muted transition-all cursor-pointer",
+                  selectedId === trade.id ? "bg-surface-muted shadow-premium border-l-4 border-l-brand-primary" : ""
                 )}
               >
                 <div className="flex justify-between items-start mb-1">
                   <span className={cn(
                     "text-sm font-bold",
-                    selectedId === trade.id ? "text-brand-primary" : "text-foreground"
+                    selectedId === trade.id ? "text-brand-primary" : "text-text-primary"
                   )}>{trade.symbol}</span>
                   <span className={cn(
                     "text-xs font-bold",
@@ -383,20 +393,20 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                   </span>
                 </div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-[11px] text-muted-foreground font-medium">
+                  <span className="text-[11px] text-text-muted font-medium">
                     {trade.date || (trade.entryDate ? new Date(trade.entryDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—')} • 
                     {trade.time || (trade.entryDate ? new Date(trade.entryDate).toLocaleTimeString('en-US', { hour12: false }) : '—')}
                   </span>
                   <span className={cn(
                     "px-1.5 py-0.5 text-[9px] font-bold rounded uppercase",
                     trade.isWinner || parseFloat((trade.pnl || "0").replace(/[$,+]/g, '')) > 0 ? "bg-status-success/10 text-status-success" : 
-                    trade.isWinner === false || parseFloat((trade.pnl || "0").replace(/[$,+]/g, '')) < 0 ? "bg-status-danger/10 text-status-danger" : "bg-secondary text-muted-foreground border border-border"
+                    trade.isWinner === false || parseFloat((trade.pnl || "0").replace(/[$,+]/g, '')) < 0 ? "bg-status-danger/10 text-status-danger" : "bg-surface-muted text-text-muted border border-border"
                   )}>
                     {trade.type} {trade.size}
                   </span>
                 </div>
                 <div className="bg-background p-2 rounded-lg border border-border">
-                  <p className="text-[10px] text-muted-foreground italic line-clamp-2">
+                  <p className="text-[10px] text-text-muted italic line-clamp-2">
                     {trade.notes || 'No notes added yet...'}
                   </p>
                 </div>
@@ -420,20 +430,20 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                   <div className="flex items-center gap-3 mb-2">
                     <button 
                       onClick={() => setShowDetail(false)}
-                      className="lg:hidden p-1.5 -ml-1.5 hover:bg-secondary rounded-lg text-muted-foreground"
+                      className="lg:hidden p-1.5 -ml-1.5 hover:bg-surface-muted rounded-lg text-text-muted"
                     >
                       <ChevronLeft className="w-5 h-5" />
                     </button>
                     <span className={cn(
                       "px-2 py-1 text-[10px] font-bold rounded uppercase",
                       selectedEntry?.status === 'won' ? "bg-status-success/20 text-status-success" : 
-                      selectedEntry?.status === 'lost' ? "bg-status-danger/20 text-status-danger" : "bg-secondary text-muted-foreground border border-border"
+                      selectedEntry?.status === 'lost' ? "bg-status-danger/20 text-status-danger" : "bg-surface-muted text-text-muted border border-border"
                     )}>
                       {selectedEntry?.status?.toUpperCase() || 'N/A'}
                     </span>
-                    <span className="text-sm font-medium text-muted-foreground">{selectedEntry?.date}</span>
+                    <span className="text-sm font-medium text-text-muted">{selectedEntry?.date}</span>
                   </div>
-                  <h2 className="text-2xl lg:text-3xl font-black text-foreground tracking-tight">
+                  <h2 className="text-2xl lg:text-3xl font-black text-text-primary tracking-tight">
                     {selectedEntry?.instrument} - {selectedEntry?.title}
                   </h2>
                   <div className="flex flex-wrap items-center gap-2 lg:gap-4 mt-3">
@@ -448,19 +458,19 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                 <div className="flex items-center gap-2 lg:gap-3 w-full sm:w-auto">
                   <button 
                     onClick={handleEditEntry}
-                    className="p-2 border border-border rounded-lg hover:bg-secondary transition-all text-muted-foreground hover:text-brand-primary"
+                    className="p-2 border border-border rounded-lg hover:bg-surface-muted transition-all text-text-muted hover:text-brand-primary"
                   >
                     <Edit3 className="w-4 h-4" />
                   </button>
                   {selectedEntry.type !== 'trade-note' && (
                     <button 
                       onClick={() => handleDeleteEntry(selectedEntry.id)}
-                      className="p-2 border border-border rounded-lg hover:bg-status-danger/10 transition-all text-muted-foreground hover:text-status-danger"
+                      className="p-2 border border-border rounded-lg hover:bg-status-danger/10 transition-all text-text-muted hover:text-status-danger"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   )}
-                  <button className="p-2 border border-border rounded-lg hover:bg-secondary transition-all text-muted-foreground">
+                  <button className="p-2 border border-border rounded-lg hover:bg-surface-muted transition-all text-text-muted">
                     <Share2 className="w-4 h-4" />
                   </button>
                 </div>
@@ -473,7 +483,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:gap-4">
                     <Card className="p-4 rounded-2xl">
                       <p className="label-text mb-1">Symbol</p>
-                      <p className="text-lg font-black text-foreground">{selectedEntry?.instrument}</p>
+                      <p className="text-lg font-black text-text-primary">{selectedEntry?.instrument}</p>
                     </Card>
                     <Card className="p-4 rounded-2xl">
                       <p className="label-text mb-1">Type</p>
@@ -486,7 +496,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                     </Card>
                     <Card className="p-4 rounded-2xl">
                       <p className="label-text mb-1">Size</p>
-                      <p className="text-lg font-black text-foreground">{selectedEntry?.volume}</p>
+                      <p className="text-lg font-black text-text-primary">{selectedEntry?.volume}</p>
                     </Card>
                     <Card className="p-4 rounded-2xl">
                       <p className="label-text mb-1">Net P&L</p>
@@ -507,12 +517,12 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                       </h3>
                       <div className="space-y-3">
                         <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">Entry Price</span>
-                          <span className="text-xs font-black text-foreground">{selectedEntry?.entryPrice || '—'}</span>
+                          <span className="text-xs text-text-muted">Entry Price</span>
+                          <span className="text-xs font-black text-text-primary">{selectedEntry?.entryPrice || '—'}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">Entry Date</span>
-                          <span className="text-xs font-black text-foreground">
+                          <span className="text-xs text-text-muted">Entry Date</span>
+                          <span className="text-xs font-black text-text-primary">
                             {selectedEntry?.entryDateRaw ? new Date(selectedEntry.entryDateRaw).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'}
                           </span>
                         </div>
@@ -524,12 +534,12 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                       </h3>
                       <div className="space-y-3">
                         <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">Exit Price</span>
-                          <span className="text-xs font-black text-foreground">{selectedEntry?.exitPrice || '—'}</span>
+                          <span className="text-xs text-text-muted">Exit Price</span>
+                          <span className="text-xs font-black text-text-primary">{selectedEntry?.exitPrice || '—'}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">Exit Date</span>
-                          <span className="text-xs font-black text-foreground">
+                          <span className="text-xs text-text-muted">Exit Date</span>
+                          <span className="text-xs font-black text-text-primary">
                             {selectedEntry?.exitDateRaw ? new Date(selectedEntry.exitDateRaw).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'}
                           </span>
                         </div>
@@ -538,7 +548,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                   </div>
 
                   {/* AI Analysis Section */}
-                  <section className="relative overflow-hidden rounded-[2rem] border border-brand-primary/20 bg-secondary p-6 lg:p-8 shadow-premium">
+                  <section className="relative overflow-hidden rounded-[2rem] border border-brand-primary/20 bg-surface-muted p-6 lg:p-8 shadow-premium">
                     <div className="absolute top-0 right-0 p-4 opacity-5">
                       <Brain className="w-24 h-24 text-brand-primary" />
                     </div>
@@ -548,7 +558,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                           <Brain className="w-5 h-5 text-brand-primary" />
                         </div>
                         <div>
-                          <h3 className="text-sm font-black text-foreground uppercase tracking-widest">AI Psychological Analysis</h3>
+                          <h3 className="text-sm font-black text-text-primary uppercase tracking-widest">AI Psychological Analysis</h3>
                           <p className="text-[10px] text-brand-primary/60 font-bold uppercase tracking-tighter">Powered by Gemini Pro</p>
                         </div>
                       </div>
@@ -568,7 +578,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                           </div>
                           <div className="space-y-2">
                             <p className="label-text">Risk Assessment</p>
-                            <p className="text-xs text-foreground font-medium leading-relaxed">
+                            <p className="text-xs text-text-primary font-medium leading-relaxed">
                               Your execution was precise. However, notice the slight hesitation before entry. This suggests a minor lack of confidence in your setup.
                             </p>
                           </div>
@@ -576,8 +586,8 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
 
                         <div className="pt-4 border-t border-border">
                           <p className="label-text mb-3">AI Recommendation</p>
-                          <div className="bg-secondary rounded-2xl p-4 border border-border shadow-sm">
-                            <p className="text-xs text-foreground italic leading-relaxed">
+                          <div className="bg-surface-muted rounded-2xl p-4 border border-border shadow-sm">
+                            <p className="text-xs text-text-primary italic leading-relaxed">
                               "You're performing well under pressure. To improve, try reducing your position size by 20% on the next trade to eliminate that entry hesitation."
                             </p>
                           </div>
@@ -590,9 +600,9 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                   <section>
                     <h3 className="label-text mb-4 flex items-center gap-2">
                       <Layers className="w-3 h-3 text-brand-primary" /> Trade Notes & Logic
-                    </h3>
-                    <div className="bg-secondary p-6 rounded-[2rem] border border-border shadow-premium">
-                      <p className="text-sm text-foreground leading-relaxed">
+                     </h3>
+                    <div className="bg-surface-muted p-6 rounded-[2rem] border border-border shadow-premium">
+                      <p className="text-sm text-text-primary leading-relaxed">
                         {selectedEntry?.tradeNotes || 'No notes provided.'}
                       </p>
                     </div>
@@ -628,8 +638,8 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
             </>
           ) : (
             <div className="flex flex-col items-center justify-center h-[60vh] text-center space-y-6">
-              <div className="w-24 h-24 rounded-[2.5rem] bg-secondary border border-border flex items-center justify-center shadow-premium">
-                <BookOpen className="w-10 h-10 text-muted-foreground opacity-50" />
+              <div className="w-24 h-24 rounded-[2.5rem] bg-surface-muted border border-border flex items-center justify-center shadow-premium">
+                <BookOpen className="w-10 h-10 text-text-muted opacity-50" />
               </div>
               <div>
                 <h2 className="heading-2 mb-2">Select an entry</h2>
@@ -650,18 +660,18 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
 
       {/* New Entry Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-md z-[60] flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-[60] flex items-center justify-center p-4">
           <Card className="w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200 p-0 rounded-[2.5rem]">
             <div className="p-6 border-b border-border flex justify-between items-center bg-background">
               <h3 className="heading-3">{editingEntry ? 'Edit Journal Entry' : 'New Journal Entry'}</h3>
               <button 
                 onClick={() => { setIsModalOpen(false); setEditingEntry(null); }} 
-                className="p-2 hover:bg-secondary rounded-xl text-muted-foreground transition-colors"
+                className="p-2 hover:bg-surface-muted rounded-xl text-text-muted transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto custom-scrollbar bg-secondary">
+            <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto custom-scrollbar bg-surface-muted">
               <div className="grid grid-cols-2 gap-4">
                 <Input 
                   label="Instrument Symbol"
@@ -670,11 +680,11 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                   id="instrument-input"
                 />
                 <div className="w-full space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block ml-1">Trade Type</label>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-text-muted block ml-1">Trade Type</label>
                   <select 
                     id="trade-type-input"
                     defaultValue={editingEntry?.tradeType || 'BUY'}
-                    className="w-full h-11 px-4 rounded-xl bg-background border border-border text-foreground focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary outline-none transition-all duration-200 text-sm font-medium"
+                    className="w-full h-11 px-4 rounded-xl bg-background border border-border text-text-primary focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary outline-none transition-all duration-200 text-sm font-medium"
                   >
                     <option value="BUY">BUY</option>
                     <option value="SELL">SELL</option>
@@ -728,17 +738,17 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
               </div>
 
               <div className="w-full space-y-1.5">
-                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block ml-1">Trade Notes & Logic</label>
+                <label className="text-[10px] font-black uppercase tracking-widest text-text-muted block ml-1">Trade Notes & Logic</label>
                 <textarea 
                   rows={4} 
                   placeholder="Describe your trade logic and emotions..." 
                   defaultValue={editingEntry?.tradeNotes || ''}
                   id="trade-notes-textarea"
-                  className="w-full px-4 py-2.5 rounded-xl bg-background border border-border focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary outline-none transition-all resize-none text-sm text-foreground placeholder:text-muted-foreground/70"
+                  className="w-full px-4 py-2.5 rounded-xl bg-background border border-border focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary outline-none transition-all resize-none text-sm text-text-primary placeholder:text-text-muted/70"
                 ></textarea>
               </div>
               <div className="w-full space-y-1.5">
-                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block ml-1">Evidence Screenshot</label>
+                <label className="text-[10px] font-black uppercase tracking-widest text-text-muted block ml-1">Evidence Screenshot</label>
                 <input 
                   type="file" 
                   accept="image/*"
@@ -755,7 +765,7 @@ export const JournalPage = ({ tradesList = [], onUpdateTrade }: { tradesList?: a
                       }
                     }
                   }}
-                  className="w-full px-4 py-2.5 rounded-xl bg-background border border-border focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary outline-none transition-all text-sm text-foreground" 
+                  className="w-full px-4 py-2.5 rounded-xl bg-background border border-border focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary outline-none transition-all text-sm text-text-primary" 
                 />
                 <input 
                   type="hidden" 

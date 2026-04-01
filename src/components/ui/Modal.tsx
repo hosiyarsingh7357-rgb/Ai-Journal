@@ -32,7 +32,7 @@ export const Modal = ({ isOpen, onClose, title, children, className }: ModalProp
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-background/80 dark:bg-background-dark/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -43,11 +43,11 @@ export const Modal = ({ isOpen, onClose, title, children, className }: ModalProp
               className
             )}
           >
-            <div className="flex items-center justify-between p-6 border-b border-border dark:border-border-dark">
+            <div className="flex items-center justify-between p-6 border-b border-border">
               {title && <h3 className="heading-3">{title}</h3>}
               <button
                 onClick={onClose}
-                className="p-2 rounded-lg hover:bg-surface-muted dark:hover:bg-surface-muted-dark transition-colors text-text-muted dark:text-text-muted-dark hover:text-text-primary dark:hover:text-text-primary-dark"
+                className="p-2 rounded-lg hover:bg-surface-muted transition-colors text-text-muted hover:text-text-primary"
               >
                 <X size={18} />
               </button>

@@ -227,6 +227,7 @@ export const TradesPage = ({
 
   const [report, setReport] = useState<any>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isConnected && !isSyncing) {
@@ -237,14 +238,18 @@ export const TradesPage = ({
   const handleRefreshAnalysis = async () => {
     if (!tradesList || tradesList.length === 0) return;
     setIsAnalyzing(true);
+    setAnalysisError(null);
     try {
       const { generateAIReport } = await import('../services/ai');
       const res = await generateAIReport(tradesList);
       if (res) {
         setReport(JSON.parse(res));
+      } else {
+        setAnalysisError("Failed to generate AI report.");
       }
     } catch (e) {
       console.error(e);
+      setAnalysisError("An error occurred while analyzing trades.");
     }
     setIsAnalyzing(false);
   };
@@ -258,22 +263,22 @@ export const TradesPage = ({
   const displayTrades = processedTrades;
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 lg:p-8 space-y-8 lg:space-y-10 no-scrollbar relative bg-background dark:bg-background-dark">
+    <div className="flex-1 overflow-y-auto p-4 lg:p-8 space-y-8 lg:space-y-10 no-scrollbar relative bg-background">
       {(isSyncing || (!isConnected && tradesList.length === 0 && !dismissOverlay)) && (
-        <div className="absolute inset-0 z-50 bg-background/80 dark:bg-background-dark/80 backdrop-blur-md flex items-center justify-center p-6 text-center">
+        <div className="absolute inset-0 z-50 bg-background/80 backdrop-blur-md flex items-center justify-center p-6 text-center">
           {isSyncing ? (
-            <Card className="p-10 max-w-sm w-full space-y-6 animate-in zoom-in-95 duration-300 border-border dark:border-border-dark bg-surface dark:bg-surface-dark shadow-premium">
-              <div className="w-20 h-20 border-4 border-border dark:border-border-dark border-t-brand-primary rounded-full animate-spin mx-auto" />
+            <Card className="p-10 max-w-sm w-full space-y-6 animate-in zoom-in-95 duration-300 border-border bg-surface shadow-premium">
+              <div className="w-20 h-20 border-4 border-border border-t-brand-primary rounded-full animate-spin mx-auto" />
               <div>
-                <h3 className="text-xl font-black text-text-primary dark:text-text-primary-dark">Syncing History</h3>
-                <p className="text-text-secondary dark:text-text-secondary-dark mt-2 text-sm font-medium">Fetching your latest trades from MT5...</p>
+                <h3 className="text-xl font-black text-text-primary">Syncing History</h3>
+                <p className="text-text-secondary mt-2 text-sm font-medium">Fetching your latest trades from MT5...</p>
               </div>
             </Card>
           ) : (
-            <Card className="p-10 max-w-md w-full space-y-6 animate-in zoom-in-95 duration-300 relative border-border dark:border-border-dark bg-surface dark:bg-surface-dark shadow-premium">
+            <Card className="p-10 max-w-md w-full space-y-6 animate-in zoom-in-95 duration-300 relative border-border bg-surface shadow-premium">
               <button 
                 onClick={() => setDismissOverlay(true)}
-                className="absolute top-4 right-4 p-2 hover:bg-surface-muted dark:hover:bg-surface-muted-dark rounded-xl transition-colors text-text-secondary dark:text-text-secondary-dark hover:text-status-danger"
+                className="absolute top-4 right-4 p-2 hover:bg-surface-muted rounded-xl transition-colors text-text-secondary hover:text-status-danger"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -281,8 +286,8 @@ export const TradesPage = ({
                 <Wallet className="w-10 h-10" />
               </div>
               <div>
-                <h3 className="text-2xl font-black text-text-primary dark:text-text-primary-dark">No Data Imported</h3>
-                <p className="text-text-secondary dark:text-text-secondary-dark mt-2 font-medium">Connect your MT4/MT5 account to automatically import your trading history and analyze your performance.</p>
+                <h3 className="text-2xl font-black text-text-primary">No Data Imported</h3>
+                <p className="text-text-secondary mt-2 font-medium">Connect your MT4/MT5 account to automatically import your trading history and analyze your performance.</p>
               </div>
               <div className="space-y-3 pt-4">
                 <Button 
@@ -293,9 +298,9 @@ export const TradesPage = ({
                   CONNECT MT5 ACCOUNT
                 </Button>
                 <div className="flex items-center gap-3 py-2">
-                  <div className="h-px bg-border dark:bg-border-dark flex-1" />
-                  <span className="text-[10px] font-bold text-text-muted dark:text-text-muted-dark uppercase tracking-widest">OR</span>
-                  <div className="h-px bg-border dark:bg-border-dark flex-1" />
+                  <div className="h-px bg-border flex-1" />
+                  <span className="text-[10px] font-bold text-text-muted uppercase tracking-widest">OR</span>
+                  <div className="h-px bg-border flex-1" />
                 </div>
                 <Button 
                   variant="outline"
@@ -313,8 +318,8 @@ export const TradesPage = ({
       {/* Page Header & Filters */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-bold text-text-primary dark:text-text-primary-dark">Trades</h1>
-          <p className="text-text-secondary dark:text-text-secondary-dark mt-1">Review and manage your institutional execution history.</p>
+          <h1 className="text-3xl font-bold text-text-primary">Trades</h1>
+          <p className="text-text-secondary mt-1">Review and manage your institutional execution history.</p>
         </div>
         <div className="flex flex-wrap items-center gap-2 lg:gap-3">
           <Button 
@@ -327,33 +332,33 @@ export const TradesPage = ({
           <div className="relative">
             <div 
               onClick={() => setShowDatePicker(!showDatePicker)}
-              className="h-10 px-3 bg-surface dark:bg-surface-dark border border-border dark:border-border-dark rounded-xl shadow-sm flex items-center gap-2 cursor-pointer hover:bg-surface-muted dark:hover:bg-surface-muted-dark transition-colors"
+              className="h-10 px-3 bg-surface border border-border rounded-xl shadow-sm flex items-center gap-2 cursor-pointer hover:bg-surface-muted transition-colors"
             >
-              <Calendar className="w-4 h-4 text-text-secondary dark:text-text-secondary-dark" />
-              <span className="text-xs font-bold text-text-primary dark:text-text-primary-dark">
+              <Calendar className="w-4 h-4 text-text-secondary" />
+              <span className="text-xs font-bold text-text-primary">
                 {dateRange.start && dateRange.end ? `${dateRange.start} - ${dateRange.end}` : timeframe}
               </span>
-              <ChevronRight className={cn("w-4 h-4 text-text-secondary dark:text-text-secondary-dark transition-transform", showDatePicker ? "rotate-[-90deg]" : "rotate-90")} />
+              <ChevronRight className={cn("w-4 h-4 text-text-secondary transition-transform", showDatePicker ? "rotate-[-90deg]" : "rotate-90")} />
             </div>
 
             {showDatePicker && (
-              <Card className="absolute right-0 mt-2 p-4 z-[60] w-64 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200 border-border dark:border-border-dark bg-surface dark:bg-surface-dark shadow-premium">
+              <Card className="absolute right-0 mt-2 p-4 z-[60] w-64 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200 border-border bg-surface shadow-premium">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary dark:text-text-secondary-dark">Start Date</label>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary">Start Date</label>
                   <input 
                     type="date" 
                     value={dateRange.start}
                     onChange={(e) => setDateRange({...dateRange, start: e.target.value})}
-                    className="w-full h-10 px-3 bg-background dark:bg-background-dark border border-border dark:border-border-dark rounded-lg text-xs font-bold text-text-primary dark:text-text-primary-dark outline-none focus:ring-2 focus:ring-brand-primary/50"
+                    className="w-full h-10 px-3 bg-background border border-border rounded-lg text-xs font-bold text-text-primary outline-none focus:ring-2 focus:ring-brand-primary/50"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary dark:text-text-secondary-dark">End Date</label>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary">End Date</label>
                   <input 
                     type="date" 
                     value={dateRange.end}
                     onChange={(e) => setDateRange({...dateRange, end: e.target.value})}
-                    className="w-full h-10 px-3 bg-background dark:bg-background-dark border border-border dark:border-border-dark rounded-lg text-xs font-bold text-text-primary dark:text-text-primary-dark outline-none focus:ring-2 focus:ring-brand-primary/50"
+                    className="w-full h-10 px-3 bg-background border border-border rounded-lg text-xs font-bold text-text-primary outline-none focus:ring-2 focus:ring-brand-primary/50"
                   />
                 </div>
                 <div className="flex gap-2 pt-2">
@@ -362,7 +367,7 @@ export const TradesPage = ({
                       setDateRange({ start: '', end: '' });
                       setShowDatePicker(false);
                     }}
-                    className="flex-1 py-2 text-[10px] font-bold text-text-secondary dark:text-text-secondary-dark hover:text-text-primary dark:text-text-primary-dark hover:bg-surface-muted dark:hover:bg-surface-muted-dark rounded-lg transition-colors"
+                    className="flex-1 py-2 text-[10px] font-bold text-text-secondary hover:text-text-primary hover:bg-surface-muted rounded-lg transition-colors"
                   >
                     RESET
                   </button>
@@ -399,11 +404,11 @@ export const TradesPage = ({
               onChange={(e) => setFormData({...formData, symbol: e.target.value})}
             />
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary dark:text-text-secondary-dark ml-1">Trade Type</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Trade Type</label>
               <select 
                 value={formData.type}
                 onChange={(e) => setFormData({...formData, type: e.target.value})}
-                className="w-full h-12 px-4 bg-background dark:bg-background-dark border border-border dark:border-border-dark rounded-xl focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary outline-none transition-all font-bold text-text-primary dark:text-text-primary-dark"
+                className="w-full h-12 px-4 bg-background border border-border rounded-xl focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary outline-none transition-all font-bold text-text-primary"
               >
                 <option value="BUY">BUY / LONG</option>
                 <option value="SELL">SELL / SHORT</option>
@@ -448,18 +453,18 @@ export const TradesPage = ({
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary dark:text-text-secondary-dark ml-1">Trade Notes & Logic</label>
+            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Trade Notes & Logic</label>
             <textarea 
               rows={3}
               placeholder="Describe your entry logic, emotions, and outcome..."
               value={formData.notes}
               onChange={(e) => setFormData({...formData, notes: e.target.value})}
-              className="w-full p-4 bg-background dark:bg-background-dark border border-border dark:border-border-dark rounded-2xl focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary outline-none transition-all font-medium text-text-primary dark:text-text-primary-dark placeholder:text-text-muted dark:placeholder:text-text-muted-dark resize-none"
+              className="w-full p-4 bg-background border border-border rounded-2xl focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary outline-none transition-all font-medium text-text-primary placeholder:text-text-muted resize-none"
             ></textarea>
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary dark:text-text-secondary-dark ml-1">Evidence Screenshot</label>
+            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary ml-1">Evidence Screenshot</label>
             <div 
               onClick={() => fileInputRef.current?.click()}
               className="relative group cursor-pointer"
@@ -472,11 +477,11 @@ export const TradesPage = ({
                 accept="image/*"
               />
               {screenshot ? (
-                <div className="relative aspect-video rounded-2xl overflow-hidden border-2 border-border dark:border-border-dark shadow-inner">
+                <div className="relative aspect-video rounded-2xl overflow-hidden border-2 border-border shadow-inner">
                   <img src={screenshot} alt="Preview" className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-background/40 dark:bg-background-dark/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                    <div className="bg-theme-surface-light/20 dark:bg-theme-surface-dark/20 backdrop-blur-md p-3 rounded-full border border-theme-border-light/30 dark:border-theme-border-dark/30">
-                      <Camera className="w-6 h-6 text-theme-text-primary-light dark:text-theme-text-primary-dark" />
+                  <div className="absolute inset-0 bg-background/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                    <div className="bg-surface/20 backdrop-blur-md p-3 rounded-full border border-border/30">
+                      <Camera className="w-6 h-6 text-text-primary" />
                     </div>
                   </div>
                   <button 
@@ -491,13 +496,13 @@ export const TradesPage = ({
                   </button>
                 </div>
               ) : (
-                <div className="aspect-video rounded-2xl border-2 border-dashed border-border dark:border-border-dark bg-background dark:bg-background-dark flex flex-col items-center justify-center gap-3 group-hover:border-brand-primary group-hover:bg-brand-primary/10 transition-all">
-                  <div className="w-12 h-12 rounded-2xl bg-surface dark:bg-surface-dark shadow-sm flex items-center justify-center text-text-secondary dark:text-text-secondary-dark group-hover:text-brand-primary transition-colors">
+                <div className="aspect-video rounded-2xl border-2 border-dashed border-border bg-background flex flex-col items-center justify-center gap-3 group-hover:border-brand-primary group-hover:bg-brand-primary/10 transition-all">
+                  <div className="w-12 h-12 rounded-2xl bg-surface shadow-sm flex items-center justify-center text-text-secondary group-hover:text-brand-primary transition-colors">
                     <Upload className="w-6 h-6" />
                   </div>
                   <div className="text-center">
-                    <p className="text-sm font-bold text-text-primary dark:text-text-primary-dark">Click to upload screenshot</p>
-                    <p className="text-[10px] font-bold text-text-secondary dark:text-text-secondary-dark uppercase tracking-wider mt-1">PNG, JPG up to 10MB</p>
+                    <p className="text-sm font-bold text-text-primary">Click to upload screenshot</p>
+                    <p className="text-[10px] font-bold text-text-secondary uppercase tracking-wider mt-1">PNG, JPG up to 10MB</p>
                   </div>
                 </div>
               )}
@@ -531,9 +536,9 @@ export const TradesPage = ({
         {/* Summary Stats */}
         <div className="col-span-12 lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="p-6">
-            <span className="text-xs font-bold text-text-secondary dark:text-text-secondary-dark tracking-wider uppercase">Total Volume</span>
+            <span className="text-xs font-bold text-text-secondary tracking-wider uppercase">Total Volume</span>
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-2xl font-extrabold text-text-primary dark:text-text-primary-dark">{isConnected ? stats.totalVolume : '0.00'}</span>
+              <span className="text-2xl font-extrabold text-text-primary">{isConnected ? stats.totalVolume : '0.00'}</span>
               {isConnected && (
                 <span className="text-xs font-bold text-status-success flex items-center">
                   <ArrowUp className="w-3 h-3" /> 12%
@@ -542,9 +547,9 @@ export const TradesPage = ({
             </div>
           </Card>
           <Card className="p-6">
-            <span className="text-xs font-bold text-text-secondary dark:text-text-secondary-dark tracking-wider uppercase">Win Rate</span>
+            <span className="text-xs font-bold text-text-secondary tracking-wider uppercase">Win Rate</span>
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-2xl font-extrabold text-text-primary dark:text-text-primary-dark">{isConnected ? stats.winRate : '0%'}</span>
+              <span className="text-2xl font-extrabold text-text-primary">{isConnected ? stats.winRate : '0%'}</span>
               {isConnected && (
                 <span className="text-xs font-bold text-status-success flex items-center">
                   <TrendingUp className="w-3 h-3" />
@@ -553,11 +558,11 @@ export const TradesPage = ({
             </div>
           </Card>
           <Card className="p-6">
-            <span className="text-xs font-bold text-text-secondary dark:text-text-secondary-dark tracking-wider uppercase">Total P&L</span>
+            <span className="text-xs font-bold text-text-secondary tracking-wider uppercase">Total P&L</span>
             <div className="mt-2 flex items-baseline gap-2">
               <span className={cn(
                 "text-2xl font-extrabold",
-                isConnected ? (stats.isPositive ? 'text-status-success' : 'text-status-danger') : 'text-text-primary dark:text-text-primary-dark'
+                isConnected ? (stats.isPositive ? 'text-status-success' : 'text-status-danger') : 'text-text-primary'
               )}>
                 {isConnected ? stats.totalPnL : '$0.00'}
               </span>
@@ -575,9 +580,20 @@ export const TradesPage = ({
               <Sparkles className="w-5 h-5 text-brand-primary" />
               <span className="text-xs font-bold text-brand-primary tracking-widest uppercase">AI Momentum Alert</span>
             </div>
-            <p className="text-sm font-semibold text-text-primary dark:text-text-primary-dark leading-relaxed">
-              {report?.summary || "Analyzing your trading patterns to provide real-time momentum alerts and risk warnings..."}
-            </p>
+            {isAnalyzing ? (
+              <div className="flex items-center gap-2 text-text-secondary">
+                <div className="w-4 h-4 border-2 border-border border-t-brand-primary rounded-full animate-spin" />
+                <span className="text-sm font-medium animate-pulse">Analyzing patterns...</span>
+              </div>
+            ) : analysisError ? (
+              <p className="text-sm font-semibold text-status-danger leading-relaxed">
+                {analysisError}
+              </p>
+            ) : (
+              <p className="text-sm font-semibold text-text-primary leading-relaxed">
+                {report?.summary || "Analyzing your trading patterns to provide real-time momentum alerts and risk warnings..."}
+              </p>
+            )}
           </div>
         </Card>
       </div>
@@ -590,8 +606,8 @@ export const TradesPage = ({
               <Sparkles className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="text-lg lg:text-xl font-black text-text-primary dark:text-text-primary-dark tracking-tight">AI Trade Insights</h2>
-              <p className="text-[10px] font-bold text-text-secondary dark:text-text-secondary-dark uppercase tracking-widest mt-0.5">Behavioral Analysis & Optimization</p>
+              <h2 className="text-lg lg:text-xl font-black text-text-primary tracking-tight">AI Trade Insights</h2>
+              <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mt-0.5">Behavioral Analysis & Optimization</p>
             </div>
           </div>
           <Button 
@@ -604,8 +620,13 @@ export const TradesPage = ({
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Winning Patterns */}
+        {analysisError ? (
+          <div className="p-6 bg-status-danger/10 border border-status-danger/20 rounded-2xl text-center">
+            <p className="text-sm font-bold text-status-danger">{analysisError}</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Winning Patterns */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-status-success">
               <TrendingUp className="w-4 h-4" />
@@ -617,12 +638,12 @@ export const TradesPage = ({
                   <div className="w-6 h-6 rounded-full bg-status-success/20 flex items-center justify-center text-status-success flex-shrink-0 mt-0.5">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                   </div>
-                  <p className="text-sm font-bold text-text-primary dark:text-text-primary-dark leading-relaxed">
+                  <p className="text-sm font-bold text-text-primary leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
               )) : (
-                <p className="text-sm font-bold text-text-secondary dark:text-text-secondary-dark leading-relaxed">
+                <p className="text-sm font-bold text-text-secondary leading-relaxed">
                   Connect your account and log trades to generate AI insights on your winning patterns.
                 </p>
               )}
@@ -641,12 +662,12 @@ export const TradesPage = ({
                   <div className="w-6 h-6 rounded-full bg-status-danger/20 flex items-center justify-center text-status-danger flex-shrink-0 mt-0.5">
                     <X className="w-3.5 h-3.5" />
                   </div>
-                  <p className="text-sm font-bold text-text-primary dark:text-text-primary-dark leading-relaxed">
+                  <p className="text-sm font-bold text-text-primary leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
               )) : (
-                <p className="text-sm font-bold text-text-secondary dark:text-text-secondary-dark leading-relaxed">
+                <p className="text-sm font-bold text-text-secondary leading-relaxed">
                   Connect your account and log trades to generate AI insights on your losing patterns.
                 </p>
               )}
@@ -661,18 +682,19 @@ export const TradesPage = ({
             </div>
             <div className="bg-brand-primary/10 rounded-2xl p-5 border border-brand-primary/20 space-y-4">
               {report?.actionPlan ? report.actionPlan.slice(0, 2).map((item: any, i: number) => (
-                <div key={i} className="p-3 bg-background dark:bg-background-dark rounded-xl shadow-sm border border-border dark:border-border-dark">
-                  <p className="text-xs font-bold text-text-secondary dark:text-text-secondary-dark uppercase tracking-tighter mb-1">{item.title}</p>
-                  <p className="text-sm font-bold text-text-primary dark:text-text-primary-dark">{item.desc}</p>
+                <div key={i} className="p-3 bg-background rounded-xl shadow-sm border border-border">
+                  <p className="text-xs font-bold text-text-secondary uppercase tracking-tighter mb-1">{item.title}</p>
+                  <p className="text-sm font-bold text-text-primary">{item.desc}</p>
                 </div>
               )) : (
-                <div className="p-3 bg-background dark:bg-background-dark rounded-xl shadow-sm border border-border dark:border-border-dark">
-                  <p className="text-sm font-bold text-text-primary dark:text-text-primary-dark">No tips available yet. Log more trades.</p>
+                <div className="p-3 bg-background rounded-xl shadow-sm border border-border">
+                  <p className="text-sm font-bold text-text-primary">No tips available yet. Log more trades.</p>
                 </div>
               )}
             </div>
           </div>
         </div>
+        )}
       </Card>
 
       {/* Main Data Table Container */}
@@ -680,40 +702,40 @@ export const TradesPage = ({
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-surface-muted dark:bg-surface-muted-dark border-b border-border dark:border-border-dark">
-                <th className="px-6 py-5 text-xs font-bold text-text-primary dark:text-text-primary-dark tracking-wider uppercase">Date/Time</th>
-                <th className="px-6 py-5 text-xs font-bold text-text-primary dark:text-text-primary-dark tracking-wider uppercase">Instrument</th>
-                <th className="px-6 py-5 text-xs font-bold text-text-primary dark:text-text-primary-dark tracking-wider uppercase">Type</th>
-                <th className="px-6 py-5 text-xs font-bold text-text-primary dark:text-text-primary-dark tracking-wider uppercase text-right">Size</th>
-                <th className="px-6 py-5 text-xs font-bold text-text-primary dark:text-text-primary-dark tracking-wider uppercase text-right">Entry</th>
-                <th className="px-6 py-5 text-xs font-bold text-text-primary dark:text-text-primary-dark tracking-wider uppercase text-right">Current</th>
-                <th className="px-6 py-5 text-xs font-bold text-text-primary dark:text-text-primary-dark tracking-wider uppercase text-right">P&L ($/%)</th>
-                <th className="px-6 py-5 text-xs font-bold text-text-primary dark:text-text-primary-dark tracking-wider uppercase text-center">Action</th>
+              <tr className="bg-surface-muted border-b border-border">
+                <th className="px-6 py-5 text-xs font-bold text-text-primary tracking-wider uppercase">Date/Time</th>
+                <th className="px-6 py-5 text-xs font-bold text-text-primary tracking-wider uppercase">Instrument</th>
+                <th className="px-6 py-5 text-xs font-bold text-text-primary tracking-wider uppercase">Type</th>
+                <th className="px-6 py-5 text-xs font-bold text-text-primary tracking-wider uppercase text-right">Size</th>
+                <th className="px-6 py-5 text-xs font-bold text-text-primary tracking-wider uppercase text-right">Entry</th>
+                <th className="px-6 py-5 text-xs font-bold text-text-primary tracking-wider uppercase text-right">Current</th>
+                <th className="px-6 py-5 text-xs font-bold text-text-primary tracking-wider uppercase text-right">P&L ($/%)</th>
+                <th className="px-6 py-5 text-xs font-bold text-text-primary tracking-wider uppercase text-center">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border dark:divide-border-dark">
+            <tbody className="divide-y divide-border">
               {displayTrades.map((trade, index) => (
                 <tr key={index} className={cn(
-                  "hover:bg-surface-muted dark:hover:bg-surface-muted-dark transition-colors group",
-                  index % 2 !== 0 ? 'bg-surface-muted/40 dark:bg-surface-muted-dark/40' : ''
+                  "hover:bg-surface-muted transition-colors group",
+                  index % 2 !== 0 ? 'bg-surface-muted/40' : ''
                 )}>
                   <td className="px-6 py-5">
                     <div className="flex flex-col">
-                      <span className="text-sm font-bold text-text-primary dark:text-text-primary-dark">{trade.date}</span>
-                      <span className="text-xs text-text-secondary dark:text-text-secondary-dark font-medium">{trade.time}</span>
+                      <span className="text-sm font-bold text-text-primary">{trade.date}</span>
+                      <span className="text-xs text-text-secondary font-medium">{trade.time}</span>
                     </div>
                   </td>
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-3">
                       <div className={cn(
-                        "w-8 h-8 rounded-full bg-background dark:bg-background-dark border border-border dark:border-border-dark flex items-center justify-center font-bold text-[10px]",
+                        "w-8 h-8 rounded-full bg-background border border-border flex items-center justify-center font-bold text-[10px]",
                         trade.isWinner ? 'text-status-success' : 'text-status-danger'
                       )}>
                         {trade.initials}
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-sm font-bold text-text-primary dark:text-text-primary-dark">{trade.symbol}</span>
-                        <span className="text-[10px] text-text-secondary dark:text-text-secondary-dark uppercase font-bold">{trade.name}</span>
+                        <span className="text-sm font-bold text-text-primary">{trade.symbol}</span>
+                        <span className="text-[10px] text-text-secondary uppercase font-bold">{trade.name}</span>
                       </div>
                     </div>
                   </td>
@@ -726,13 +748,13 @@ export const TradesPage = ({
                     </span>
                   </td>
                   <td className="px-6 py-5 text-right">
-                    <span className="text-sm font-bold text-text-primary dark:text-text-primary-dark">{trade.size}</span>
+                    <span className="text-sm font-bold text-text-primary">{trade.size}</span>
                   </td>
                   <td className="px-6 py-5 text-right">
-                    <span className="text-sm font-bold text-text-primary dark:text-text-primary-dark">{trade.entry}</span>
+                    <span className="text-sm font-bold text-text-primary">{trade.entry}</span>
                   </td>
                   <td className="px-6 py-5 text-right">
-                    <span className="text-sm font-bold text-text-primary dark:text-text-primary-dark">{trade.current}</span>
+                    <span className="text-sm font-bold text-text-primary">{trade.current}</span>
                   </td>
                   <td className="px-6 py-5 text-right">
                     <div className="flex flex-col items-end">
@@ -752,16 +774,16 @@ export const TradesPage = ({
                     <div className="flex items-center justify-center gap-1">
                       <button 
                         onClick={() => onNavigate && onNavigate('journal')}
-                        className="w-8 h-8 rounded-lg hover:bg-surface-muted dark:hover:bg-surface-muted-dark flex items-center justify-center text-text-secondary dark:text-text-secondary-dark hover:text-brand-primary transition-all"
+                        className="w-8 h-8 rounded-lg hover:bg-surface-muted flex items-center justify-center text-text-secondary hover:text-brand-primary transition-all"
                       >
                         <BookOpen className="w-4 h-4" />
                       </button>
-                      <button className="w-8 h-8 rounded-lg hover:bg-surface-muted dark:hover:bg-surface-muted-dark flex items-center justify-center text-text-secondary dark:text-text-secondary-dark hover:text-brand-primary transition-all">
+                      <button className="w-8 h-8 rounded-lg hover:bg-surface-muted flex items-center justify-center text-text-secondary hover:text-brand-primary transition-all">
                         <ExternalLink className="w-4 h-4" />
                       </button>
                       <button 
                         onClick={() => handleDeleteTrade(trade.id)}
-                        className="w-8 h-8 rounded-lg hover:bg-surface-muted dark:hover:bg-surface-muted-dark flex items-center justify-center text-text-secondary dark:text-text-secondary-dark hover:text-status-danger transition-all"
+                        className="w-8 h-8 rounded-lg hover:bg-surface-muted flex items-center justify-center text-text-secondary hover:text-status-danger transition-all"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -774,12 +796,12 @@ export const TradesPage = ({
         </div>
         
         {/* Pagination */}
-        <div className="px-8 py-4 bg-surface-muted dark:bg-surface-muted-dark flex items-center justify-between border-t border-border dark:border-border-dark">
-          <span className="text-xs font-bold text-text-secondary dark:text-text-secondary-dark">Showing {displayTrades.length} of {isConnected ? tradesList.length : '0'} Active Trades</span>
+        <div className="px-8 py-4 bg-surface-muted flex items-center justify-between border-t border-border">
+          <span className="text-xs font-bold text-text-secondary">Showing {displayTrades.length} of {isConnected ? tradesList.length : '0'} Active Trades</span>
           <div className="flex gap-2">
             <button 
               onClick={() => setCurrentPageNum(Math.max(1, currentPageNum - 1))}
-              className="w-8 h-8 flex items-center justify-center rounded-lg border border-border dark:border-border-dark text-text-secondary dark:text-text-secondary-dark hover:text-brand-primary transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-text-secondary hover:text-brand-primary transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -788,8 +810,8 @@ export const TradesPage = ({
                 key={num}
                 onClick={() => setCurrentPageNum(num)}
                 className={cn(
-                  "w-8 h-8 flex items-center justify-center rounded-lg border border-border dark:border-border-dark text-xs font-bold transition-colors",
-                  currentPageNum === num ? 'bg-brand-primary text-white border-brand-primary shadow-premium' : 'text-text-secondary dark:text-text-secondary-dark hover:text-brand-primary'
+                  "w-8 h-8 flex items-center justify-center rounded-lg border border-border text-xs font-bold transition-colors",
+                  currentPageNum === num ? 'bg-brand-primary text-white border-brand-primary shadow-premium' : 'text-text-secondary hover:text-brand-primary'
                 )}
               >
                 {num}
@@ -797,7 +819,7 @@ export const TradesPage = ({
             ))}
             <button 
               onClick={() => setCurrentPageNum(Math.min(3, currentPageNum + 1))}
-              className="w-8 h-8 flex items-center justify-center rounded-lg border border-border dark:border-border-dark text-text-secondary dark:text-text-secondary-dark hover:text-brand-primary transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded-lg border border-border text-text-secondary hover:text-brand-primary transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

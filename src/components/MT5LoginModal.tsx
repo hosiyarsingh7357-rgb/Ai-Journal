@@ -71,20 +71,20 @@ export const MT5LoginModal = ({ isOpen, onClose, onSuccess }: MT5LoginModalProps
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-900/60 dark:bg-slate-900/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-      <div className="glass w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-300 bg-theme-surface-light dark:bg-theme-surface-dark border-theme-border-light dark:border-theme-border-dark">
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+      <div className="glass w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-300 bg-surface border-border">
         {/* Header */}
-        <div className="p-6 border-b border-theme-border-light dark:border-theme-border-dark flex justify-between items-center bg-theme-bg-light/50 dark:bg-theme-bg-dark/50">
+        <div className="p-6 border-b border-border flex justify-between items-center bg-background/50">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-brand-primary flex items-center justify-center text-white shadow-premium">
               <Shield className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-theme-text-primary-light dark:text-theme-text-primary-dark">Connect Trading Account</h3>
-              <p className="text-[10px] font-bold text-theme-text-secondary-light dark:text-theme-text-secondary-dark uppercase tracking-widest">Secure MT4/MT5 Integration</p>
+              <h3 className="text-lg font-bold text-text-primary">Connect Trading Account</h3>
+              <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Secure MT4/MT5 Integration</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-theme-bg-light dark:hover:bg-theme-bg-dark rounded-full transition-colors text-theme-text-secondary-light dark:text-theme-text-secondary-dark">
+          <button onClick={onClose} className="p-2 hover:bg-background rounded-full transition-colors text-text-secondary">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -92,7 +92,7 @@ export const MT5LoginModal = ({ isOpen, onClose, onSuccess }: MT5LoginModalProps
         {step === 1 ? (
           <form onSubmit={handleConnect} className="p-8 space-y-6">
             {error && (
-              <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3 text-red-400 text-sm animate-in slide-in-from-top-2">
+              <div className="p-4 bg-status-danger/10 border border-status-danger/20 rounded-xl flex items-center gap-3 text-status-danger text-sm animate-in slide-in-from-top-2">
                 <AlertCircle className="w-5 h-5 shrink-0" />
                 <p className="font-medium">{error}</p>
               </div>
@@ -109,7 +109,7 @@ export const MT5LoginModal = ({ isOpen, onClose, onSuccess }: MT5LoginModalProps
                     className={`py-3 rounded-xl font-bold text-xs transition-all border ${
                       formData.platform === p
                         ? 'bg-brand-primary text-white border-brand-primary shadow-premium'
-                        : 'bg-theme-bg-light dark:bg-theme-bg-dark text-theme-text-secondary-light dark:text-theme-text-secondary-dark border-theme-border-light dark:border-theme-border-dark hover:border-brand-primary/50'
+                        : 'bg-background text-text-secondary border-border hover:border-brand-primary/50'
                     }`}
                   >
                     {p} PLATFORM
@@ -120,7 +120,7 @@ export const MT5LoginModal = ({ isOpen, onClose, onSuccess }: MT5LoginModalProps
               {/* Broker Server */}
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
-                  <label className="text-[10px] font-bold text-theme-text-secondary-light dark:text-theme-text-secondary-dark uppercase tracking-widest ml-1">Broker Server</label>
+                  <label className="text-[10px] font-bold text-text-secondary uppercase tracking-widest ml-1">Broker Server</label>
                   <button
                     type="button"
                     onClick={() => setBrokerInputType(brokerInputType === 'text' ? 'select' : 'text')}
@@ -130,26 +130,26 @@ export const MT5LoginModal = ({ isOpen, onClose, onSuccess }: MT5LoginModalProps
                   </button>
                 </div>
                 <div className="relative">
-                  <Server className="absolute left-4 top-1/2 -translate-y-1/2 text-theme-text-secondary-light dark:text-theme-text-secondary-dark w-4 h-4" />
+                  <Server className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary w-4 h-4" />
                   {brokerInputType === 'text' ? (
                     <input
                       required
                       type="text"
                       placeholder="e.g. IC Markets-Live 20"
-                      className="w-full pl-12 pr-4 py-3 bg-theme-bg-light dark:bg-theme-bg-dark border border-theme-border-light dark:border-theme-border-dark rounded-2xl text-sm text-theme-text-primary-light dark:text-theme-text-primary-dark focus:bg-theme-surface-light dark:focus:bg-theme-surface-dark focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 outline-none transition-all placeholder:text-theme-text-secondary-light/70 dark:placeholder:text-theme-text-secondary-dark/70"
+                      className="w-full pl-12 pr-4 py-3 bg-background border border-border rounded-2xl text-sm text-text-primary focus:bg-surface focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 outline-none transition-all placeholder:text-text-secondary/70"
                       value={formData.broker}
                       onChange={(e) => setFormData({ ...formData, broker: e.target.value })}
                     />
                   ) : (
                     <select
                       required
-                      className="w-full pl-12 pr-4 py-3 bg-theme-bg-light dark:bg-theme-bg-dark border border-theme-border-light dark:border-theme-border-dark rounded-2xl text-sm text-theme-text-primary-light dark:text-theme-text-primary-dark focus:bg-theme-surface-light dark:focus:bg-theme-surface-dark focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 outline-none transition-all"
+                      className="w-full pl-12 pr-4 py-3 bg-background border border-border rounded-2xl text-sm text-text-primary focus:bg-surface focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 outline-none transition-all"
                       value={formData.broker}
                       onChange={(e) => setFormData({ ...formData, broker: e.target.value })}
                     >
                       <option value="" disabled>Select a broker</option>
                       {brokers.map(broker => (
-                        <option key={broker} value={broker} className="bg-theme-surface-light dark:bg-theme-surface-dark text-theme-text-primary-light dark:text-theme-text-primary-dark">{broker}</option>
+                        <option key={broker} value={broker} className="bg-surface text-text-primary">{broker}</option>
                       ))}
                     </select>
                   )}
@@ -158,14 +158,14 @@ export const MT5LoginModal = ({ isOpen, onClose, onSuccess }: MT5LoginModalProps
 
               {/* Account Number */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-theme-text-secondary-light dark:text-theme-text-secondary-dark uppercase tracking-widest ml-1">Account Number</label>
+                <label className="text-[10px] font-bold text-text-secondary uppercase tracking-widest ml-1">Account Number</label>
                 <div className="relative">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-theme-text-secondary-light dark:text-theme-text-secondary-dark w-4 h-4" />
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary w-4 h-4" />
                   <input
                     required
                     type="text"
                     placeholder="Enter login ID"
-                    className="w-full pl-12 pr-4 py-3 bg-theme-bg-light dark:bg-theme-bg-dark border border-theme-border-light dark:border-theme-border-dark rounded-2xl text-sm text-theme-text-primary-light dark:text-theme-text-primary-dark focus:bg-theme-surface-light dark:focus:bg-theme-surface-dark focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 outline-none transition-all placeholder:text-theme-text-secondary-light/70 dark:placeholder:text-theme-text-secondary-dark/70"
+                    className="w-full pl-12 pr-4 py-3 bg-background border border-border rounded-2xl text-sm text-text-primary focus:bg-surface focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 outline-none transition-all placeholder:text-text-secondary/70"
                     value={formData.account}
                     onChange={(e) => setFormData({ ...formData, account: e.target.value })}
                   />
@@ -174,14 +174,14 @@ export const MT5LoginModal = ({ isOpen, onClose, onSuccess }: MT5LoginModalProps
 
               {/* Password */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-theme-text-secondary-light dark:text-theme-text-secondary-dark uppercase tracking-widest ml-1">Trading Password</label>
+                <label className="text-[10px] font-bold text-text-secondary uppercase tracking-widest ml-1">Trading Password</label>
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-theme-text-secondary-light dark:text-theme-text-secondary-dark w-4 h-4" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary w-4 h-4" />
                   <input
                     required
                     type="password"
                     placeholder="••••••••"
-                    className="w-full pl-12 pr-4 py-3 bg-theme-bg-light dark:bg-theme-bg-dark border border-theme-border-light dark:border-theme-border-dark rounded-2xl text-sm text-theme-text-primary-light dark:text-theme-text-primary-dark focus:bg-theme-surface-light dark:focus:bg-theme-surface-dark focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 outline-none transition-all placeholder:text-theme-text-secondary-light/70 dark:placeholder:text-theme-text-secondary-dark/70"
+                    className="w-full pl-12 pr-4 py-3 bg-background border border-border rounded-2xl text-sm text-text-primary focus:bg-surface focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 outline-none transition-all placeholder:text-text-secondary/70"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   />
@@ -207,27 +207,27 @@ export const MT5LoginModal = ({ isOpen, onClose, onSuccess }: MT5LoginModalProps
               )}
             </button>
 
-            <p className="text-[10px] text-center text-theme-text-secondary-light dark:text-theme-text-secondary-dark px-4">
+            <p className="text-[10px] text-center text-text-secondary px-4">
               Your credentials are encrypted and never stored on our servers. We use read-only access for performance tracking.
             </p>
           </form>
         ) : (
           <div className="p-10 text-center space-y-6 animate-in fade-in slide-in-from-bottom-4">
-            <div className="w-20 h-20 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto shadow-premium border border-emerald-500/30">
+            <div className="w-20 h-20 bg-status-success/20 text-status-success rounded-full flex items-center justify-center mx-auto shadow-premium border border-status-success/30">
               <CheckCircle2 className="w-10 h-10" />
             </div>
             <div>
-              <h3 className="text-2xl font-black text-theme-text-primary-light dark:text-theme-text-primary-dark">Account Connected!</h3>
-              <p className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark mt-2 font-medium">Your {formData.platform} account ({formData.account}) is now connected to Ai Journal.</p>
+              <h3 className="text-2xl font-black text-text-primary">Account Connected!</h3>
+              <p className="text-text-secondary mt-2 font-medium">Your {formData.platform} account ({formData.account}) is now connected to Ai Journal.</p>
             </div>
-            <div className="bg-theme-bg-light/50 dark:bg-theme-bg-dark/50 p-5 rounded-2xl border border-theme-border-light dark:border-theme-border-dark text-left space-y-3">
+            <div className="bg-background/50 p-5 rounded-2xl border border-border text-left space-y-3">
               <div className="flex justify-between items-center text-xs">
-                <span className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark font-bold uppercase tracking-wider">Status</span>
-                <span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded-md font-black text-[10px] uppercase">Active</span>
+                <span className="text-text-secondary font-bold uppercase tracking-wider">Status</span>
+                <span className="px-2 py-1 bg-status-success/20 text-status-success rounded-md font-black text-[10px] uppercase">Active</span>
               </div>
               <div className="flex justify-between items-center text-xs">
-                <span className="text-theme-text-secondary-light dark:text-theme-text-secondary-dark font-bold uppercase tracking-wider">Data Import</span>
-                <span className="text-theme-text-primary-light dark:text-theme-text-primary-dark font-black">Ready to Sync</span>
+                <span className="text-text-secondary font-bold uppercase tracking-wider">Data Import</span>
+                <span className="text-text-primary font-black">Ready to Sync</span>
               </div>
             </div>
             <div className="space-y-3">
@@ -243,7 +243,7 @@ export const MT5LoginModal = ({ isOpen, onClose, onSuccess }: MT5LoginModalProps
               </button>
               <button
                 onClick={onClose}
-                className="w-full py-4 bg-theme-bg-light dark:bg-theme-bg-dark text-theme-text-primary-light dark:text-theme-text-primary-dark border border-theme-border-light dark:border-theme-border-dark rounded-2xl font-bold text-sm hover:bg-theme-surface-light dark:hover:bg-theme-surface-dark transition-all active:scale-[0.98]"
+                className="w-full py-4 bg-background text-text-primary border border-border rounded-2xl font-bold text-sm hover:bg-surface transition-all active:scale-[0.98]"
               >
                 CLOSE
               </button>

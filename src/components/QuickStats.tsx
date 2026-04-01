@@ -39,17 +39,17 @@ export const QuickStats = ({ isConnected = false, trades = [] }: { isConnected?:
 
   return (
     <Card className="p-6">
-      <h3 className="font-bold text-gray-900 dark:text-white mb-4">Quick Stats</h3>
+      <h3 className="font-bold text-text-primary mb-4">Quick Stats</h3>
       <div className="grid grid-cols-2 gap-3">
         {displayStats.map((stat, index) => (
           <div 
             key={index} 
-            className={`bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-3 ${stat.colSpan ? 'col-span-2' : ''}`}
+            className={`bg-surface-muted border border-border rounded-xl p-3 ${stat.colSpan ? 'col-span-2' : ''}`}
           >
-            <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+            <p className="text-[10px] font-semibold text-text-secondary uppercase tracking-wide mb-1">
               {stat.label}
             </p>
-            <p className={`font-bold ${stat.variant === 'danger' ? 'text-red-600 dark:text-red-400' : stat.variant === 'success' ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-900 dark:text-white'}`}>
+            <p className={`font-bold ${stat.variant === 'danger' ? 'text-status-danger' : stat.variant === 'success' ? 'text-status-success' : 'text-text-primary'}`}>
               {stat.value}
             </p>
           </div>

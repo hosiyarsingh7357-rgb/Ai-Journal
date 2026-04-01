@@ -89,14 +89,14 @@ export const MonthlyPnL = ({ isConnected = false, trades = [] }: { isConnected?:
   return (
     <Card className="p-6 flex flex-col">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-gray-900 dark:text-white">Monthly P&L</h3>
-        <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">{monthName}</span>
+        <h3 className="font-bold text-text-primary">Monthly P&L</h3>
+        <span className="text-xs text-text-secondary font-medium">{monthName}</span>
       </div>
       
       <div className="w-full text-center">
         <div className="grid grid-cols-8 gap-1 mb-2">
           {days.map((day, i) => (
-            <div key={i} className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase py-1">
+            <div key={i} className="text-[10px] font-semibold text-text-secondary uppercase py-1">
               {day}
             </div>
           ))}
@@ -105,14 +105,14 @@ export const MonthlyPnL = ({ isConnected = false, trades = [] }: { isConnected?:
         <div className="grid grid-cols-8 gap-1 text-sm font-medium">
           {grid.map((cell, i) => {
             if (cell.type === 'empty' && cell.day === 0) {
-              return <div key={i} className="aspect-square bg-gray-100 dark:bg-gray-700 rounded flex items-start p-1 text-xs text-gray-400" />;
+              return <div key={i} className="aspect-square bg-surface-muted rounded flex items-start p-1 text-xs text-text-muted" />;
             }
             if (cell.type === 'weekly') {
               return (
-                <div key={i} className="aspect-square bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded flex flex-col justify-center items-center text-[9px] p-1">
-                  <span className="text-gray-500 dark:text-gray-400">WEEKLY</span>
-                  <span className="font-bold text-gray-900 dark:text-white">{cell.value}</span>
-                  <span className="text-gray-500 dark:text-gray-400 truncate w-full">{cell.trades}</span>
+                <div key={i} className="aspect-square bg-surface-muted border border-border rounded flex flex-col justify-center items-center text-[9px] p-1">
+                  <span className="text-text-secondary">WEEKLY</span>
+                  <span className="font-bold text-text-primary">{cell.value}</span>
+                  <span className="text-text-secondary truncate w-full">{cell.trades}</span>
                 </div>
               );
             }
@@ -120,9 +120,9 @@ export const MonthlyPnL = ({ isConnected = false, trades = [] }: { isConnected?:
               <div 
                 key={i} 
                 className={`aspect-square rounded flex items-start p-1 text-[10px] font-bold ${
-                  cell.type === 'profit' ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400' : 
-                  cell.type === 'loss' ? 'bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400' : 
-                  cell.type === 'neutral' ? 'bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300' : 'bg-gray-100 dark:bg-gray-700 text-gray-400'
+                  cell.type === 'profit' ? 'bg-status-success/10 text-status-success' : 
+                  cell.type === 'loss' ? 'bg-status-danger/10 text-status-danger' : 
+                  cell.type === 'neutral' ? 'bg-surface-muted text-text-secondary' : 'bg-surface-muted text-text-muted'
                 }`}
               >
                 {cell.day}
@@ -131,12 +131,12 @@ export const MonthlyPnL = ({ isConnected = false, trades = [] }: { isConnected?:
           })}
         </div>
 
-        <div className="mt-4 flex items-center justify-center gap-4 text-[10px] text-gray-500 dark:text-gray-400 font-medium">
+        <div className="mt-4 flex items-center justify-center gap-4 text-[10px] text-text-secondary font-medium">
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400"></span> Profit
+            <span className="w-2 h-2 rounded-full bg-status-success"></span> Profit
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-red-500 dark:bg-red-400"></span> Loss
+            <span className="w-2 h-2 rounded-full bg-status-danger"></span> Loss
           </div>
         </div>
       </div>

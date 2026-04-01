@@ -19,7 +19,7 @@ export const OpenPositions = ({ isConnected = false, trades = [] }: { isConnecte
     <Card className="flex flex-col min-h-[220px]">
       <h3 className="heading-3 mb-4">Open Positions</h3>
       {(!isConnected && trades.length === 0) || openPositions.length === 0 ? (
-        <div className="flex-1 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
+        <div className="flex-1 flex flex-col items-center justify-center text-text-secondary">
           <Clock className="w-8 h-8 mb-2 opacity-50" />
           <p className="text-sm">{!isConnected ? 'Connect MT5 to see positions' : 'No active positions'}</p>
         </div>
@@ -30,19 +30,19 @@ export const OpenPositions = ({ isConnected = false, trades = [] }: { isConnecte
             const isWinner = pnlVal >= 0;
             
             return (
-              <div key={pos.id || i} className="flex items-center justify-between p-3 bg-gray-100 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600">
+              <div key={pos.id || i} className="flex items-center justify-between p-3 bg-surface-muted rounded-xl border border-border">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${isWinner ? 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400' : 'bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400'}`}>
+                  <div className={`p-2 rounded-lg ${isWinner ? 'bg-status-success/10 text-status-success' : 'bg-status-danger/10 text-status-danger'}`}>
                     {isWinner ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-text-primary dark:text-text-primary-dark">{pos.symbol}</p>
-                    <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">{pos.type} • {pos.size} Lots</p>
+                    <p className="text-sm font-bold text-text-primary">{pos.symbol}</p>
+                    <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">{pos.type} • {pos.size} Lots</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className={`text-sm font-black ${isWinner ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-700 dark:text-red-400'}`}>{pos.pnl || "$0.00"}</p>
-                  <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Floating</p>
+                  <p className={`text-sm font-black ${isWinner ? 'text-status-success' : 'text-status-danger'}`}>{pos.pnl || "$0.00"}</p>
+                  <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Floating</p>
                 </div>
               </div>
             );

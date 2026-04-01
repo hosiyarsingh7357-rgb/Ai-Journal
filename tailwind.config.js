@@ -6,50 +6,35 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          primary: '#4F46E5',
+          primary: 'var(--brand-primary)',
           secondary: '#8b5cf6',
           accent: '#06b6d4',
         },
-        // SaaS Design System
-        background: {
-          DEFAULT: '#FFFFFF',
-          dark: '#0B0F19',
-        },
+        primary: 'var(--brand-primary)',
+        success: 'var(--status-success)',
+        danger: 'var(--status-danger)',
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
         surface: {
-          DEFAULT: '#F9FAFB',
-          dark: '#111827',
-          muted: '#f1f5f9',
-          'muted-dark': '#1e293b',
+          DEFAULT: 'var(--surface)',
+          muted: 'var(--surface-muted)',
         },
+        secondary: 'var(--surface-muted)',
+        'muted-foreground': 'var(--text-muted)',
         text: {
-          primary: '#111827',
-          'primary-dark': '#E5E7EB',
-          secondary: '#475569',
-          'secondary-dark': '#94a3b8',
-          muted: '#64748b',
-          'muted-dark': '#64748b',
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          muted: 'var(--text-muted)',
         },
         border: {
-          DEFAULT: '#E5E7EB',
-          dark: '#374151',
-          strong: '#cbd5e1',
-          'strong-dark': '#334155',
+          DEFAULT: 'var(--border)',
+          strong: 'var(--border-strong)',
         },
-        success: {
-          DEFAULT: '#22C55E',
-          dark: '#16a34a',
-        },
-        danger: {
-          DEFAULT: '#EF4444',
-          dark: '#dc2626',
-        },
-        warning: {
-          DEFAULT: '#f59e0b',
-          dark: '#d97706',
-        },
-        info: {
-          DEFAULT: '#3b82f6',
-          dark: '#2563eb',
+        status: {
+          success: 'var(--status-success)',
+          danger: 'var(--status-danger)',
+          warning: 'var(--status-warning)',
+          info: 'var(--status-info)',
         }
       },
       borderRadius: {
@@ -59,7 +44,6 @@ module.exports = {
       },
       backgroundImage: {
         'gradient-premium': 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
-        'gradient-surface': 'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%)',
       },
       boxShadow: {
         'premium': '0 20px 40px -15px rgba(0, 0, 0, 0.3)',
