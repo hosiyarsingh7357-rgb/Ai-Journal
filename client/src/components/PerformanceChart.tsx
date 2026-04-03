@@ -70,7 +70,7 @@ export const PerformanceChart = ({ isConnected = false, trades = [] }: { isConne
   }, [trades, isConnected, activeRange]);
 
   return (
-    <Card className="flex flex-col h-full relative p-8">
+    <Card className="flex flex-col h-full relative p-6">
       {!isConnected && trades.length === 0 && (
         <div className="absolute inset-0 z-20 bg-background/80 backdrop-blur-md flex items-center justify-center rounded-[2rem]">
           <div className="text-center p-6 bg-surface border border-brand-primary/20 shadow-premium rounded-2xl">
@@ -78,7 +78,7 @@ export const PerformanceChart = ({ isConnected = false, trades = [] }: { isConne
           </div>
         </div>
       )}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="w-2 h-8 bg-brand-primary rounded-full" />
           <h3 className="label-text">Performance Analytics</h3>
@@ -100,7 +100,7 @@ export const PerformanceChart = ({ isConnected = false, trades = [] }: { isConne
         </div>
       </div>
       
-      <div className="flex-1 min-h-[300px] w-full">
+      <div className="flex-1 min-h-[250px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={chartData}

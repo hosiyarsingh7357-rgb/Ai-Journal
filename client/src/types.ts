@@ -1,21 +1,15 @@
 export interface Trade {
   id?: string;
-  _id?: string;
   userId?: string;
-  symbol?: string; // Old field
-  pair?: string;   // New field
-  type?: 'BUY' | 'SELL';
-  size?: string;
-  entryPrice?: string; // Old field
-  entry?: number;      // New field
-  exitPrice?: string;  // Old field
-  exit?: number;       // New field
-  pnl?: string;        // Old field
-  profit?: number;     // New field
+  symbol: string;
+  type: 'BUY' | 'SELL';
+  size: string;
+  entryPrice: string;
+  exitPrice?: string;
+  pnl?: string;
   isWinner?: boolean;
   entryDate?: string;
   exitDate?: string;
-  date?: string | Date;
   notes?: string;
   screenshot?: string;
   createdAt?: any;
