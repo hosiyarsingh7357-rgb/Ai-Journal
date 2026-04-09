@@ -2,89 +2,201 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {userId}
+    // Fields:
+    //   - username: string (required)
+    //   - email: string (required, email format)
+    //   - passwordHash: string (required)
+    //   - createdAt: string (required, date-time)
+    //   - firstName: string (optional)
+    //   - lastName: string (optional)
+    //
+    // Collection: users/{userId}/brokerAccounts
+    // Document ID: {accountId}
+    // Fields:
+    //   - userId: string (required)
+    //   - accountName: string (required)
+    //   - brokerName: string (required)
+    //   - createdAt: string (required, date-time)
+    //   - accountNumber: string (optional)
+    //   - currency: string (optional)
+    //
+    // Collection: users/{userId}/trades
+    // Document ID: {tradeId}
+    // Fields:
+    //   - userId: string (required)
+    //   - symbol: string (required)
+    //   - type: string (required, 'BUY' | 'SELL')
+    //   - size: string (required)
+    //   - entryPrice: string (required)
+    //   - exitPrice: string (optional)
+    //   - pnl: string (optional)
+    //   - isWinner: boolean (optional)
+    //   - entryDate: string (optional)
+    //   - exitDate: string (optional)
+    //   - notes: string (optional)
+    //   - screenshot: string (optional)
+    //   - createdAt: string (required, date-time)
+    //
+    // Collection: users/{userId}/journals
+    // Document ID: {journalId}
+    // Fields:
+    //   - userId: string (required)
+    //   - date: string (required, date format)
+    //   - content: string (required)
+    //   - mood: string (optional)
+    //   - createdAt: string (required, date-time)
+    //
+    // Collection: trades/{tradeId}/screenshots
+    // Document ID: {screenshotId}
+    // Fields:
+    //   - tradeId: string (required)
+    //   - imageUrl: string (required, URL format)
+    //   - createdAt: string (required, date-time)
+    //   - caption: string (optional)
+    //
+    // ===============================================================
+
+    // ===============================================================
     // Helper Functions
     // ===============================================================
     function isAuthenticated() {
       return request.auth != null;
     }
-    
+
     function isOwner(userId) {
       return isAuthenticated() && request.auth.uid == userId;
     }
-    
-    function hasOnlyAllowedFields(fields) {
-      return request.resource.data.keys().hasOnly(fields);
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     }
 
-    function validStringLength(field, minLen, maxLen) {
-      return request.resource.data[field] is string &&
-             request.resource.data[field].size() >= minLen &&
-             request.resource.data[field].size() <= maxLen;
+    function isValidDateString(dateStr) {
+      return dateStr is string && dateStr.matches("^\\d{4}-\\d{2}-\\d{2}$");
+    }
+
+    function isValidDateTimeString(dateTimeStr) {
+      return dateTimeStr is string && dateTimeStr.matches("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.*Z?$");
+    }
+
+    function isValidUrl(url) {
+      return url is string && (url.matches("^https://.*") || url.matches("^http://.*"));
+    }
+
+    function hasOnlyAllowedFields(data, allowedFields) {
+      return data.keys().hasOnly(allowedFields);
+    }
+
+    function hasRequiredFields(data, requiredFields) {
+      return data.keys().hasAll(requiredFields);
     }
 
     // ===============================================================
     // Domain Validators
     // ===============================================================
+
     function isValidUser(data) {
-      return hasOnlyAllowedFields(['username', 'email', 'passwordHash', 'createdAt', 'firstName', 'lastName']) &&
-             validStringLength('username', 3, 50) &&
-             validStringLength('email', 5, 100) &&
+      return hasRequiredFields(data, ['username', 'email', 'passwordHash', 'createdAt']) &&
+             hasOnlyAllowedFields(data, ['username', 'email', 'passwordHash', 'createdAt', 'firstName', 'lastName']) &&
+             data.username is string && data.username.size() > 0 && data.username.size() < 50 &&
+             isValidEmail(data.email) &&
              data.passwordHash is string &&
-             (data.createdAt is timestamp || data.createdAt is string) &&
-             (!('firstName' in data) || data.firstName is string) &&
-             (!('lastName' in data) || data.lastName is string);
+             isValidDateTimeString(data.createdAt);
     }
 
     function isValidBrokerAccount(data) {
-      return hasOnlyAllowedFields(['userId', 'accountName', 'brokerName', 'createdAt', 'accountNumber', 'currency']) &&
+      return hasRequiredFields(data, ['userId', 'accountName', 'brokerName', 'createdAt']) &&
+             hasOnlyAllowedFields(data, ['userId', 'accountName', 'brokerName', 'createdAt', 'accountNumber', 'currency']) &&
              data.userId == request.auth.uid &&
-             validStringLength('accountName', 1, 100) &&
-             validStringLength('brokerName', 1, 100) &&
-             (data.createdAt is timestamp || data.createdAt is string) &&
-             (!('accountNumber' in data) || data.accountNumber is string) &&
-             (!('currency' in data) || data.currency is string);
+             data.accountName is string && data.accountName.size() > 0 && data.accountName.size() < 100 &&
+             data.brokerName is string && data.brokerName.size() > 0 && data.brokerName.size() < 100 &&
+             isValidDateTimeString(data.createdAt);
     }
 
     function isValidTrade(data) {
-      return hasOnlyAllowedFields(['userId', 'brokerAccountId', 'tradeDate', 'instrument', 'tradeType', 'quantity', 'entryPrice', 'exitPrice', 'profitLoss', 'createdAt', 'entryTime', 'exitTime', 'notes']) &&
-             data.userId == request.auth.uid &&
-             data.brokerAccountId is string &&
-             (data.tradeDate is timestamp || data.tradeDate is string) &&
-             validStringLength('instrument', 1, 20) &&
-             validStringLength('tradeType', 1, 10) &&
-             data.quantity is number &&
-             data.entryPrice is number &&
-             data.exitPrice is number &&
-             data.profitLoss is number &&
-             (data.createdAt is timestamp || data.createdAt is string) &&
-             (!('entryTime' in data) || data.entryTime is string) &&
-             (!('exitTime' in data) || data.exitTime is string) &&
-             (!('notes' in data) || data.notes is string);
+      return (!('userId' in data) || data.userId == request.auth.uid) &&
+             (!('symbol' in data) || data.symbol is string) &&
+             (!('type' in data) || data.type in ['BUY', 'SELL']) &&
+             (!('size' in data) || data.size is string) &&
+             (!('entryPrice' in data) || data.entryPrice is string) &&
+             (!('entry' in data) || data.entry is string || data.entry is number) &&
+             (!('current' in data) || data.current is string || data.current is number) &&
+             (!('exitPrice' in data) || data.exitPrice is string) &&
+             (!('pnl' in data) || data.pnl is string) &&
+             (!('isWinner' in data) || data.isWinner is bool) &&
+             (!('entryDate' in data) || data.entryDate is string) &&
+             (!('exitDate' in data) || data.exitDate is string) &&
+             (!('notes' in data) || data.notes is string) &&
+             (!('screenshot' in data) || data.screenshot is string) &&
+             (!('id' in data) || data.id is string) &&
+             (!('_id' in data) || data._id is string) &&
+             (!('date' in data) || data.date is string) &&
+             (!('time' in data) || data.time is string) &&
+             (!('initials' in data) || data.initials is string) &&
+             (!('name' in data) || data.name is string) &&
+             (!('rr' in data) || data.rr is string) &&
+             (!('duration' in data) || data.duration is string) &&
+             (!('volume' in data) || data.volume is string) &&
+             (!('pnlPercent' in data) || data.pnlPercent is string) &&
+             (!('createdAt' in data) || isValidDateTimeString(data.createdAt));
+    }
+
+    function isValidJournalEntry(data) {
+      return (!('userId' in data) || data.userId == request.auth.uid) &&
+             (!('title' in data) || (data.title is string && data.title.size() < 200)) &&
+             (!('instrument' in data) || (data.instrument is string && data.instrument.size() < 50)) &&
+             (!('tradeType' in data) || data.tradeType in ['BUY', 'SELL']) &&
+             (!('volume' in data) || (data.volume is string && data.volume.size() < 50)) &&
+             (!('pnl' in data) || (data.pnl is string && data.pnl.size() < 50)) &&
+             (!('entryPrice' in data) || (data.entryPrice is string && data.entryPrice.size() < 50)) &&
+             (!('exitPrice' in data) || (data.exitPrice is string && data.exitPrice.size() < 50)) &&
+             (!('entryDate' in data) || (data.entryDate is string && data.entryDate.size() < 100)) &&
+             (!('exitDate' in data) || (data.exitDate is string && data.exitDate.size() < 100)) &&
+             (!('date' in data) || (data.date is string && data.date.size() < 50)) &&
+             (!('time' in data) || (data.time is string && data.time.size() < 50)) &&
+             (!('status' in data) || data.status in ['won', 'lost', 'neutral']) &&
+             (!('tradeId' in data) || data.tradeId is string) &&
+             (!('tradeNotes' in data) || data.tradeNotes is string) &&
+             (!('screenshot' in data) || data.screenshot is string) &&
+             (!('confidence' in data) || data.confidence is string) &&
+             (!('logic' in data) || data.logic is string) &&
+             (!('emotionalCheck' in data) || data.emotionalCheck is string) &&
+             (!('tags' in data) || data.tags is list) &&
+             (!('preTradeAnalysis' in data) || data.preTradeAnalysis is string) &&
+             (!('postTradeReview' in data) || data.postTradeReview is string) &&
+             (!('emotions' in data) || data.emotions is string) &&
+             (!('lessonsLearned' in data) || data.lessonsLearned is string) &&
+             (!('rating' in data) || data.rating is number) &&
+             (!('checklist' in data) || data.checklist is list) &&
+             (!('screenshots' in data) || data.screenshots is list) &&
+             (!('riskReward' in data) || data.riskReward is map) &&
+             (!('id' in data) || data.id is string) &&
+             (!('createdAt' in data) || isValidDateTimeString(data.createdAt));
     }
 
     function isValidTradeScreenshot(data) {
-      return hasOnlyAllowedFields(['tradeId', 'imageUrl', 'createdAt', 'caption']) &&
+      return hasRequiredFields(data, ['tradeId', 'imageUrl', 'createdAt']) &&
+             hasOnlyAllowedFields(data, ['tradeId', 'imageUrl', 'createdAt', 'caption']) &&
              data.tradeId is string &&
-             data.imageUrl is string &&
-             (data.createdAt is timestamp || data.createdAt is string) &&
-             (!('caption' in data) || data.caption is string);
-    }
-
-    function isValidJournal(data) {
-      return hasOnlyAllowedFields(['userId', 'title', 'createdAt', 'narrative', 'confidence', 'logic', 'emotionalCheck', 'emotions', 'updatedAt']) &&
-             data.userId == request.auth.uid &&
-             validStringLength('title', 1, 100) &&
-             (data.createdAt is timestamp || data.createdAt is string);
+             isValidUrl(data.imageUrl) &&
+             isValidDateTimeString(data.createdAt);
     }
 
     // ===============================================================
     // Rules
     // ===============================================================
+
     match /users/{userId} {
       allow read: if isOwner(userId);
       allow create: if isOwner(userId) && isValidUser(request.resource.data);
       allow update: if isOwner(userId) && isValidUser(request.resource.data);
-      
+      allow delete: if isOwner(userId);
+
       match /brokerAccounts/{accountId} {
         allow read: if isOwner(userId);
         allow create: if isOwner(userId) && isValidBrokerAccount(request.resource.data);
@@ -94,27 +206,33 @@ service cloud.firestore {
 
       match /trades/{tradeId} {
         allow read: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidTrade(request.resource.data);
-        allow update: if isOwner(userId) && isValidTrade(request.resource.data);
+        allow create: if isOwner(userId) && 
+                      hasRequiredFields(request.resource.data, ['userId', 'symbol', 'type', 'size', 'entryPrice', 'createdAt']) &&
+                      isValidTrade(request.resource.data);
+        allow update: if isOwner(userId);
         allow delete: if isOwner(userId);
       }
 
       match /journals/{journalId} {
         allow read: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidJournal(request.resource.data);
-        allow update: if isOwner(userId) && isValidJournal(request.resource.data);
+        allow create: if isOwner(userId) && 
+                      hasRequiredFields(request.resource.data, ['userId', 'title', 'instrument', 'tradeType', 'volume', 'pnl', 'entryPrice', 'exitPrice', 'entryDate', 'exitDate', 'date', 'time', 'status', 'createdAt']) &&
+                      isValidJournalEntry(request.resource.data);
+        allow update: if isOwner(userId) && isValidJournalEntry(request.resource.data);
+        allow delete: if isOwner(userId);
+      }
+      
+      match /trades/{tradeId}/screenshots/{screenshotId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidTradeScreenshot(request.resource.data);
+        allow update: if isOwner(userId) && isValidTradeScreenshot(request.resource.data);
         allow delete: if isOwner(userId);
       }
     }
 
-    match /trades/{tradeId} {
-      match /screenshots/{screenshotId} {
-        // Need to verify ownership of the trade
-        allow read: if isAuthenticated() && get(/databases/$(database)/documents/trades/$(tradeId)).data.userId == request.auth.uid;
-        allow create: if isAuthenticated() && get(/databases/$(database)/documents/trades/$(tradeId)).data.userId == request.auth.uid && isValidTradeScreenshot(request.resource.data);
-        allow update: if isAuthenticated() && get(/databases/$(database)/documents/trades/$(tradeId)).data.userId == request.auth.uid && isValidTradeScreenshot(request.resource.data);
-        allow delete: if isAuthenticated() && get(/databases/$(database)/documents/trades/$(tradeId)).data.userId == request.auth.uid;
-      }
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

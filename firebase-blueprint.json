@@ -49,6 +49,58 @@
       },
       "required": ["userId", "brokerAccountId", "tradeDate", "instrument", "tradeType", "quantity", "entryPrice", "exitPrice", "profitLoss", "createdAt"]
     },
+    "JournalEntry": {
+      "title": "JournalEntry",
+      "description": "Daily journal entry for a trader",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "tradeId": { "type": "string" },
+        "title": { "type": "string" },
+        "tradeNotes": { "type": "string" },
+        "instrument": { "type": "string" },
+        "tradeType": { "type": "string" },
+        "volume": { "type": "string" },
+        "pnl": { "type": "string" },
+        "entryPrice": { "type": "string" },
+        "exitPrice": { "type": "string" },
+        "entryDate": { "type": "string" },
+        "exitDate": { "type": "string" },
+        "screenshot": { "type": "string" },
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "status": { "type": "string" },
+        "confidence": { "type": "string" },
+        "logic": { "type": "string" },
+        "emotionalCheck": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "preTradeAnalysis": { "type": "string" },
+        "postTradeReview": { "type": "string" },
+        "riskReward": { 
+          "type": "object",
+          "properties": {
+            "risk": { "type": "number" },
+            "reward": { "type": "number" }
+          }
+        },
+        "emotions": { "type": "string" },
+        "lessonsLearned": { "type": "string" },
+        "rating": { "type": "number" },
+        "checklist": { 
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": { "type": "string" },
+              "checked": { "type": "boolean" }
+            }
+          }
+        },
+        "screenshots": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "instrument", "tradeType", "volume", "pnl", "entryPrice", "exitPrice", "entryDate", "exitDate", "date", "time", "status", "createdAt"]
+    },
     "TradeScreenshot": {
       "title": "TradeScreenshot",
       "description": "Screenshot of a trade",

@@ -24,6 +24,10 @@ interface AppState {
   
   error: string | null;
   setError: (error: string | null) => void;
+
+  isAiBlocked: boolean;
+  aiBlockedUntil: number | null;
+  setAiBlocked: (blocked: boolean, until?: number) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -60,4 +64,11 @@ export const useAppStore = create<AppState>((set) => ({
   
   error: null,
   setError: (error) => set({ error }),
+
+  isAiBlocked: false,
+  aiBlockedUntil: null,
+  setAiBlocked: (blocked, until) => set({ 
+    isAiBlocked: blocked, 
+    aiBlockedUntil: until || (blocked ? Date.now() + 5 * 60 * 1000 : null) 
+  }),
 }));

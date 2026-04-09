@@ -18,8 +18,9 @@ export interface Trade {
 export interface JournalEntry {
   id?: string;
   userId?: string;
+  tradeId?: string;
   title: string;
-  tradeNotes: string;
+  tradeNotes?: string;
   instrument: string;
   tradeType: 'BUY' | 'SELL';
   volume: string;
@@ -36,6 +37,17 @@ export interface JournalEntry {
   logic?: string;
   emotionalCheck?: string;
   tags?: string[];
+  
+  // New fields for redesign
+  preTradeAnalysis?: string;
+  postTradeReview?: string;
+  riskReward?: { risk: number; reward: number };
+  emotions?: string;
+  lessonsLearned?: string;
+  rating?: number;
+  checklist?: { label: string; checked: boolean }[];
+  screenshots?: string[];
+  
   createdAt?: any;
 }
 

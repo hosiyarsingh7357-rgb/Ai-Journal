@@ -74,9 +74,9 @@
   @apply hover:shadow-premium hover:scale-[1.01] active:scale-[0.99] hover:border-brand-primary/30;
 }
 
-/* smooth theme transition */
-* {
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+/* smooth theme transition - applied to body for better performance */
+body {
+  transition: background-color 0.3s, color 0.3s;
 }
 
 /* Premium Gradient Text */
@@ -108,14 +108,14 @@
 }
 
 /* Custom styles for Journal Date Input */
-input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(0); /* Black icon */
   cursor: pointer;
+  opacity: 1;
 }
 
-.dark input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-}
-.light input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(0);
+.dark input[type="date"]::-webkit-calendar-picker-indicator,
+.dark input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* White icon in dark mode for visibility */
 }

@@ -21,13 +21,13 @@ import { motion } from 'motion/react';
 import { X } from 'lucide-react';
 import { useAuth } from './context/AuthContext';
 import { db } from './lib/firebase';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 import { useAppStore } from './store/useAppStore';
 import { Button } from './components/ui/Button';
 import { Card } from './components/ui/Card';
 
 export default function App() {
-  const { user, loading, signOut, verificationEmailSent, setVerificationEmailSent } = useAuth();
+  const { user, loading, logout, verificationEmailSent, setVerificationEmailSent } = useAuth();
   const { 
     isSidebarOpen, 
     toggleSidebar, 
@@ -43,6 +43,7 @@ export default function App() {
   const [syncProgress, setSyncProgress] = useState(0);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState('dashboard');
+  const [selectedTradeIdForJournal, setSelectedTradeIdForJournal] = useState<string | null>(null);
   const { trades, addTrade, updateTrade, deleteTrade } = useTrades();
   const [accountName, setAccountName] = useState<string>('');
   const [showAuth, setShowAuth] = useState(false);
@@ -56,15 +57,39 @@ export default function App() {
 
   useEffect(() => {
     if (user) {
-      const docRef = doc(db, 'users', user.uid);
-      const unsubscribe = onSnapshot(docRef, (doc) => {
+      // Fetch user data from Firestore
+      const fetchUserData = async () => {
+        try {
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          if (userDoc.exists()) {
+            const data = userDoc.data();
+            // In our new schema, broker accounts are in a subcollection
+            // But for simplicity in this migration, we'll check if there's any connected account
+            // Or if we still want to store a 'primary' account on the user doc
+            const account = data.mt5Credentials?.account || '';
+            setAccountName(account);
+            setIsAccountConnected(!!account);
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      };
+
+      fetchUserData();
+
+      // Subscribe to user data changes
+      const unsubscribe = onSnapshot(doc(db, 'users', user.uid), (doc) => {
         if (doc.exists()) {
-          const account = doc.data().mt5Credentials?.account || '';
+          const data = doc.data();
+          const account = data.mt5Credentials?.account || '';
           setAccountName(account);
           setIsAccountConnected(!!account);
         }
       });
-      return unsubscribe;
+
+      return () => {
+        unsubscribe();
+      };
     }
   }, [user]);
 
@@ -82,10 +107,24 @@ export default function App() {
     settings: 'Settings'
   };
 
-  const handleConnectAccount = () => {
+  const handleConnectAccount = async () => {
     setIsSyncing(true);
     setSyncProgress(0);
     
+    // Persist connection state to Firestore if user is logged in
+    if (user) {
+      try {
+        await setDoc(doc(db, 'users', user.uid), {
+          mt5Credentials: {
+            connectedAt: new Date().toISOString(),
+            account: accountName || 'DEMO_ACCOUNT'
+          }
+        }, { merge: true });
+      } catch (err) {
+        console.error("Error persisting connection state:", err);
+      }
+    }
+
     const interval = setInterval(() => {
       setSyncProgress(prev => {
         if (prev >= 100) {
@@ -113,10 +152,19 @@ export default function App() {
     }, 150);
   };
 
+  const handleNavigate = (page: string, tradeId?: string) => {
+    if (tradeId) {
+      setSelectedTradeIdForJournal(tradeId);
+    } else {
+      setSelectedTradeIdForJournal(null);
+    }
+    setCurrentPage(page);
+  };
+
   const renderPage = () => {
     switch (currentPage) {
       case 'dashboard':
-        return <Dashboard isConnected={isAccountConnected} />;
+        return <Dashboard isConnected={isAccountConnected} onNavigate={handleNavigate} />;
       case 'trades':
         return <TradesPage 
           isConnected={isAccountConnected} 
@@ -129,13 +177,20 @@ export default function App() {
           isSyncing={isSyncing}
           tradesList={trades}
           onDeleteTrade={deleteTrade}
+          onUpdateTrade={updateTrade}
+          onNavigate={handleNavigate}
         />;
       case 'performance':
-        return <PerformancePage tradesList={trades} onNavigate={setCurrentPage} />;
+        return <PerformancePage onNavigate={handleNavigate} />;
       case 'journal':
-        return <JournalPage tradesList={trades} onUpdateTrade={updateTrade} />;
+        return <JournalPage 
+          tradesList={trades} 
+          onUpdateTrade={updateTrade} 
+          onNavigate={handleNavigate} 
+          initialSelectedTradeId={selectedTradeIdForJournal}
+        />;
       case 'analysis':
-        return <AnalysisPage tradesList={trades} />;
+        return <AnalysisPage tradesList={trades} onNavigate={handleNavigate} />;
       case 'market':
         return <MarketPage />;
       case 'ai-report':
@@ -153,13 +208,11 @@ export default function App() {
     }
   };
 
+  console.log("App state:", { loading, isAppLoading, user: user?.email });
   if (loading || isAppLoading) {
     return (
-      <div className="relative flex items-center justify-center h-screen bg-background text-text-primary overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <BackgroundAnimation />
-        </div>
-        <div className="relative z-10 animate-spin w-12 h-12 border-4 border-brand-primary border-t-transparent rounded-full shadow-premium"></div>
+      <div className="flex items-center justify-center h-screen bg-background text-text-primary">
+        <div className="animate-spin w-12 h-12 border-4 border-brand-primary border-t-transparent rounded-full shadow-premium"></div>
       </div>
     );
   }
@@ -179,7 +232,7 @@ export default function App() {
           <Button 
             onClick={() => {
               setVerificationEmailSent(false);
-              signOut();
+              logout();
             }}
             className="w-full h-12 rounded-xl"
           >
@@ -200,7 +253,7 @@ export default function App() {
   return (
     <div className="relative min-h-screen bg-background text-text-primary transition-colors duration-300">
       <div className="absolute inset-0 -z-10">
-        <BackgroundAnimation />
+        {/* <BackgroundAnimation /> */}
       </div>
       <div className="relative z-10 flex h-screen overflow-hidden">
         {isSyncing && (
@@ -218,7 +271,7 @@ export default function App() {
 
         <Sidebar 
           currentPage={currentPage} 
-          onNavigate={(id) => setCurrentPage(id)}
+          onNavigate={handleNavigate}
         />
         
         <main className="flex-1 flex flex-col h-full overflow-hidden relative z-10 w-full min-w-0">
@@ -229,14 +282,14 @@ export default function App() {
             isSyncing={isSyncing}
             isAccountConnected={isAccountConnected}
             accountName={accountName}
-            onLogout={signOut}
+            onLogout={logout}
           />
           <motion.div
             key={currentPage}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="flex-1 overflow-hidden flex flex-col"
+            className="flex-1 overflow-hidden flex flex-col will-change-transform"
           >
             {renderPage()}
           </motion.div>
