@@ -110,7 +110,8 @@ export const generateAIReport = async (trades: Trade[], fullReport: boolean = fa
   }
 
   const prompt = fullReport 
-    ? `Analyze these trades and provide a detailed psychological performance report in simple, easy-to-understand language (aasan bhasa). 
+    ? `Analyze these trades and provide a detailed psychological performance report.
+       CRITICAL: Use very simple, everyday language (Hinglish / aasan bhasha) that a beginner can easily understand.
        CRITICAL: You MUST return ONLY a valid JSON object. DO NOT include any text outside the JSON.
        The JSON MUST have exactly these keys:
        - "sahi": a string describing "KYA SAHI HUAA" (What went right)
@@ -119,19 +120,20 @@ export const generateAIReport = async (trades: Trade[], fullReport: boolean = fa
        
        Trades data: ${JSON.stringify(tradeSummary)}`
     : `Analyze these trades and provide a structured AI insight report in JSON format. 
+       CRITICAL: Use very simple, everyday language (Hinglish or simple English) that anyone can understand easily. Avoid complex trading jargon.
        CRITICAL: You MUST return ONLY a valid JSON object. DO NOT include any text outside the JSON.
        The JSON MUST have exactly these keys (all lowercase):
        - "summary": a brief 1-sentence overview of performance
-       - "strengths": an array of objects with a "desc" field (e.g. [{"desc": "Consistent risk management on XAUUSD"}])
-       - "weaknesses": an array of objects with a "desc" field (e.g. [{"desc": "Overtrading during London session"}])
-       - "actionPlan": an array of objects with "title" and "desc" fields (e.g. [{"title": "Session Limit", "desc": "Limit to 2 trades per session"}])
+       - "strengths": an array of objects with a "desc" field (e.g. [{"desc": "Aapne XAUUSD par risk management achha kiya"}])
+       - "weaknesses": an array of objects with a "desc" field (e.g. [{"desc": "London session mein overtrading ki gayi"}])
+       - "actionPlan": an array of objects with "title" and "desc" fields (e.g. [{"title": "Session Limit", "desc": "Ek session mein sirf 2 trades lein"}])
        
        Example of valid response:
        {
-         "summary": "Your performance shows strong discipline in gold trading but some inconsistency in forex pairs.",
-         "strengths": [{"desc": "Excellent risk management on XAUUSD trades"}],
-         "weaknesses": [{"desc": "Entering trades too late during the New York session"}],
-         "actionPlan": [{"title": "Session Focus", "desc": "Focus on London session for EURUSD trades"}]
+         "summary": "Aapki performance gold trading mein achhi hai, par forex pairs mein thodi inconsistency hai.",
+         "strengths": [{"desc": "XAUUSD trades par risk management bahut badhiya raha"}],
+         "weaknesses": [{"desc": "New York session mein entry bahut late li gayi"}],
+         "actionPlan": [{"title": "Session Focus", "desc": "EURUSD trades ke liye London session par focus karein"}]
        }
 
        Trades data: ${JSON.stringify(tradeSummary)}`;
@@ -183,7 +185,7 @@ export const generateTradeInsight = async (trade: any) => {
 
   const prompt = `
     Analyze this trading performance and provide a very simple, easy-to-understand summary (max 3 sentences). 
-    Use normal, everyday language that a beginner trader would understand. Avoid complex financial jargon.
+    CRITICAL: Use normal, everyday language (Hinglish / aasan bhasha) that a beginner trader would understand easily. Avoid complex financial jargon.
     Explain clearly what went wrong or what was done correctly.
     
     Trade: ${trade.symbol} ${trade.type}
@@ -193,7 +195,7 @@ export const generateTradeInsight = async (trade: any) => {
     Emotions: ${trade.journal?.emotions}
     Lessons: ${trade.journal?.lessonsLearned}
     
-    Focus on execution, psychology, and technical discipline. Provide simple, actionable advice.
+    Focus on execution, psychology, and technical discipline. Provide simple, actionable advice in Hinglish.
   `;
 
   try {
