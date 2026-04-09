@@ -6,7 +6,10 @@ import {
   signOut, 
   User,
   signInWithPopup,
-  GoogleAuthProvider
+  GoogleAuthProvider,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  updateProfile
 } from "firebase/auth";
 import { auth, googleProvider } from "../config/firebase";
 
@@ -14,9 +17,10 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, fullName: string) => Promise<void>;
   logout: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
   verificationEmailSent: boolean;
   setVerificationEmailSent: (sent: boolean) => void;
 }
@@ -52,15 +56,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, fullName: string) => {
     try {
       console.log("Attempting sign up with email:", email);
-      await createUserWithEmailAndPassword(auth, email, password);
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // Update profile with full name
+      await updateProfile(result.user, { displayName: fullName });
+      
+      // Send verification email
+      await sendEmailVerification(result.user);
+      setVerificationEmailSent(true);
+      console.log("Sign up successful, verification email sent");
     } catch (error: any) {
       console.error("Sign up error:", error);
       if (error.code === 'auth/email-already-in-use') {
         throw new Error("User already exists. Please sign in");
       }
+      throw error;
+    }
+  };
+
+  const forgotPassword = async (email: string) => {
+    try {
+      console.log("Attempting password reset for email:", email);
+      await sendPasswordResetEmail(auth, email);
+    } catch (error: any) {
+      console.error("Password reset error:", error);
       throw error;
     }
   };
@@ -82,7 +104,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, logout, signInWithGoogle, verificationEmailSent, setVerificationEmailSent }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signUp, logout, signInWithGoogle, forgotPassword, verificationEmailSent, setVerificationEmailSent }}>
       {!loading && children}
     </AuthContext.Provider>
   );

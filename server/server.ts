@@ -7,7 +7,6 @@ import { createServer as createViteServer } from "vite";
 import path from "path";
 import mongoose from "mongoose";
 import tradeRoutes from "./routes/tradeRoutes.js";
-import aiRoutes from "./routes/aiRoutes.js";
 import { connectDatabase } from "./config/database.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
@@ -38,7 +37,6 @@ async function startServer() {
 
   app.use("/api/trades", tradeRoutes);
   app.use("/api/trade", tradeRoutes);
-  app.use("/api/ai", aiRoutes);
 
   // Error Handler
   app.use(errorHandler);

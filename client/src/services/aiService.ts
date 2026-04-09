@@ -1,35 +1,37 @@
 import { Trade } from "@shared/types";
 import { useAppStore } from "../store/useAppStore";
+import { GoogleGenAI } from "@google/genai";
+
+// Initialize Gemini AI directly in the frontend as per SKILL.md
+// The environment provides GEMINI_API_KEY automatically
+const ai = new GoogleGenAI({ 
+  apiKey: (process.env.GEMINI_API_KEY || '').trim() 
+});
 
 // Persistent cache for AI reports using localStorage
 const CACHE_KEY_PREFIX = 'ai_report_cache_';
 
 const callGeminiAI = async (prompt: string, config?: any) => {
   try {
-    console.log("Calling AI via server proxy...");
+    console.log("Calling Gemini AI from frontend. Prompt length:", prompt.length);
     
-    const response = await fetch("/api/ai/analyze", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ prompt, config }),
+    // Use gemini-3-flash-preview for general tasks as per SKILL.md
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: prompt,
+      config: {
+        ...config
+      }
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      const error = new Error(errorData.error || "Failed to generate AI content");
-      (error as any).status = response.status;
-      throw error;
-    }
-
-    const data = await response.json();
-    return data.text || "";
+    const text = response.text || "";
+    console.log("Gemini AI call successful, response length:", text.length);
+    return text;
   } catch (error: any) {
-    console.error("AI Error in Service:", error);
+    console.error("Gemini AI Error in Frontend:", error);
     
     // Handle quota errors
-    if (error?.status === 429 || error?.message?.includes('quota')) {
+    if (error?.status === 'RESOURCE_EXHAUSTED' || error?.message?.includes('quota')) {
       const { setAiBlocked } = useAppStore.getState();
       setAiBlocked(true, Date.now() + 5 * 60 * 1000);
     }
