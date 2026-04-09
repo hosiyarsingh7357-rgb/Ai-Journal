@@ -231,8 +231,8 @@ export default function App() {
           <h1 className="text-3xl font-bold bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">Ai Journal</h1>
           <p className="text-text-secondary">
             {verificationEmailSent 
-              ? `We have sent you a verification email. Please verify it and log in.`
-              : `Your email is not verified. Please check your inbox for a verification email.`
+              ? `We have sent you a verification email. Please verify it and log in. (Check your Spam folder if you don't see it)`
+              : `Your email is not verified. Please check your inbox (and Spam folder) for a verification email.`
             }
           </p>
           <Button 

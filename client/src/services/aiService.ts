@@ -4,8 +4,17 @@ import { GoogleGenAI } from "@google/genai";
 
 // Initialize Gemini AI directly in the frontend as per SKILL.md
 // The environment provides GEMINI_API_KEY automatically
+const rawKey = process.env.GEMINI_API_KEY || '';
+const apiKey = rawKey.replace(/['"]/g, '').trim();
+
+if (!apiKey) {
+  console.error("GEMINI_API_KEY is missing! If you are on Vercel, please add GEMINI_API_KEY or VITE_GEMINI_API_KEY to your Vercel Environment Variables and REDEPLOY.");
+} else {
+  console.log("Gemini API Key loaded successfully. Starts with:", apiKey.substring(0, 4) + "...");
+}
+
 const ai = new GoogleGenAI({ 
-  apiKey: (process.env.GEMINI_API_KEY || '').trim() 
+  apiKey: apiKey || 'missing_key' // Provide a dummy key to prevent crash on init, it will fail on call
 });
 
 // Persistent cache for AI reports using localStorage
@@ -13,6 +22,10 @@ const CACHE_KEY_PREFIX = 'ai_report_cache_';
 
 const callGeminiAI = async (prompt: string, config?: any) => {
   try {
+    if (!apiKey || apiKey === 'missing_key') {
+      throw new Error("Gemini API Key is missing. Please configure GEMINI_API_KEY in your Vercel Environment Variables and redeploy.");
+    }
+
     console.log("Calling Gemini AI from frontend. Prompt length:", prompt.length);
     
     // Use gemini-3-flash-preview for general tasks as per SKILL.md
