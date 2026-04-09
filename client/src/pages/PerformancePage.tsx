@@ -13,9 +13,9 @@ import {
 } from 'recharts';
 import { useTrades } from '../context/TradeContext';
 import { useAppStore } from '../store/useAppStore';
-import { cn } from '../lib/utils';
+import { cn } from '@/utils/cn';
 import { motion, AnimatePresence } from 'motion/react';
-import { Trade } from '../types';
+import { Trade } from '@shared/types';
 
 type TimePeriod = 'today' | '7d' | '30d' | '3m' | '1y' | 'all';
 type TradeFilter = 'all' | 'winners' | 'losers';
@@ -344,10 +344,23 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
             <p className="text-text-secondary font-medium">Analyze your trading patterns and improve your strategy</p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Time Period</span>
-              <div className="bg-surface p-1 rounded-xl border border-border flex gap-1 shadow-sm">
+              <div className="lg:hidden flex-1">
+                <select 
+                  value={timePeriod}
+                  onChange={(e) => setTimePeriod(e.target.value as any)}
+                  className="w-full bg-surface border border-border rounded-xl px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-text-primary outline-none focus:border-status-success"
+                >
+                  {(['today', '7d', '30d', '3m', '1y', 'all'] as TimePeriod[]).map(p => (
+                    <option key={p} value={p}>
+                      {p === '7d' ? '7 Days' : p === '30d' ? '30 Days' : p === '3m' ? '3 Months' : p === '1y' ? '1 Year' : p === 'all' ? 'All Time' : 'Today'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="hidden lg:flex bg-surface p-1 rounded-xl border border-border gap-1 shadow-sm">
                 {(['today', '7d', '30d', '3m', '1y', 'all'] as TimePeriod[]).map(p => (
                   <button
                     key={p}
@@ -365,7 +378,20 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
 
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Filter By</span>
-              <div className="bg-surface p-1 rounded-xl border border-border flex gap-1 shadow-sm">
+              <div className="lg:hidden flex-1">
+                <select 
+                  value={tradeFilter}
+                  onChange={(e) => setTradeFilter(e.target.value as any)}
+                  className="w-full bg-surface border border-border rounded-xl px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-text-primary outline-none focus:border-status-success"
+                >
+                  {(['all', 'winners', 'losers'] as TradeFilter[]).map(f => (
+                    <option key={f} value={f}>
+                      {f === 'all' ? 'All Trades' : f === 'winners' ? 'Winners' : 'Losers'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="hidden lg:flex bg-surface p-1 rounded-xl border border-border flex gap-1 shadow-sm">
                 {(['all', 'winners', 'losers'] as TradeFilter[]).map(f => (
                   <button
                     key={f}
@@ -384,12 +410,12 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
         </div>
 
         {/* Top KPIs */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {[
-            { label: 'Total P&L', value: formatCurrency(stats.totalPnL), icon: DollarSign, color: stats.totalPnL >= 0 ? 'text-status-success' : 'text-status-danger', sub: `From ${filteredTrades.length} closed trades`, bg: 'bg-status-success' },
-            { label: 'Win Rate', value: `${stats.winRate.toFixed(1)}%`, icon: Award, color: 'text-text-primary', sub: `${stats.winCount} wins • ${stats.grossLoss === 0 ? 0 : stats.lossCount} losses`, bg: 'bg-status-success' },
+            { label: 'Total P&L', value: formatCurrency(stats.totalPnL), icon: DollarSign, color: stats.totalPnL >= 0 ? 'text-status-success' : 'text-status-danger', sub: `From ${filteredTrades.length} trades`, bg: 'bg-status-success' },
+            { label: 'Win Rate', value: `${stats.winRate.toFixed(1)}%`, icon: Award, color: 'text-text-primary', sub: `${stats.winCount} wins • ${stats.lossCount} losses`, bg: 'bg-status-success' },
             { label: 'Profit Factor', value: stats.pf === 99 ? 'Infinity' : stats.pf.toFixed(2), icon: BarChart2, color: 'text-text-primary', sub: stats.pf > 1.5 ? 'Excellent' : 'Good', bg: 'bg-status-success' },
-            { label: 'Expectancy', value: formatCurrency(stats.expectancy), icon: Target, color: stats.expectancy >= 0 ? 'text-status-success' : 'text-status-danger', sub: 'Average per trade', bg: 'bg-status-success' },
+            { label: 'Expectancy', value: formatCurrency(stats.expectancy), icon: Target, color: stats.expectancy >= 0 ? 'text-status-success' : 'text-status-danger', sub: 'Avg per trade', bg: 'bg-status-success' },
           ].map((kpi, idx) => (
             <motion.div
               key={idx}
@@ -397,17 +423,17 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 + idx * 0.1 }}
             >
-              <Card className="p-6 relative overflow-hidden group border-border bg-surface shadow-sm hover:shadow-md transition-shadow">
+              <Card className="p-4 lg:p-6 relative overflow-hidden group border-border bg-surface shadow-sm hover:shadow-md transition-shadow">
                 <div className={cn("absolute top-0 left-0 w-1 h-full", kpi.bg)} />
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center text-text-primary", kpi.bg)}>
-                    <kpi.icon className="w-4 h-4" />
+                <div className="flex items-center gap-2 lg:gap-3 mb-2 lg:mb-4">
+                  <div className={cn("w-6 h-6 lg:w-8 lg:h-8 rounded-lg flex items-center justify-center text-text-primary", kpi.bg)}>
+                    <kpi.icon className="w-3 h-3 lg:w-4 lg:h-4" />
                   </div>
-                  <span className="text-[10px] font-black text-text-secondary uppercase tracking-widest">{kpi.label}</span>
+                  <span className="text-[8px] lg:text-[10px] font-black text-text-secondary uppercase tracking-widest">{kpi.label}</span>
                 </div>
-                <h2 className={cn("text-2xl font-black tracking-tight mb-1", kpi.color)}>{kpi.value}</h2>
-                <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">{kpi.sub}</p>
-                <div className="mt-4 h-1 w-full bg-surface-muted rounded-full overflow-hidden">
+                <h2 className={cn("text-lg lg:text-2xl font-black tracking-tight mb-0.5 lg:mb-1", kpi.color)}>{kpi.value}</h2>
+                <p className="text-[8px] lg:text-[10px] font-black text-text-secondary uppercase tracking-widest truncate">{kpi.sub}</p>
+                <div className="mt-2 lg:mt-4 h-1 w-full bg-surface-muted rounded-full overflow-hidden">
                   <div className={cn("h-full rounded-full", kpi.bg)} style={{ width: '70%' }} />
                 </div>
               </Card>
@@ -697,32 +723,33 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
         {/* Trading Calendar */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <Card className="lg:col-span-3 p-6 space-y-6 bg-surface border-border">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-2">
                 <CalendarIcon className="w-4 h-4 text-status-success" />
                 <h3 className="text-[10px] font-black uppercase tracking-widest text-text-primary">Trading Calendar</h3>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-4 text-[10px] font-black text-text-secondary uppercase tracking-widest">
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="hidden lg:flex items-center gap-4 text-[10px] font-black text-text-secondary uppercase tracking-widest">
                   <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-status-success" /> Profitable Day</div>
                   <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-status-danger" /> Losing Day</div>
                   <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-surface-muted" /> No Trades</div>
                 </div>
-                <div className="flex items-center gap-2 bg-surface-muted p-1 rounded-lg">
+                <div className="flex items-center gap-2 bg-surface-muted p-1 rounded-lg ml-auto sm:ml-0">
                   <button onClick={() => setCurrentCalendarDate(new Date(currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1)))} className="p-1 hover:bg-surface-muted text-text-primary rounded-md transition-colors"><ChevronLeft className="w-4 h-4" /></button>
-                  <span className="text-[10px] font-black uppercase tracking-widest px-2 text-text-primary">
-                    {currentCalendarDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                  <span className="text-[9px] lg:text-[10px] font-black uppercase tracking-widest px-1 lg:px-2 text-text-primary whitespace-nowrap">
+                    {currentCalendarDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                   </span>
                   <button onClick={() => setCurrentCalendarDate(new Date(currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1)))} className="p-1 hover:bg-surface-muted text-text-primary rounded-md transition-colors"><ChevronRight className="w-4 h-4" /></button>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-8 gap-2">
-              {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Weekly'].map(d => (
-                <div key={d} className="text-center text-[9px] font-black text-text-secondary uppercase tracking-widest py-2">{d}</div>
-              ))}
-              {calendarDays.map((day, i) => {
+            <div className="overflow-x-auto no-scrollbar -mx-6 px-6">
+              <div className="min-w-[600px] lg:min-w-0 grid grid-cols-8 gap-2">
+                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Weekly'].map(d => (
+                  <div key={d} className="text-center text-[9px] font-black text-text-secondary uppercase tracking-widest py-2">{d}</div>
+                ))}
+                {calendarDays.map((day, i) => {
                 if (day.isWeekly) {
                   const isProfit = day.pnl >= 0;
                   return (
@@ -764,7 +791,8 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
                 );
               })}
             </div>
-          </Card>
+          </div>
+        </Card>
 
           <Card className="p-6 space-y-6 bg-surface border-border">
             <div className="flex items-center gap-2">

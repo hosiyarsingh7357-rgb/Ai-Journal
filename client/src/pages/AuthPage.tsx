@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { BrainCircuit, Mail, Lock, User, ArrowRight, Sparkles, Shield, Zap } from 'lucide-react';
+import { Logo } from '../components/Logo';
+import { Mail, Lock, User, ArrowRight, Sparkles, Shield, Zap } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -51,9 +52,7 @@ export const AuthPage = () => {
       >
         <div className="bg-surface/40 backdrop-blur-2xl border border-border rounded-[3rem] p-8 lg:p-12 shadow-premium">
           <div className="flex flex-col items-center text-center mb-10">
-            <div className="w-16 h-16 rounded-2xl bg-status-success flex items-center justify-center shadow-premium mb-6">
-              <BrainCircuit className="w-10 h-10 text-white" />
-            </div>
+            <Logo size="lg" className="mb-6" />
             <h1 className="text-3xl font-black text-text-primary tracking-tight mb-2">
               {isForgotPassword ? 'Reset Password' : (isLogin ? 'Welcome Back' : 'Create Account')}
             </h1>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '../components/ui/Card';
 import { Search, Globe, RefreshCw, AlertCircle, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
-import { analyzeNews } from '../services/ai';
+import { analyzeNews } from '../services/aiService';
 
 const NewsCard: React.FC<{ event: any }> = ({ event }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -43,8 +43,13 @@ const NewsCard: React.FC<{ event: any }> = ({ event }) => {
       try {
         const result = await analyzeNews([event]);
         setAnalysis(result);
-      } catch (error) {
-        setAnalysis("Failed to load analysis.");
+      } catch (error: any) {
+        console.error("AI Analysis Error:", error);
+        if (error?.status === 'RESOURCE_EXHAUSTED' || error?.message?.includes('quota')) {
+          setAnalysis("AI Quota Exceeded. Please try again in a few minutes.");
+        } else {
+          setAnalysis("Failed to load analysis.");
+        }
       } finally {
         setIsLoading(false);
       }

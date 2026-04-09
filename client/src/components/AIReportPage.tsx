@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from './ui/Card';
-import { BrainCircuit, Sparkles, Zap, Shield, Globe, ArrowRight, RefreshCw } from 'lucide-react';
-import { generateAIReport } from '../services/ai';
-import { Trade } from '../types';
+import { BrainCircuit, Sparkles, Zap, Shield, Globe, ArrowRight, RefreshCw, AlertCircle } from 'lucide-react';
+import { generateAIReport } from '../services/aiService';
+import { Trade } from '@shared/types';
 
 interface AIReportData {
   sahi: string;
@@ -13,10 +13,12 @@ interface AIReportData {
 export const AIReportPage = ({ tradesList = [] }: { tradesList?: Trade[] }) => {
   const [report, setReport] = useState<AIReportData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isQuotaExceeded, setIsQuotaExceeded] = useState(false);
 
   const handleGenerateReport = async () => {
     if (tradesList.length === 0) return;
     setIsLoading(true);
+    setIsQuotaExceeded(false);
     try {
       const res = await generateAIReport(tradesList, true, true);
       if (res && res.trim()) {
@@ -42,8 +44,11 @@ export const AIReportPage = ({ tradesList = [] }: { tradesList?: Trade[] }) => {
           });
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI Report Error:", error);
+      if (error?.status === 'RESOURCE_EXHAUSTED' || error?.message?.includes('Quota')) {
+        setIsQuotaExceeded(true);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -102,6 +107,16 @@ export const AIReportPage = ({ tradesList = [] }: { tradesList?: Trade[] }) => {
                       <div className="h-6 w-full bg-surface-muted rounded-full" />
                       <div className="h-6 w-5/6 bg-surface-muted rounded-full" />
                       <div className="h-6 w-4/6 bg-surface-muted rounded-full" />
+                    </div>
+                  ) : isQuotaExceeded ? (
+                    <div className="p-8 text-center space-y-4 bg-status-danger/5 border border-status-danger/20 rounded-2xl">
+                      <AlertCircle className="w-10 h-10 text-status-danger mx-auto" />
+                      <div>
+                        <h4 className="text-lg font-black text-text-primary">AI Quota Exceeded</h4>
+                        <p className="text-sm text-text-secondary font-medium">
+                          The AI is currently receiving too many requests. Please wait a few minutes and try again.
+                        </p>
+                      </div>
                     </div>
                   ) : report ? (
                     <div className="space-y-8">

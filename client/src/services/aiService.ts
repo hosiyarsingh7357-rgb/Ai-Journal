@@ -1,5 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-import { Trade } from "../types";
+import { Trade } from "@shared/types";
 import { useAppStore } from "../store/useAppStore";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
@@ -129,6 +129,54 @@ export const analyzeNews = async (news: any[]) => {
     return result.text || "No analysis available.";
   } catch (error: any) {
     console.error("AI Analysis Error:", error);
+    
+    if (error?.status === 'RESOURCE_EXHAUSTED' || error?.message?.includes('quota')) {
+      const { setAiBlocked } = useAppStore.getState();
+      setAiBlocked(true, Date.now() + 5 * 60 * 1000);
+      throw error;
+    }
     return "An error occurred while analyzing news.";
+  }
+};
+
+export const generateTradeInsight = async (trade: any) => {
+  const { isAiBlocked, aiBlockedUntil, setAiBlocked } = useAppStore.getState();
+
+  if (isAiBlocked && aiBlockedUntil && Date.now() < aiBlockedUntil) {
+    const error = new Error('AI Quota Exceeded');
+    (error as any).status = 'RESOURCE_EXHAUSTED';
+    throw error;
+  }
+
+  const prompt = `
+    Analyze this trading performance and provide a very simple, easy-to-understand summary (max 3 sentences). 
+    Use normal, everyday language that a beginner trader would understand. Avoid complex financial jargon.
+    Explain clearly what went wrong or what was done correctly.
+    
+    Trade: ${trade.symbol} ${trade.type}
+    Result: ${trade.isWinner ? 'WON' : 'LOST'} (${trade.pnl})
+    Pre-Trade Analysis: ${trade.journal?.preTradeAnalysis}
+    Post-Trade Review: ${trade.journal?.postTradeReview}
+    Emotions: ${trade.journal?.emotions}
+    Lessons: ${trade.journal?.lessonsLearned}
+    
+    Focus on execution, psychology, and technical discipline. Provide simple, actionable advice.
+  `;
+
+  try {
+    const result = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: prompt,
+    });
+
+    return result.text || "No insights available.";
+  } catch (error: any) {
+    console.error("AI Insight Error:", error);
+    
+    if (error?.status === 'RESOURCE_EXHAUSTED' || error?.message?.includes('quota')) {
+      setAiBlocked(true, Date.now() + 5 * 60 * 1000);
+      throw error;
+    }
+    return null;
   }
 };

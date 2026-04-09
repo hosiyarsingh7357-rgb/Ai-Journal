@@ -16,7 +16,12 @@ export default defineConfig(({mode}) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'src'),
+        '@shared': path.resolve(__dirname, '../shared'),
       },
+    },
+    build: {
+      outDir: '../dist',
+      emptyOutDir: true,
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.

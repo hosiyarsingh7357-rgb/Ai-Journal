@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import { useAppStore } from "../store/useAppStore";
 
-export const PerformanceChart = ({ trades }: any) => {
+export const PerformanceChart = ({ trades, timePeriod = 'ALL' }: { trades: any[], timePeriod?: string }) => {
   const { theme } = useAppStore();
 
   const data = useMemo(() => {
@@ -22,8 +22,23 @@ export const PerformanceChart = ({ trades }: any) => {
       return parseFloat(clean) || 0;
     };
 
+    let filteredTrades = [...trades];
+    const now = new Date();
+    if (timePeriod !== 'ALL') {
+      const cutoff = new Date();
+      if (timePeriod === '1D') cutoff.setHours(0, 0, 0, 0);
+      else if (timePeriod === '1W') cutoff.setDate(now.getDate() - 7);
+      else if (timePeriod === '1M') cutoff.setDate(now.getDate() - 30);
+      else if (timePeriod === '3M') cutoff.setMonth(now.getMonth() - 3);
+      
+      filteredTrades = filteredTrades.filter(t => {
+        const tradeDate = new Date(t.exitDate || t.entryDate || '');
+        return tradeDate >= cutoff;
+      });
+    }
+
     let cumulative = 0;
-    const sortedTrades = [...trades].sort((a, b) => 
+    const sortedTrades = filteredTrades.sort((a, b) => 
       new Date(a.entryDate || '').getTime() - new Date(b.entryDate || '').getTime()
     );
 
@@ -36,7 +51,7 @@ export const PerformanceChart = ({ trades }: any) => {
         pnl: cumulative
       };
     });
-  }, [trades]);
+  }, [trades, timePeriod]);
 
   if (!data.length) {
     return (

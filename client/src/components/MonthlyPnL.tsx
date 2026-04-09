@@ -1,8 +1,8 @@
 import React from 'react';
 import { Card } from './ui/Card';
 import { Calendar, ArrowUpRight, ArrowDownRight } from 'lucide-react';
-import { Trade } from '../types';
-import { cn } from '../lib/utils';
+import { Trade } from '@shared/types';
+import { cn } from '@/utils/cn';
 
 export const MonthlyPnL = ({ isConnected = false, trades = [] }: { isConnected?: boolean, trades?: Trade[] }) => {
   const [selectedDate, setSelectedDate] = React.useState(new Date());

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Card } from './ui/Card';
 import { History, ArrowUpRight, ArrowDownRight, Clock } from 'lucide-react';
-import { Trade } from '../types';
-import { cn } from '../lib/utils';
+import { Trade } from '@shared/types';
+import { cn } from '@/utils/cn';
 
 export const RecentActivity = ({ isConnected = false, trades = [], onNavigate }: { isConnected?: boolean, trades?: Trade[], onNavigate: (page: string) => void }) => {
   const recentTrades = trades.slice(0, 5);

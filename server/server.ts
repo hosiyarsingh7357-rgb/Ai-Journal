@@ -5,6 +5,8 @@ import path from "path";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import tradeRoutes from "./routes/tradeRoutes.js";
+import { connectDatabase } from "./config/database.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 
 dotenv.config();
 
@@ -16,19 +18,7 @@ async function startServer() {
   app.use(express.json());
 
   // Connect to MongoDB
-  const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
-  if (mongoUri) {
-    mongoose.connect(mongoUri)
-      .then(() => {
-        console.log("✅ MongoDB Connected");
-      })
-      .catch((error) => {
-        console.error("❌ MongoDB Connection Failed:", error.message);
-        process.exit(1);
-      });
-  } else {
-    console.warn("⚠️ MONGO_URI not set, using in-memory storage");
-  }
+  await connectDatabase();
 
   // Basic routes
   app.get("/api", (req, res) => {
@@ -46,6 +36,9 @@ async function startServer() {
 
   app.use("/api/trades", tradeRoutes);
   app.use("/api/trade", tradeRoutes);
+
+  // Error Handler
+  app.use(errorHandler);
 
   app.get("/api/economic-news", async (req, res) => {
     // Generate a comprehensive mock dataset for the month
@@ -90,7 +83,7 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), 'client', 'dist');
+    const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));

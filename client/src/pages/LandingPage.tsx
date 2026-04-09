@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { Logo } from '../components/Logo';
 import { BrainCircuit, ArrowRight, Sparkles, Shield, Zap, Globe } from 'lucide-react';
 import { BackgroundAnimation } from '../components/BackgroundAnimation';
 import { Button } from '../components/ui/Button';
@@ -11,9 +12,7 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
       
       <nav className="h-24 flex items-center justify-between px-8 lg:px-16 relative z-10">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-status-success rounded-2xl flex items-center justify-center text-white shadow-premium">
-            <BrainCircuit className="w-6 h-6" />
-          </div>
+          <Logo />
           <h1 className="text-xl font-black text-text-primary tracking-tight">Ai Journal</h1>
         </div>
         <Button onClick={onGetStarted} variant="primary" className="rounded-2xl">

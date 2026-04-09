@@ -32,10 +32,10 @@ import { uploadImage } from '../services/storageService';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
-import { cn } from '../lib/utils';
+import { cn } from '@/utils/cn';
 import { useAppStore } from '../store/useAppStore';
 import { motion, AnimatePresence } from 'motion/react';
-import { JournalEntry, Trade } from '../types';
+import { JournalEntry, Trade } from '@shared/types';
 
 export const JournalPage = ({ 
   tradesList = [], 
@@ -215,6 +215,14 @@ export const JournalPage = ({
     }));
   };
 
+  const [showMobileDetail, setShowMobileDetail] = useState(false);
+
+  useEffect(() => {
+    if (selectedTradeId) {
+      setShowMobileDetail(true);
+    }
+  }, [selectedTradeId]);
+
   if (isLoading) {
     return (
       <div className="flex-1 flex items-center justify-center bg-background">
@@ -224,9 +232,12 @@ export const JournalPage = ({
   }
 
   return (
-    <div className="flex-1 flex h-full overflow-hidden bg-background">
+    <div className="flex-1 flex h-full overflow-hidden bg-background relative">
       {/* Left Sidebar: Trade List */}
-      <aside className="w-80 flex flex-col bg-surface border-r border-border shrink-0">
+      <aside className={cn(
+        "w-full lg:w-80 flex flex-col bg-surface border-r border-border shrink-0 transition-all duration-300",
+        showMobileDetail ? "hidden lg:flex" : "flex"
+      )}>
         <div className="p-6 border-b border-border">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-black text-text-primary">Trade Journal</h2>
@@ -313,7 +324,10 @@ export const JournalPage = ({
       </aside>
 
       {/* Main Content: Journal Form */}
-      <main className="flex-1 overflow-y-auto custom-scrollbar p-8 lg:p-12">
+      <main className={cn(
+        "flex-1 overflow-y-auto custom-scrollbar p-4 lg:p-12 transition-all duration-300",
+        !showMobileDetail ? "hidden lg:block" : "block"
+      )}>
         <AnimatePresence mode="wait">
           {selectedTrade ? (
             <motion.div
@@ -322,45 +336,52 @@ export const JournalPage = ({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="max-w-5xl mx-auto space-y-8"
+              className="max-w-5xl mx-auto space-y-6 lg:space-y-8"
             >
+              {/* Mobile Back Button */}
+              <button 
+                onClick={() => setShowMobileDetail(false)}
+                className="lg:hidden flex items-center gap-2 text-text-secondary hover:text-text-primary mb-4 font-bold text-xs uppercase tracking-widest"
+              >
+                <ChevronLeft className="w-4 h-4" /> Back to Trades
+              </button>
+
               {/* Form Header */}
-              <header className="flex items-center justify-between bg-surface p-6 rounded-[2rem] border border-border shadow-sm">
+              <header className="flex flex-col sm:flex-row sm:items-center justify-between bg-surface p-4 lg:p-6 rounded-[1.5rem] lg:rounded-[2rem] border border-border shadow-sm gap-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-surface-muted flex items-center justify-center border border-border">
-                    <TrendingUp className={cn("w-6 h-6", selectedTrade.type === 'BUY' ? "text-brand-primary" : "text-status-danger")} />
+                  <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl lg:rounded-2xl bg-surface-muted flex items-center justify-center border border-border">
+                    <TrendingUp className={cn("w-5 h-5 lg:w-6 lg:h-6", selectedTrade.type === 'BUY' ? "text-brand-primary" : "text-status-danger")} />
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <h1 className="text-2xl font-black text-text-primary tracking-tight">{selectedTrade.symbol}</h1>
+                      <h1 className="text-xl lg:text-2xl font-black text-text-primary tracking-tight">{selectedTrade.symbol}</h1>
                       <span className={cn(
-                        "px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-widest",
+                        "px-2 py-0.5 rounded-lg text-[9px] lg:text-[10px] font-black uppercase tracking-widest",
                         selectedTrade.isWinner ? "bg-status-success/10 text-status-success" : "bg-status-danger/10 text-status-danger"
                       )}>
                         {selectedTrade.isWinner ? 'Winner' : 'Loser'}
                       </span>
                     </div>
-                    <div className="flex items-center gap-4 text-[11px] font-black text-text-secondary uppercase tracking-widest">
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] lg:text-[11px] font-black text-text-secondary uppercase tracking-widest">
                       <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {selectedTrade.type} • Entry {selectedTrade.entryPrice}</span>
                       <span>• Size {selectedTrade.size}</span>
-                      <span>• {new Date(selectedTrade.entryDate || '').toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <button className="p-2.5 rounded-xl border border-border hover:bg-surface-muted transition-all text-text-secondary hover:text-text-primary">
-                    <RotateCcw className="w-5 h-5" />
+                <div className="flex items-center gap-2 lg:gap-3">
+                  <button className="p-2 lg:p-2.5 rounded-xl border border-border hover:bg-surface-muted transition-all text-text-secondary hover:text-text-primary">
+                    <RotateCcw className="w-4 h-4 lg:w-5 lg:h-5" />
                   </button>
                   <button 
                     onClick={() => onNavigate?.('analysis')}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border hover:bg-surface-muted transition-all text-text-primary font-bold text-sm"
+                    className="flex items-center gap-2 px-3 lg:px-4 py-2 lg:py-2.5 rounded-xl border border-border hover:bg-surface-muted transition-all text-text-primary font-bold text-xs lg:text-sm"
                   >
-                    <BarChart2 className="w-4 h-4" /> Analytics
+                    <BarChart2 className="w-4 h-4" /> <span className="hidden sm:inline">Analytics</span>
                   </button>
                   <Button 
                     onClick={handleSave} 
                     disabled={isSaving}
-                    className="px-8 py-2.5 rounded-xl bg-status-success hover:bg-status-success/90 text-text-primary"
+                    className="flex-1 sm:flex-none px-6 lg:px-8 py-2 lg:py-2.5 rounded-xl bg-status-success hover:bg-status-success/90 text-text-primary"
                   >
                     {isSaving ? 'Saving...' : 'Save'}
                   </Button>

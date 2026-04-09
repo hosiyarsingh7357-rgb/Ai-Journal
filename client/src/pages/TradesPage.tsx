@@ -27,10 +27,10 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Modal } from '../components/ui/Modal';
-import { cn } from '../lib/utils';
+import { cn } from '@/utils/cn';
 import { motion } from 'motion/react';
 import { useAppStore } from '../store/useAppStore';
-import { generateAIReport } from '../services/ai';
+import { generateAIReport } from '../services/aiService';
 
 const initialTrades: any[] = [];
 

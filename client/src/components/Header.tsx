@@ -1,4 +1,5 @@
 import React from 'react';
+import { Logo } from './Logo';
 import { 
   Search, 
   Bell, 
@@ -12,7 +13,7 @@ import {
   HelpCircle,
   CreditCard
 } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '@/utils/cn';
 import { useAppStore } from '../store/useAppStore';
 import { useAuth } from '../context/AuthContext';
 
@@ -24,6 +25,7 @@ interface HeaderProps {
   isAccountConnected: boolean;
   accountName?: string;
   onLogout: () => void;
+  onNavigate?: (page: string) => void;
 }
 
 export const Header = ({ 
@@ -33,7 +35,8 @@ export const Header = ({
   isSyncing, 
   isAccountConnected, 
   accountName,
-  onLogout 
+  onLogout,
+  onNavigate
 }: HeaderProps) => {
   const { toggleSidebar, theme } = useAppStore();
   const { user } = useAuth();
@@ -42,13 +45,10 @@ export const Header = ({
   return (
     <header className="h-20 bg-surface border-b border-border flex items-center justify-between px-4 lg:px-8 relative z-30 shadow-premium">
       <div className="flex items-center gap-4">
-        <button 
-          onClick={toggleSidebar}
-          className="lg:hidden p-2 hover:bg-surface-muted rounded-xl transition-colors text-text-secondary"
-        >
-          <Menu className="w-6 h-6" />
-        </button>
-        <h2 className="text-xl font-black text-text-primary tracking-tight">{title}</h2>
+        <div className="flex items-center gap-3">
+          <Logo size="sm" className="lg:hidden" />
+          <h2 className="text-lg lg:text-xl font-black text-text-primary tracking-tight truncate max-w-[120px] lg:max-w-none">{title}</h2>
+        </div>
       </div>
 
       <div className="flex items-center gap-3 lg:gap-6">
@@ -63,12 +63,12 @@ export const Header = ({
         </div>
 
         <div className="flex items-center gap-2 lg:gap-4">
-          {/* MT5 Connection Status */}
+          {/* MT5 Connection Status - Hidden on mobile, moved to profile dropdown */}
           <button 
             onClick={isAccountConnected ? onSync : onOpenLogin}
             disabled={isSyncing}
             className={cn(
-              "flex items-center gap-2 px-4 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-premium active:scale-95",
+              "hidden lg:flex items-center gap-2 px-4 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-premium active:scale-95",
               isAccountConnected 
                 ? "bg-status-success/10 text-status-success border border-status-success/30 hover:bg-status-success/20" 
                 : "bg-status-success text-white hover:bg-status-success/90"
@@ -114,19 +114,47 @@ export const Header = ({
             {isProfileOpen && (
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setIsProfileOpen(false)} />
-                <div className="absolute right-0 mt-3 w-64 bg-surface border border-border rounded-3xl shadow-premium z-50 p-3 animate-in fade-in slide-in-from-top-2">
+                <div className="absolute right-0 mt-3 w-64 max-w-[calc(100vw-2rem)] bg-surface border border-border rounded-3xl shadow-premium z-50 p-3 animate-in fade-in slide-in-from-top-2">
                   <div className="p-4 border-b border-border mb-2">
                     <p className="text-sm font-black text-text-primary truncate">{user?.displayName || 'Trader'}</p>
                     <p className="text-[10px] font-bold text-text-secondary truncate mt-0.5">{user?.email}</p>
                   </div>
                   <div className="space-y-1">
-                    <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-all">
+                    {/* Mobile Only: Connect MT5 */}
+                    <button 
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        isAccountConnected ? onSync() : onOpenLogin();
+                      }}
+                      className="lg:hidden w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-status-success hover:bg-status-success/10 transition-all"
+                    >
+                      <Globe className="w-4 h-4" /> {isAccountConnected ? (accountName || 'Sync MT5') : 'Connect MT5'}
+                    </button>
+                    <button 
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        onNavigate?.('settings');
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-all"
+                    >
                       <Settings className="w-4 h-4" /> Settings
                     </button>
-                    <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-all">
+                    <button 
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        onNavigate?.('subscription');
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-all"
+                    >
                       <CreditCard className="w-4 h-4" /> Subscription
                     </button>
-                    <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-all">
+                    <button 
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        onNavigate?.('support');
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-all"
+                    >
                       <HelpCircle className="w-4 h-4" /> Support
                     </button>
                     <div className="h-px bg-border my-2 mx-2" />

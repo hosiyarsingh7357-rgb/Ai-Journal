@@ -9,14 +9,15 @@ import { Card } from '../components/ui/Card';
 import { ArrowUpRight, PieChart, BrainCircuit, Sparkles, Calendar, Clock, TrendingUp } from 'lucide-react';
 import { useTrades } from '../context/TradeContext';
 import { useAppStore } from '../store/useAppStore';
-import { generateAIReport } from '../services/ai';
+import { generateAIReport } from '../services/aiService';
 import { motion } from 'motion/react';
-import { cn } from '../lib/utils';
+import { cn } from '@/utils/cn';
 
 export const Dashboard = ({ isConnected = false, onNavigate }: { isConnected?: boolean, onNavigate: (page: string, tradeId?: string) => void }) => {
   const { trades } = useTrades();
   const { isAiBlocked, aiBlockedUntil, setAiBlocked } = useAppStore();
   const [report, setReport] = useState<string | null>(null);
+  const [chartTimePeriod, setChartTimePeriod] = useState('1W');
 
   const stats = useMemo(() => {
     if (!trades || trades.length === 0) {
@@ -184,7 +185,7 @@ export const Dashboard = ({ isConnected = false, onNavigate }: { isConnected?: b
             )}
 
             {/* KPI Cards Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
               {[
                 { label: 'Total P&L', value: stats.totalPnL, trades: stats.totalTrades, icon: ArrowUpRight, color: 'status-success', type: 'Total' },
                 { label: 'Unrealized', value: stats.unrealizedPnL, trades: stats.openTrades, icon: Clock, color: 'yellow-600', type: 'Open' },
@@ -197,25 +198,25 @@ export const Dashboard = ({ isConnected = false, onNavigate }: { isConnected?: b
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 + i * 0.1 }}
                 >
-                  <Card className="p-6 bg-surface border-border shadow-sm h-full flex flex-col justify-between relative overflow-hidden">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", kpi.color === 'status-success' ? "bg-status-success/10 text-status-success" : "bg-yellow-900/30 text-yellow-500")}>
-                        <kpi.icon className="w-6 h-6" />
+                  <Card className="p-3 lg:p-6 bg-surface border-border shadow-sm h-full flex flex-col justify-between relative overflow-hidden">
+                    <div className="flex justify-between items-start mb-2 lg:mb-4">
+                      <div className={cn("w-8 h-8 lg:w-10 lg:h-10 rounded-lg lg:rounded-xl flex items-center justify-center", kpi.color === 'status-success' ? "bg-status-success/10 text-status-success" : "bg-yellow-900/30 text-yellow-500")}>
+                        <kpi.icon className="w-5 h-5 lg:w-6 lg:h-6" />
                       </div>
-                      <span className={cn("px-2 py-1 rounded-md text-[10px] font-black uppercase", kpi.color === 'status-success' ? "bg-status-success/10 text-status-success" : "bg-yellow-900/30 text-yellow-500")}>{kpi.type}</span>
+                      <span className={cn("px-1.5 py-0.5 rounded-md text-[8px] lg:text-[10px] font-black uppercase", kpi.color === 'status-success' ? "bg-status-success/10 text-status-success" : "bg-yellow-900/30 text-yellow-500")}>{kpi.type}</span>
                     </div>
                     <div>
-                      <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">{kpi.label}</p>
-                      <p className={cn("text-2xl font-black tracking-tight", typeof kpi.value === 'number' ? (kpi.value >= 0 ? "text-status-success" : "text-status-danger") : "text-text-primary")}>
+                      <p className="text-[8px] lg:text-[10px] font-black text-text-secondary uppercase tracking-widest mb-0.5 lg:mb-1">{kpi.label}</p>
+                      <p className={cn("text-lg lg:text-2xl font-black tracking-tight", typeof kpi.value === 'number' ? (kpi.value >= 0 ? "text-status-success" : "text-status-danger") : "text-text-primary")}>
                         {typeof kpi.value === 'number' ? formatCurrency(kpi.value) : kpi.value}
                       </p>
                       {kpi.progress !== undefined ? (
-                        <div className="w-full h-1.5 bg-surface-muted rounded-full mt-3 overflow-hidden">
+                        <div className="w-full h-1 lg:h-1.5 bg-surface-muted rounded-full mt-2 lg:mt-3 overflow-hidden">
                           <div className="h-full bg-status-success" style={{ width: `${kpi.progress}%` }} />
                         </div>
                       ) : (
-                        <p className="text-[10px] font-bold text-text-secondary mt-1 flex items-center gap-1">
-                          {kpi.trades} {kpi.type === 'Open' ? 'open positions' : 'trades'}
+                        <p className="text-[8px] lg:text-[10px] font-bold text-text-secondary mt-1 flex items-center gap-1">
+                          {kpi.trades} {kpi.type === 'Open' ? 'open' : 'trades'}
                         </p>
                       )}
                     </div>
@@ -242,12 +243,32 @@ export const Dashboard = ({ isConnected = false, onNavigate }: { isConnected?: b
                         <ArrowUpRight className="w-4 h-4 text-text-secondary" />
                         <h3 className="text-[10px] font-black uppercase tracking-widest text-text-primary">Performance</h3>
                       </div>
-                      <div className="flex gap-1 bg-background p-1 rounded-lg">
-                        {['1D', '1W', '1M', '3M', 'ALL'].map(t => (
-                          <button key={t} className={cn("px-3 py-1 text-[10px] font-black rounded-md transition-all", t === '1W' ? "bg-status-success text-white shadow-sm" : "text-text-secondary hover:bg-surface-muted")}>
-                            {t}
-                          </button>
-                        ))}
+                      <div className="flex items-center gap-2">
+                        <div className="md:hidden">
+                          <select 
+                            value={chartTimePeriod}
+                            onChange={(e) => setChartTimePeriod(e.target.value)}
+                            className="bg-surface-muted border border-border rounded-lg px-2 py-1 text-[10px] font-black uppercase tracking-widest text-text-primary outline-none"
+                          >
+                            {['1D', '1W', '1M', '3M', 'ALL'].map(t => (
+                              <option key={t} value={t}>{t}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="hidden md:flex gap-1 bg-background p-1 rounded-lg">
+                          {['1D', '1W', '1M', '3M', 'ALL'].map(t => (
+                            <button 
+                              key={t} 
+                              onClick={() => setChartTimePeriod(t)}
+                              className={cn(
+                                "px-3 py-1 text-[10px] font-black rounded-md transition-all", 
+                                t === chartTimePeriod ? "bg-status-success text-white shadow-sm" : "text-text-secondary hover:bg-surface-muted"
+                              )}
+                            >
+                              {t}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
                     <div className="mb-6">
@@ -265,7 +286,7 @@ export const Dashboard = ({ isConnected = false, onNavigate }: { isConnected?: b
                       </div>
                     </div>
                     <div className="h-[300px]">
-                      <PerformanceChart trades={trades} />
+                      <PerformanceChart trades={trades} timePeriod={chartTimePeriod} />
                     </div>
                   </Card>
                 </motion.div>

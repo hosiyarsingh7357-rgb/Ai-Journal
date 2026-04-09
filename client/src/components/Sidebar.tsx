@@ -1,4 +1,5 @@
 import React from 'react';
+import { Logo } from './Logo';
 import { 
   LayoutDashboard, 
   BarChart3, 
@@ -6,7 +7,7 @@ import {
   BookOpen, 
   LineChart, 
   Globe, 
-  BrainCircuit, 
+  BrainCircuit,
   HelpCircle, 
   CreditCard, 
   MessageSquare, 
@@ -14,7 +15,7 @@ import {
   LogOut,
   X
 } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '@/utils/cn';
 import { useAppStore } from '../store/useAppStore';
 import { useAuth } from '../context/AuthContext';
 
@@ -54,9 +55,7 @@ export const Sidebar = ({ currentPage, onNavigate }: SidebarProps) => {
       <div className="flex flex-col h-full p-6">
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-status-success rounded-2xl flex items-center justify-center text-white shadow-premium">
-              <BrainCircuit className="w-6 h-6" />
-            </div>
+            <Logo />
             <h1 className="text-xl font-black text-text-primary tracking-tight">Ai Journal</h1>
           </div>
           <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-2 hover:bg-surface-muted rounded-xl transition-colors">

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from './components/Sidebar';
+import { BottomNav } from './components/BottomNav';
 import { Header } from './components/Header';
 import { Dashboard } from './pages/Dashboard'; 
 import { SupportPage } from './components/SupportPage';
@@ -20,7 +21,7 @@ import { useTrades } from './context/TradeContext';
 import { motion } from 'motion/react';
 import { X } from 'lucide-react';
 import { useAuth } from './context/AuthContext';
-import { db } from './lib/firebase';
+import { db } from './config/firebase';
 import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 import { useAppStore } from './store/useAppStore';
 import { Button } from './components/ui/Button';
@@ -159,6 +160,7 @@ export default function App() {
       setSelectedTradeIdForJournal(null);
     }
     setCurrentPage(page);
+    setSidebarOpen(false);
   };
 
   const renderPage = () => {
@@ -283,17 +285,23 @@ export default function App() {
             isAccountConnected={isAccountConnected}
             accountName={accountName}
             onLogout={logout}
+            onNavigate={handleNavigate}
           />
           <motion.div
             key={currentPage}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="flex-1 overflow-hidden flex flex-col will-change-transform"
+            className="flex-1 overflow-hidden flex flex-col will-change-transform pb-16 lg:pb-0"
           >
             {renderPage()}
           </motion.div>
         </main>
+
+        <BottomNav 
+          currentPage={currentPage} 
+          onNavigate={handleNavigate} 
+        />
 
         <MT5LoginModal 
           isOpen={isLoginModalOpen} 

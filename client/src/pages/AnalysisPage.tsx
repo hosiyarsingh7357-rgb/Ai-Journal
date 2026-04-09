@@ -9,6 +9,7 @@ import {
   Layers, 
   ArrowUpRight,
   ChevronDown,
+  ChevronLeft,
   Star,
   Info,
   Zap,
@@ -21,9 +22,9 @@ import { useAuth } from '../context/AuthContext';
 import { subscribeToJournals } from '../services/journalService';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { cn } from '../lib/utils';
-import { JournalEntry, Trade } from '../types';
-import { GoogleGenAI } from "@google/genai";
+import { cn } from '@/utils/cn';
+import { JournalEntry, Trade } from '@shared/types';
+import { generateTradeInsight } from '../services/aiService';
 import { useAppStore } from '../store/useAppStore';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -249,38 +250,17 @@ export const AnalysisPage = ({
     const timer = setTimeout(async () => {
       setIsGeneratingInsight(true);
       try {
-        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-        const prompt = `
-          Analyze this trading performance and provide a very simple, easy-to-understand summary (max 3 sentences). 
-          Use normal, everyday language that a beginner trader would understand. Avoid complex financial jargon.
-          Explain clearly what went wrong or what was done correctly.
-          
-          Trade: ${selectedTrade.symbol} ${selectedTrade.type}
-          Result: ${selectedTrade.isWinner ? 'WON' : 'LOST'} (${selectedTrade.pnl})
-          Pre-Trade Analysis: ${selectedTrade.journal?.preTradeAnalysis}
-          Post-Trade Review: ${selectedTrade.journal?.postTradeReview}
-          Emotions: ${selectedTrade.journal?.emotions}
-          Lessons: ${selectedTrade.journal?.lessonsLearned}
-          
-          Focus on execution, psychology, and technical discipline. Provide simple, actionable advice.
-        `;
-        
-        const response = await ai.models.generateContent({
-          model: "gemini-3-flash-preview",
-          contents: prompt,
-        });
+        const text = await generateTradeInsight(selectedTrade);
         
         if (isMounted) {
-          const text = response.text || "No insights available.";
-          setAiInsight(text);
-          insightCache.current[tradeId] = text;
+          setAiInsight(text || "No insights available.");
+          if (text) insightCache.current[tradeId] = text;
         }
       } catch (error: any) {
         console.error("Error generating AI insight:", error);
         if (isMounted) {
-          if (error?.status === 'RESOURCE_EXHAUSTED' || error?.message?.includes('quota')) {
-            setAiBlocked(true, Date.now() + 5 * 60 * 1000);
-            setAiInsight("AI is currently busy. Please try again in a few minutes.");
+          if (error?.status === 'RESOURCE_EXHAUSTED' || error?.message?.includes('Quota')) {
+            setAiInsight("AI Quota Exceeded. Please try again in a few minutes.");
           } else {
             setAiInsight("Unable to generate AI insights at this time.");
           }
@@ -296,6 +276,14 @@ export const AnalysisPage = ({
     };
   }, [selectedTrade, isAiBlocked, aiBlockedUntil]);
 
+  const [showMobileDetail, setShowMobileDetail] = useState(false);
+
+  useEffect(() => {
+    if (selectedTradeId) {
+      setShowMobileDetail(true);
+    }
+  }, [selectedTradeId]);
+
   if (isLoading) {
     return (
       <div className="flex-1 flex items-center justify-center bg-background">
@@ -305,9 +293,12 @@ export const AnalysisPage = ({
   }
 
   return (
-    <div className="flex-1 flex h-full overflow-hidden bg-background">
+    <div className="flex-1 flex h-full overflow-hidden bg-background relative">
       {/* Left Sidebar: Trade Analysis List */}
-      <aside className="w-80 flex flex-col bg-surface border-r border-border shrink-0">
+      <aside className={cn(
+        "w-full lg:w-80 flex flex-col bg-surface border-r border-border shrink-0 transition-all duration-300",
+        showMobileDetail ? "hidden lg:flex" : "flex"
+      )}>
         <div className="p-6 border-b border-border">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-black text-text-primary">Trade Analysis</h2>
@@ -452,7 +443,10 @@ export const AnalysisPage = ({
       </aside>
 
       {/* Main Content: Detailed Analysis */}
-      <main className="flex-1 overflow-y-auto custom-scrollbar p-8 lg:p-12">
+      <main className={cn(
+        "flex-1 overflow-y-auto custom-scrollbar p-4 lg:p-12 transition-all duration-300",
+        !showMobileDetail ? "hidden lg:block" : "block"
+      )}>
         <AnimatePresence mode="wait">
           {selectedTrade ? (
             <motion.div
@@ -461,43 +455,50 @@ export const AnalysisPage = ({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="max-w-6xl mx-auto space-y-8"
+              className="max-w-6xl mx-auto space-y-6 lg:space-y-8"
             >
+              {/* Mobile Back Button */}
+              <button 
+                onClick={() => setShowMobileDetail(false)}
+                className="lg:hidden flex items-center gap-2 text-text-secondary hover:text-text-primary mb-4 font-bold text-xs uppercase tracking-widest"
+              >
+                <ChevronLeft className="w-4 h-4" /> Back to Analysis
+              </button>
+
               {/* Header */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 rounded-2xl bg-surface border border-border flex items-center justify-center shadow-sm">
-                    <TrendingUp className={cn("w-8 h-8", selectedTrade.type === 'BUY' ? "text-brand-primary" : "text-status-danger")} />
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                <div className="flex items-center gap-4 lg:gap-6">
+                  <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-xl lg:rounded-2xl bg-surface border border-border flex items-center justify-center shadow-sm">
+                    <TrendingUp className={cn("w-6 h-6 lg:w-8 lg:h-8", selectedTrade.type === 'BUY' ? "text-brand-primary" : "text-status-danger")} />
                   </div>
                   <div>
-                    <div className="flex items-center gap-3 mb-1">
-                      <h1 className="text-3xl font-black text-text-primary tracking-tight">{selectedTrade.symbol}</h1>
+                    <div className="flex flex-wrap items-center gap-2 lg:gap-3 mb-1">
+                      <h1 className="text-xl lg:text-3xl font-black text-text-primary tracking-tight">{selectedTrade.symbol}</h1>
                       <span className={cn(
-                        "px-3 py-1 rounded-xl text-[11px] font-black uppercase tracking-widest",
+                        "px-2 lg:px-3 py-0.5 lg:py-1 rounded-lg lg:rounded-xl text-[9px] lg:text-[11px] font-black uppercase tracking-widest",
                         selectedTrade.isWinner ? "bg-status-success/10 text-status-success" : "bg-status-danger/10 text-status-danger"
                       )}>
                         {selectedTrade.isWinner ? 'Winner' : 'Loser'}
                       </span>
-                      <div className="flex items-center gap-1.5 px-3 py-1 bg-surface rounded-xl border border-border">
-                        <span className="text-[10px] font-bold text-text-secondary uppercase">Score:</span>
-                        <span className="text-[11px] font-black text-text-primary">{qualityMetrics.total}</span>
+                      <div className="flex items-center gap-1.5 px-2 lg:px-3 py-0.5 lg:py-1 bg-surface rounded-lg lg:rounded-xl border border-border">
+                        <span className="text-[9px] lg:text-[10px] font-bold text-text-secondary uppercase">Score:</span>
+                        <span className="text-[10px] lg:text-[11px] font-black text-text-primary">{qualityMetrics.total}</span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4 text-[12px] font-black text-text-secondary uppercase tracking-widest">
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] lg:text-[12px] font-black text-text-secondary uppercase tracking-widest">
                       <span className="flex items-center gap-1.5">
                         <span className={cn(selectedTrade.type === 'BUY' ? "text-brand-primary" : "text-status-danger")}>
                           {selectedTrade.type === 'BUY' ? 'Long' : 'Short'}
                         </span>
                         • {new Date(selectedTrade.entryDate || '').toLocaleString('en-US', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                        • Duration: {holdDuration}
                       </span>
                     </div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.2em] mb-1">P&L</p>
+                <div className="sm:text-right">
+                  <p className="text-[9px] lg:text-[10px] font-black text-text-secondary uppercase tracking-[0.2em] mb-1">P&L</p>
                   <p className={cn(
-                    "text-3xl font-black tracking-tight",
+                    "text-2xl lg:text-3xl font-black tracking-tight",
                     selectedTrade.isWinner ? "text-status-success" : "text-status-danger"
                   )}>
                     {selectedTrade.pnl}

@@ -1,4 +1,4 @@
-import { db, auth } from "../lib/firebase";
+import { db, auth } from "../config/firebase";
 import { 
   collection, 
   query, 
@@ -11,7 +11,7 @@ import {
   orderBy,
   getDocs
 } from "firebase/firestore";
-import { Trade } from "../types";
+import { Trade } from "@shared/types";
 
 enum OperationType {
   CREATE = 'create',

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card } from './ui/Card';
 import { MessageSquare, Star, Send, Smile, Frown, Meh } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { cn } from '@/utils/cn';
 
 export const FeedbackPage = () => {
   const [rating, setRating] = useState<number | null>(null);

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Shield, Server, User, Lock, Globe, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { db } from '../lib/firebase';
+import { db } from '../config/firebase';
 import { doc, setDoc, collection, addDoc } from 'firebase/firestore';
 
 interface MT5LoginModalProps {

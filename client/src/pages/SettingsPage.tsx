@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { toggleTheme } from '../utils/theme';
 import { useAuth } from '../context/AuthContext';
-import { db } from '../lib/firebase';
+import { db } from '../config/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export const SettingsPage = () => {
