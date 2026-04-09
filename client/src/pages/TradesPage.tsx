@@ -275,7 +275,7 @@ export const TradesPage = ({
   }, [isConnected, isSyncing]);
 
   const handleRefreshAnalysis = async () => {
-    console.log("Refresh analysis clicked, tradesList:", tradesList);
+    console.log("Refresh analysis clicked, tradesList length:", tradesList?.length);
     if (!tradesList || tradesList.length === 0) {
       console.log("No trades to analyze");
       return;
@@ -283,46 +283,52 @@ export const TradesPage = ({
     setIsAnalyzing(true);
     setAnalysisError(null);
     try {
+      console.log("Calling generateAIReport...");
       const res = await generateAIReport(tradesList, false, true);
-      console.log("AI Report generated:", res);
+      console.log("AI Report response received:", res ? "YES" : "NO");
+      
       if (res) {
         try {
-          let cleanRes = res;
-          if (typeof res === 'string') {
-            // Strip markdown code blocks if present
-            cleanRes = res.replace(/```json\n?|```/g, '').trim();
-          }
           let parsed;
-          if (typeof cleanRes === 'string') {
-            // Try to find the first '{' and last '}'
+          if (typeof res === 'string') {
+            // Clean the string from markdown blocks
+            const cleanRes = res.replace(/```json\n?|```/g, '').trim();
+            
+            // Try to extract JSON if there's surrounding text
             const firstBrace = cleanRes.indexOf('{');
             const lastBrace = cleanRes.lastIndexOf('}');
+            
             if (firstBrace !== -1 && lastBrace !== -1) {
               const jsonStr = cleanRes.substring(firstBrace, lastBrace + 1);
-              try {
-                parsed = JSON.parse(jsonStr);
-              } catch (e) {
-                parsed = JSON.parse(cleanRes); // Fallback
-              }
+              parsed = JSON.parse(jsonStr);
             } else {
               parsed = JSON.parse(cleanRes);
             }
           } else {
-            parsed = cleanRes;
+            parsed = res;
           }
+          
+          console.log("Parsed AI report successfully:", parsed);
           setReport(parsed);
         } catch (parseErr) {
-          console.error("JSON Parse Error:", parseErr, res);
-          setAnalysisError("AI returned an invalid format. Please try again.");
+          console.error("JSON Parse Error in TradesPage:", parseErr, res);
+          setAnalysisError("AI returned an unexpected format. Please try again.");
         }
       } else {
-        setAnalysisError("Failed to generate AI report.");
+        setAnalysisError("Failed to generate AI report. Please check your API key.");
       }
-    } catch (e) {
-      console.error(e);
-      setAnalysisError("An error occurred while analyzing trades.");
+    } catch (e: any) {
+      console.error("Error in handleRefreshAnalysis:", e);
+      if (e?.status === 'RESOURCE_EXHAUSTED' || e?.message?.includes('quota')) {
+        setAnalysisError("AI Quota exceeded. Please try again in 5 minutes.");
+      } else if (e?.message?.includes('API key')) {
+        setAnalysisError("Invalid API Key. Please check your Gemini API settings.");
+      } else {
+        setAnalysisError("An error occurred while analyzing trades.");
+      }
+    } finally {
+      setIsAnalyzing(false);
     }
-    setIsAnalyzing(false);
   };
 
   useEffect(() => {

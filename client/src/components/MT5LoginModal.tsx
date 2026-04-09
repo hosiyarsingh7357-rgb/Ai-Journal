@@ -7,7 +7,7 @@ import { doc, setDoc, collection, addDoc } from 'firebase/firestore';
 interface MT5LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess?: () => void;
+  onSuccess?: (accountInfo?: any) => void;
 }
 
 export const MT5LoginModal = ({ isOpen, onClose, onSuccess }: MT5LoginModalProps) => {
@@ -63,7 +63,7 @@ export const MT5LoginModal = ({ isOpen, onClose, onSuccess }: MT5LoginModalProps
 
       setStep(2);
       setIsConnecting(false);
-      if (onSuccess) onSuccess();
+      if (onSuccess) onSuccess({ accountName: `${formData.broker} (${formData.account})` });
     } catch (err: any) {
       setError(err.message || 'Failed to connect account');
       setIsConnecting(false);

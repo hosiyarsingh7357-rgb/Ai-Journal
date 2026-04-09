@@ -108,17 +108,22 @@ export default function App() {
     settings: 'Settings'
   };
 
-  const handleConnectAccount = async () => {
+  const handleConnectAccount = async (accountInfo?: any) => {
     setIsSyncing(true);
     setSyncProgress(0);
     
+    const nameToUse = accountInfo?.accountName || accountName || 'DEMO_ACCOUNT';
+    if (accountInfo?.accountName) {
+      setAccountName(accountInfo.accountName);
+    }
+
     // Persist connection state to Firestore if user is logged in
     if (user) {
       try {
         await setDoc(doc(db, 'users', user.uid), {
           mt5Credentials: {
             connectedAt: new Date().toISOString(),
-            account: accountName || 'DEMO_ACCOUNT'
+            account: nameToUse
           }
         }, { merge: true });
       } catch (err) {
@@ -126,31 +131,30 @@ export default function App() {
       }
     }
 
+    let progress = 0;
     const interval = setInterval(() => {
-      setSyncProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setIsAccountConnected(true);
-          setIsSyncing(false);
-          
-          if (trades.length === 0) {
-            const mockTrades = [
-              { symbol: 'XAUUSD', type: 'BUY', size: '1.00 Lots', entryPrice: '2015.50', exitPrice: '2035.20', pnl: '+$1,970.00', isWinner: true, entryDate: new Date(Date.now() - 86400000 * 2).toISOString(), exitDate: new Date(Date.now() - 86400000 * 1.9).toISOString() },
-              { symbol: 'EURUSD', type: 'SELL', size: '2.50 Lots', entryPrice: '1.0850', exitPrice: '1.0820', pnl: '+$750.00', isWinner: true, entryDate: new Date(Date.now() - 86400000 * 5).toISOString(), exitDate: new Date(Date.now() - 86400000 * 4.8).toISOString() },
-              { symbol: 'GBPUSD', type: 'BUY', size: '0.50 Lots', entryPrice: '1.2650', exitPrice: '1.2610', pnl: '-$200.00', isWinner: false, entryDate: new Date(Date.now() - 86400000 * 10).toISOString(), exitDate: new Date(Date.now() - 86400000 * 9.9).toISOString() },
-              { symbol: 'NAS100', type: 'BUY', size: '0.10 Lots', entryPrice: '17850', exitPrice: '18100', pnl: '+$2,500.00', isWinner: true, entryDate: new Date(Date.now() - 86400000 * 15).toISOString(), exitDate: new Date(Date.now() - 86400000 * 14.5).toISOString() },
-              { symbol: 'BTCUSD', type: 'SELL', size: '0.05 Lots', entryPrice: '65000', exitPrice: '63500', pnl: '+$75.00', isWinner: true, entryDate: new Date(Date.now() - 86400000 * 20).toISOString(), exitDate: new Date(Date.now() - 86400000 * 19.8).toISOString() },
-              { symbol: 'ETHUSD', type: 'BUY', size: '1.00 Lots', entryPrice: '3500.00', pnl: '+$120.00', entryDate: new Date(Date.now() - 3600000).toISOString() },
-              { symbol: 'SOLUSD', type: 'SELL', size: '10.00 Lots', entryPrice: '145.50', pnl: '-$45.00', entryDate: new Date(Date.now() - 7200000).toISOString() },
-            ];
-            mockTrades.forEach(t => addTrade(t as any));
-          }
-          
-          return 100;
+      progress += 10;
+      setSyncProgress(progress);
+      
+      if (progress >= 100) {
+        clearInterval(interval);
+        setIsAccountConnected(true);
+        setIsSyncing(false);
+        
+        if (trades.length === 0) {
+          const mockTrades = [
+            { symbol: 'XAUUSD', type: 'BUY', size: '1.00 Lots', entryPrice: '2015.50', exitPrice: '2035.20', pnl: '+$1,970.00', isWinner: true, entryDate: new Date(Date.now() - 86400000 * 2).toISOString(), exitDate: new Date(Date.now() - 86400000 * 1.9).toISOString() },
+            { symbol: 'EURUSD', type: 'SELL', size: '2.50 Lots', entryPrice: '1.0850', exitPrice: '1.0820', pnl: '+$750.00', isWinner: true, entryDate: new Date(Date.now() - 86400000 * 5).toISOString(), exitDate: new Date(Date.now() - 86400000 * 4.8).toISOString() },
+            { symbol: 'GBPUSD', type: 'BUY', size: '0.50 Lots', entryPrice: '1.2650', exitPrice: '1.2610', pnl: '-$200.00', isWinner: false, entryDate: new Date(Date.now() - 86400000 * 10).toISOString(), exitDate: new Date(Date.now() - 86400000 * 9.9).toISOString() },
+            { symbol: 'NAS100', type: 'BUY', size: '0.10 Lots', entryPrice: '17850', exitPrice: '18100', pnl: '+$2,500.00', isWinner: true, entryDate: new Date(Date.now() - 86400000 * 15).toISOString(), exitDate: new Date(Date.now() - 86400000 * 14.5).toISOString() },
+            { symbol: 'BTCUSD', type: 'SELL', size: '0.05 Lots', entryPrice: '65000', exitPrice: '63500', pnl: '+$75.00', isWinner: true, entryDate: new Date(Date.now() - 86400000 * 20).toISOString(), exitDate: new Date(Date.now() - 86400000 * 19.8).toISOString() },
+            { symbol: 'ETHUSD', type: 'BUY', size: '1.00 Lots', entryPrice: '3500.00', pnl: '+$120.00', entryDate: new Date(Date.now() - 3600000).toISOString() },
+            { symbol: 'SOLUSD', type: 'SELL', size: '10.00 Lots', entryPrice: '145.50', pnl: '-$45.00', entryDate: new Date(Date.now() - 7200000).toISOString() },
+          ];
+          mockTrades.forEach(t => addTrade(t as any));
         }
-        return prev + 5;
-      });
-    }, 150);
+      }
+    }, 100);
   };
 
   const handleNavigate = (page: string, tradeId?: string) => {
@@ -204,7 +208,7 @@ export default function App() {
       case 'feedback':
         return <FeedbackPage />;
       case 'settings':
-        return <SettingsPage />;
+        return <SettingsPage onSync={handleConnectAccount} isSyncing={isSyncing} />;
       default:
         return <div className="p-8 text-center body-text">Page Not Found</div>;
     }

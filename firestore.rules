@@ -101,17 +101,15 @@ service cloud.firestore {
     // ===============================================================
 
     function isValidUser(data) {
-      return hasRequiredFields(data, ['username', 'email', 'passwordHash', 'createdAt']) &&
-             hasOnlyAllowedFields(data, ['username', 'email', 'passwordHash', 'createdAt', 'firstName', 'lastName']) &&
-             data.username is string && data.username.size() > 0 && data.username.size() < 50 &&
-             isValidEmail(data.email) &&
-             data.passwordHash is string &&
-             isValidDateTimeString(data.createdAt);
+      return (!('email' in data) || isValidEmail(data.email)) &&
+             (!('createdAt' in data) || isValidDateTimeString(data.createdAt)) &&
+             (!('mt5Credentials' in data) || data.mt5Credentials is map) &&
+             hasOnlyAllowedFields(data, ['uid', 'username', 'email', 'createdAt', 'firstName', 'lastName', 'mt5Credentials', 'displayName', 'photoURL', 'theme', 'currency', 'language', 'name', 'role']);
     }
 
     function isValidBrokerAccount(data) {
       return hasRequiredFields(data, ['userId', 'accountName', 'brokerName', 'createdAt']) &&
-             hasOnlyAllowedFields(data, ['userId', 'accountName', 'brokerName', 'createdAt', 'accountNumber', 'currency']) &&
+             hasOnlyAllowedFields(data, ['userId', 'accountName', 'brokerName', 'createdAt', 'accountNumber', 'currency', 'platform']) &&
              data.userId == request.auth.uid &&
              data.accountName is string && data.accountName.size() > 0 && data.accountName.size() < 100 &&
              data.brokerName is string && data.brokerName.size() > 0 && data.brokerName.size() < 100 &&

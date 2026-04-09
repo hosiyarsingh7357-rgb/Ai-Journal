@@ -21,8 +21,9 @@ import { toggleTheme } from '../utils/theme';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../config/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { cn } from '@/utils/cn';
 
-export const SettingsPage = () => {
+export const SettingsPage = ({ onSync, isSyncing }: { onSync?: () => void, isSyncing?: boolean }) => {
   const { user, signOut } = useAuth();
   const [currency, setCurrency] = useState('USD ($)');
   const [language, setLanguage] = useState('English (US)');
@@ -216,9 +217,13 @@ export const SettingsPage = () => {
                   </div>
                 </div>
                 <div className="flex flex-col justify-end gap-3">
-                  <button className="w-full bg-surface-muted hover:bg-surface text-text-primary py-2.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 border border-border shadow-sm">
-                    <RefreshCw className="w-4 h-4" />
-                    Synchronize Data
+                  <button 
+                    onClick={onSync}
+                    disabled={isSyncing || !userData?.mt5Credentials}
+                    className="w-full bg-surface-muted hover:bg-surface text-text-primary py-2.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 border border-border shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <RefreshCw className={cn("w-4 h-4", isSyncing && "animate-spin")} />
+                    {isSyncing ? 'Synchronizing...' : 'Synchronize Data'}
                   </button>
                   <button className="w-full border border-status-danger/30 text-status-danger hover:bg-status-danger/10 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2">
                     <XCircle className="w-4 h-4" />

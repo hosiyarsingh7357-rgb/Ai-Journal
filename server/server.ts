@@ -1,14 +1,15 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import cors from "cors";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 import tradeRoutes from "./routes/tradeRoutes.js";
+import aiRoutes from "./routes/aiRoutes.js";
 import { connectDatabase } from "./config/database.js";
 import { errorHandler } from "./middleware/errorHandler.js";
-
-dotenv.config();
 
 async function startServer() {
   const app = express();
@@ -30,12 +31,14 @@ async function startServer() {
     res.json({ 
       status: "ok", 
       database: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
-      readyState: mongoose.connection.readyState 
+      readyState: mongoose.connection.readyState,
+      aiConfigured: !!process.env.GEMINI_API_KEY
     });
   });
 
   app.use("/api/trades", tradeRoutes);
   app.use("/api/trade", tradeRoutes);
+  app.use("/api/ai", aiRoutes);
 
   // Error Handler
   app.use(errorHandler);

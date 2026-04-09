@@ -1,11 +1,42 @@
-import { GoogleGenAI } from "@google/genai";
 import { Trade } from "@shared/types";
 import { useAppStore } from "../store/useAppStore";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
-
 // Persistent cache for AI reports using localStorage
 const CACHE_KEY_PREFIX = 'ai_report_cache_';
+
+const callGeminiAI = async (prompt: string, config?: any) => {
+  try {
+    console.log("Calling AI via server proxy...");
+    
+    const response = await fetch("/api/ai/analyze", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ prompt, config }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      const error = new Error(errorData.error || "Failed to generate AI content");
+      (error as any).status = response.status;
+      throw error;
+    }
+
+    const data = await response.json();
+    return data.text || "";
+  } catch (error: any) {
+    console.error("AI Error in Service:", error);
+    
+    // Handle quota errors
+    if (error?.status === 429 || error?.message?.includes('quota')) {
+      const { setAiBlocked } = useAppStore.getState();
+      setAiBlocked(true, Date.now() + 5 * 60 * 1000);
+    }
+    
+    throw error;
+  }
+};
 
 const getCachedReport = (key: string) => {
   try {
@@ -80,30 +111,27 @@ export const generateAIReport = async (trades: Trade[], fullReport: boolean = fa
        - "weaknesses": an array of objects with a "desc" field (e.g. [{"desc": "Overtrading during London session"}])
        - "actionPlan": an array of objects with "title" and "desc" fields (e.g. [{"title": "Session Limit", "desc": "Limit to 2 trades per session"}])
        
+       Example of valid response:
+       {
+         "summary": "Your performance shows strong discipline in gold trading but some inconsistency in forex pairs.",
+         "strengths": [{"desc": "Excellent risk management on XAUUSD trades"}],
+         "weaknesses": [{"desc": "Entering trades too late during the New York session"}],
+         "actionPlan": [{"title": "Session Focus", "desc": "Focus on London session for EURUSD trades"}]
+       }
+
        Trades data: ${JSON.stringify(tradeSummary)}`;
 
   try {
-    const result = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json"
-      }
+    const text = await callGeminiAI(prompt, {
+      responseMimeType: "application/json"
     });
 
-    const text = result.text || "";
     if (text) {
       setCachedReport(cacheKey, text);
     }
     return text;
   } catch (error: any) {
-    console.error("AI Generation Error:", error);
-    
-    if (error?.status === 'RESOURCE_EXHAUSTED' || error?.message?.includes('quota')) {
-      // Block AI for 5 minutes
-      setAiBlocked(true, Date.now() + 5 * 60 * 1000);
-      throw error;
-    }
+    console.error("AI Generation Error in Service:", error);
     return null;
   }
 };
@@ -121,26 +149,16 @@ export const analyzeNews = async (news: any[]) => {
      Do NOT return JSON. Return only the bulleted summary.`;
 
   try {
-    const result = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: prompt,
-    });
-
-    return result.text || "No analysis available.";
+    const text = await callGeminiAI(prompt);
+    return text || "No analysis available.";
   } catch (error: any) {
     console.error("AI Analysis Error:", error);
-    
-    if (error?.status === 'RESOURCE_EXHAUSTED' || error?.message?.includes('quota')) {
-      const { setAiBlocked } = useAppStore.getState();
-      setAiBlocked(true, Date.now() + 5 * 60 * 1000);
-      throw error;
-    }
     return "An error occurred while analyzing news.";
   }
 };
 
 export const generateTradeInsight = async (trade: any) => {
-  const { isAiBlocked, aiBlockedUntil, setAiBlocked } = useAppStore.getState();
+  const { isAiBlocked, aiBlockedUntil } = useAppStore.getState();
 
   if (isAiBlocked && aiBlockedUntil && Date.now() < aiBlockedUntil) {
     const error = new Error('AI Quota Exceeded');
@@ -164,19 +182,10 @@ export const generateTradeInsight = async (trade: any) => {
   `;
 
   try {
-    const result = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: prompt,
-    });
-
-    return result.text || "No insights available.";
+    const text = await callGeminiAI(prompt);
+    return text || "No insights available.";
   } catch (error: any) {
     console.error("AI Insight Error:", error);
-    
-    if (error?.status === 'RESOURCE_EXHAUSTED' || error?.message?.includes('quota')) {
-      setAiBlocked(true, Date.now() + 5 * 60 * 1000);
-      throw error;
-    }
     return null;
   }
 };
