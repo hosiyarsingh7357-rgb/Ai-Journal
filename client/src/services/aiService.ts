@@ -120,20 +120,20 @@ export const generateAIReport = async (trades: Trade[], fullReport: boolean = fa
        
        Trades data: ${JSON.stringify(tradeSummary)}`
     : `Analyze these trades and provide a structured AI insight report in JSON format. 
-       CRITICAL: Use very simple, everyday language (Hinglish or simple English) that anyone can understand easily. Avoid complex trading jargon.
+       CRITICAL: Use very simple, normal language (Hinglish) that anyone can understand easily. Avoid complex trading jargon. Write as if you are explaining to a friend.
        CRITICAL: You MUST return ONLY a valid JSON object. DO NOT include any text outside the JSON.
        The JSON MUST have exactly these keys (all lowercase):
-       - "summary": a brief 1-sentence overview of performance
-       - "strengths": an array of objects with a "desc" field (e.g. [{"desc": "Aapne XAUUSD par risk management achha kiya"}])
-       - "weaknesses": an array of objects with a "desc" field (e.g. [{"desc": "London session mein overtrading ki gayi"}])
-       - "actionPlan": an array of objects with "title" and "desc" fields (e.g. [{"title": "Session Limit", "desc": "Ek session mein sirf 2 trades lein"}])
+       - "summary": a brief 1-sentence overview of performance in simple Hinglish
+       - "strengths": an array of objects with a "desc" field (e.g. [{"desc": "Aapne gold me loss kam liya, ye achhi baat hai"}])
+       - "weaknesses": an array of objects with a "desc" field (e.g. [{"desc": "Aap jaldi trade close kar rahe hain"}])
+       - "actionPlan": an array of objects with "title" and "desc" fields (e.g. [{"title": "Patience", "desc": "Trade ko thoda aur time dein"}])
        
        Example of valid response:
        {
-         "summary": "Aapki performance gold trading mein achhi hai, par forex pairs mein thodi inconsistency hai.",
-         "strengths": [{"desc": "XAUUSD trades par risk management bahut badhiya raha"}],
-         "weaknesses": [{"desc": "New York session mein entry bahut late li gayi"}],
-         "actionPlan": [{"title": "Session Focus", "desc": "EURUSD trades ke liye London session par focus karein"}]
+         "summary": "Aapki trading theek chal rahi hai, bas thoda sabar rakhne ki zaroorat hai.",
+         "strengths": [{"desc": "Risk management achha hai"}],
+         "weaknesses": [{"desc": "Loss wale trades ko lamba hold kar rahe hain"}],
+         "actionPlan": [{"title": "Stop Loss", "desc": "Stop loss hit hone par turant exit karein"}]
        }
 
        Trades data: ${JSON.stringify(tradeSummary)}`;
@@ -204,5 +204,59 @@ export const generateTradeInsight = async (trade: any) => {
   } catch (error: any) {
     console.error("AI Insight Error:", error);
     return null;
+  }
+};
+
+export const chatWithSupportAI = async (message: string, chatHistory: { role: 'user' | 'model', content: string }[], trades: any[] = []) => {
+  const tradeSummary = trades.map(t => ({
+    date: t.exitDate || t.entryDate,
+    symbol: t.symbol,
+    type: t.type,
+    pnl: t.pnl,
+    isWinner: t.isWinner,
+    notes: t.journal?.postTradeReview || t.journal?.lessonsLearned || ''
+  }));
+
+  const systemInstruction = `You are the Advanced AI Trading Assistant & Support Bot for "AI Journal".
+Your goal is to help users with their questions about the website, trading features, AND their personal trading data.
+
+Key information about AI Journal:
+- It helps traders track execution history, analyze performance, and provides AI-driven psychological and behavioral insights.
+- Contact email: hosiyarsingh7357@gmail.com
+- Live chat is available 24/5 during market hours.
+
+USER'S ACTUAL TRADING DATA (JSON):
+${JSON.stringify(tradeSummary)}
+
+Instructions for analyzing trades:
+- If the user asks about a specific date, check the trading data for that date.
+- If they ask how many trades they took, count them from the data.
+- If they ask which pairs they traded, list the symbols.
+- If they ask about their mistakes or what to improve, analyze their losing trades and their notes, and give them actionable advice (e.g., "You are losing mostly on XAUUSD, you need to work on patience").
+- Act as a personal trading coach.
+- Be helpful, concise, and friendly. Use Hinglish (Hindi + English) or English based on the user's language.`;
+
+  const contents = chatHistory.map(msg => ({
+    role: msg.role,
+    parts: [{ text: msg.content }]
+  }));
+  
+  contents.push({
+    role: 'user',
+    parts: [{ text: message }]
+  });
+
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: contents,
+      config: {
+        systemInstruction: systemInstruction
+      }
+    });
+    return response.text || "Sorry, I couldn't process that.";
+  } catch (error) {
+    console.error("Support Chat Error:", error);
+    throw error;
   }
 };

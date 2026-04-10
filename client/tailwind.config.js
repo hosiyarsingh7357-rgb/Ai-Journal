@@ -43,11 +43,11 @@ module.exports = {
         '3xl': '1.5rem',
       },
       backgroundImage: {
-        'gradient-premium': 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
+        'gradient-premium': 'linear-gradient(135deg, #34d399 0%, #059669 100%)',
       },
       boxShadow: {
         'premium': '0 20px 40px -15px rgba(0, 0, 0, 0.3)',
-        'glow': '0 0 20px -5px rgba(99, 102, 241, 0.5)',
+        'glow': '0 0 20px -5px rgba(16, 185, 129, 0.5)',
       }
     },
   },

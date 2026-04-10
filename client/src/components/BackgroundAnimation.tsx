@@ -40,10 +40,10 @@ void main() {
     m.x *= aspect;
     float pDist = distance(p, m);
 
-    vec3 colorBg = vec3(0.01, 0.01, 0.03);
-    vec3 color1 = vec3(0.05, 0.08, 0.25);
-    vec3 color2 = vec3(0.15, 0.05, 0.28);
-    vec3 color3 = vec3(0.25, 0.35, 0.65);
+    vec3 colorBg = vec3(0.01, 0.03, 0.01);
+    vec3 color1 = vec3(0.05, 0.25, 0.08);
+    vec3 color2 = vec3(0.05, 0.28, 0.15);
+    vec3 color3 = vec3(0.25, 0.65, 0.35);
     
     float mouseInfluence = smoothstep(0.6, 0.0, pDist);
     
@@ -64,7 +64,7 @@ void main() {
     
     float streaks = sin(p.x * 10.0 + p.y * 5.0 + iTime) * 0.5 + 0.5;
     streaks *= pow(noise(p * 4.0 + iTime * 0.2), 3.0);
-    finalColor += vec3(0.1, 0.15, 0.3) * streaks * 0.15;
+    finalColor += vec3(0.1, 0.3, 0.15) * streaks * 0.15;
 
     finalColor *= 1.1;
     

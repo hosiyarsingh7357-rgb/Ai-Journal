@@ -491,7 +491,7 @@ export const JournalPage = ({
                      className="space-y-3"
                    >
                       <div className="flex items-center gap-2 text-text-secondary">
-                        <BookOpen className="w-4 h-4 text-brand-secondary" />
+                        <BookOpen className="w-4 h-4 text-emerald-500" />
                         <h3 className="text-[10px] font-black uppercase tracking-[0.2em]">Lessons Learned</h3>
                       </div>
                       <textarea 

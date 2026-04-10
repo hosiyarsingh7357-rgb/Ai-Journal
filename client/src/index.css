@@ -17,7 +17,7 @@
     --text-primary: #111827;
     --text-secondary: #4B5563;
     --text-muted: #6B7280;
-    --brand-primary: #4F46E5;
+    --brand-primary: #10B981;
     --status-success: #22C55E;
     --status-danger: #EF4444;
     --status-warning: #F59E0B;
@@ -81,14 +81,14 @@ body {
 
 /* Premium Gradient Text */
 .text-gradient {
-  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 /* Subtle Glow Effect */
 .glow-primary {
-  box-shadow: 0 0 20px -5px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 0 20px -5px rgba(16, 185, 129, 0.3);
 }
 
 /* Custom scrollbar */
@@ -100,11 +100,11 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(16, 185, 129, 0.1);
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.3);
+  background: rgba(16, 185, 129, 0.3);
 }
 
 /* Custom styles for Journal Date Input */

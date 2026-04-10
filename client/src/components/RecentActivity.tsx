@@ -5,7 +5,9 @@ import { Trade } from '@shared/types';
 import { cn } from '@/utils/cn';
 
 export const RecentActivity = ({ isConnected = false, trades = [], onNavigate }: { isConnected?: boolean, trades?: Trade[], onNavigate: (page: string) => void }) => {
-  const recentTrades = trades.slice(0, 5);
+  const recentTrades = [...trades]
+    .sort((a, b) => new Date(b.exitDate || b.entryDate || '').getTime() - new Date(a.exitDate || a.entryDate || '').getTime())
+    .slice(0, 5);
 
   return (
     <Card className="p-8 relative overflow-hidden group">

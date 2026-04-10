@@ -25,6 +25,7 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
   const { theme } = useAppStore();
   const [timePeriod, setTimePeriod] = useState<TimePeriod>('30d');
   const [tradeFilter, setTradeFilter] = useState<TradeFilter>('all');
+  const [equityMode, setEquityMode] = useState<'equity' | 'drawdown'>('equity');
   const [currentCalendarDate, setCurrentCalendarDate] = useState(new Date());
   const [selectedCalendarDay, setSelectedCalendarDay] = useState<string | null>(null);
 
@@ -64,7 +65,47 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
   }, [tradesList, timePeriod, tradeFilter]);
 
   const stats = useMemo(() => {
-    if (!filteredTrades.length) return null;
+    const defaultStats = {
+      totalPnL: 0,
+      winRate: 0,
+      pf: 0,
+      expectancy: 0,
+      avgWin: 0,
+      avgLoss: 0,
+      winCount: 0,
+      lossCount: 0,
+      totalWins: 0,
+      totalLosses: 0,
+      largestWin: 0,
+      largestLoss: 0,
+      maxWinStreak: 0,
+      maxLossStreak: 0,
+      totalVolume: 0,
+      long: { trades: 0, pnl: 0, winRate: 0 },
+      short: { trades: 0, pnl: 0, winRate: 0 },
+      symbolStats: [],
+      dayOfWeekStats: [
+        { day: 'Mon', pnl: 0, trades: 0 },
+        { day: 'Tue', pnl: 0, trades: 0 },
+        { day: 'Wed', pnl: 0, trades: 0 },
+        { day: 'Thu', pnl: 0, trades: 0 },
+        { day: 'Fri', pnl: 0, trades: 0 },
+        { day: 'Sat', pnl: 0, trades: 0 },
+        { day: 'Sun', pnl: 0, trades: 0 },
+      ],
+      sessions: {
+        asian: { trades: 0, wins: 0, pnl: 0, volume: 0, losses: 0 },
+        london: { trades: 0, wins: 0, pnl: 0, volume: 0, losses: 0 },
+        newyork: { trades: 0, wins: 0, pnl: 0, volume: 0, losses: 0 }
+      },
+      grossProfit: 0,
+      grossLoss: 0,
+      bestMonth: { name: 'None', pnl: 0 },
+      worstMonth: { name: 'None', pnl: 0 },
+      avgMonthPnL: 0
+    };
+
+    if (!filteredTrades.length) return defaultStats;
 
     let totalPnL = 0;
     let winCount = 0;
@@ -103,7 +144,7 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
     filteredTrades.forEach(t => {
       const pnl = parsePnL(t.pnl);
       totalPnL += pnl;
-      totalVolume += parseFloat(t.size || '0');
+      totalVolume += parseFloat(t.size || '0') || 0;
 
       // Symbol Stats
       if (!symbolStats[t.symbol]) symbolStats[t.symbol] = { pnl: 0, trades: 0, wins: 0 };
@@ -151,24 +192,37 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
       if (hour >= 22 || hour < 8) {
         sessions.asian.trades++;
         sessions.asian.pnl += pnl;
-        sessions.asian.volume += parseFloat(t.size || '0');
+        sessions.asian.volume += parseFloat(t.size || '0') || 0;
         if (pnl > 0) sessions.asian.wins++; else sessions.asian.losses += Math.abs(pnl);
       } else if (hour >= 8 && hour < 13) {
         sessions.london.trades++;
         sessions.london.pnl += pnl;
-        sessions.london.volume += parseFloat(t.size || '0');
+        sessions.london.volume += parseFloat(t.size || '0') || 0;
         if (pnl > 0) sessions.london.wins++; else sessions.london.losses += Math.abs(pnl);
       } else if (hour >= 13 && hour < 22) {
         sessions.newyork.trades++;
         sessions.newyork.pnl += pnl;
-        sessions.newyork.volume += parseFloat(t.size || '0');
+        sessions.newyork.volume += parseFloat(t.size || '0') || 0;
         if (pnl > 0) sessions.newyork.wins++; else sessions.newyork.losses += Math.abs(pnl);
       }
     });
 
-    const winRate = (winCount / filteredTrades.length) * 100;
-    const pf = totalLosses === 0 ? 99 : totalWins / totalLosses;
-    const expectancy = totalPnL / filteredTrades.length;
+    const winRate = filteredTrades.length > 0 ? (winCount / filteredTrades.length) * 100 : 0;
+    const pf = totalLosses === 0 ? (totalWins > 0 ? 99 : 0) : totalWins / totalLosses;
+    const expectancy = filteredTrades.length > 0 ? totalPnL / filteredTrades.length : 0;
+
+    // Monthly stats for "Your Stats"
+    const monthlyPnL: Record<string, number> = {};
+    filteredTrades.forEach(t => {
+      const d = new Date(t.exitDate || t.entryDate || '');
+      const monthKey = d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+      monthlyPnL[monthKey] = (monthlyPnL[monthKey] || 0) + parsePnL(t.pnl);
+    });
+
+    const months = Object.entries(monthlyPnL).sort((a, b) => b[1] - a[1]);
+    const bestMonth = months[0] || ['None', 0];
+    const worstMonth = months[months.length - 1] || ['None', 0];
+    const avgMonthPnL = months.length > 0 ? totalPnL / months.length : 0;
 
     return {
       totalPnL,
@@ -188,24 +242,41 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
       dayOfWeekStats,
       sessions,
       grossProfit: totalWins,
-      grossLoss: totalLosses
+      grossLoss: totalLosses,
+      bestMonth: { name: bestMonth[0], pnl: bestMonth[1] },
+      worstMonth: { name: worstMonth[0], pnl: worstMonth[1] },
+      avgMonthPnL
     };
-  }, [filteredTrades]);
+  }, [filteredTrades, tradesList]);
 
   const equityData = useMemo(() => {
     let cumulative = 0;
-    return [...filteredTrades]
-      .sort((a, b) => new Date(a.exitDate || a.entryDate || '').getTime() - new Date(b.exitDate || b.entryDate || '').getTime())
-      .map((t, i) => {
-        cumulative += parsePnL(t.pnl);
-        const date = new Date(t.exitDate || t.entryDate || '');
-        return { 
-          name: i + 1, 
-          pnl: cumulative,
-          date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-        };
+    let peak = 0;
+    const sorted = [...filteredTrades]
+      .sort((a, b) => new Date(a.exitDate || a.entryDate || '').getTime() - new Date(b.exitDate || b.entryDate || '').getTime());
+    
+    // Group by date for daily equity curve
+    const dailyPnL: Record<string, number> = {};
+    sorted.forEach(t => {
+      const date = new Date(t.exitDate || t.entryDate || '').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      dailyPnL[date] = (dailyPnL[date] || 0) + parsePnL(t.pnl);
+    });
+
+    const result = [];
+    const dates = Object.keys(dailyPnL);
+    for (const date of dates) {
+      cumulative += dailyPnL[date];
+      if (cumulative > peak) peak = cumulative;
+      const drawdown = cumulative - peak;
+      
+      result.push({
+        name: date,
+        pnl: equityMode === 'equity' ? cumulative : drawdown,
+        date: date
       });
-  }, [filteredTrades]);
+    }
+    return result;
+  }, [filteredTrades, equityMode]);
 
   const formatCurrency = (val: number) => {
     const formatted = Math.abs(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -487,25 +558,41 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
                   <h3 className="text-[10px] font-black uppercase tracking-widest text-text-primary">Equity Curve</h3>
                 </div>
                 <div className="flex bg-surface-muted p-1 rounded-lg gap-1">
-                  <button className="px-3 py-1 text-[8px] font-black uppercase bg-status-success text-text-primary rounded-md shadow-sm">Equity</button>
-                  <button className="px-3 py-1 text-[8px] font-black uppercase text-text-secondary hover:text-text-primary">Drawdown</button>
+                  <button 
+                    onClick={() => setEquityMode('equity')}
+                    className={cn(
+                      "px-3 py-1 text-[8px] font-black uppercase rounded-md transition-all",
+                      equityMode === 'equity' ? "bg-status-success text-text-primary shadow-sm" : "text-text-secondary hover:text-text-primary"
+                    )}
+                  >
+                    Equity
+                  </button>
+                  <button 
+                    onClick={() => setEquityMode('drawdown')}
+                    className={cn(
+                      "px-3 py-1 text-[8px] font-black uppercase rounded-md transition-all",
+                      equityMode === 'drawdown' ? "bg-status-danger text-text-primary shadow-sm" : "text-text-secondary hover:text-text-primary"
+                    )}
+                  >
+                    Drawdown
+                  </button>
                 </div>
               </div>
               <div className="flex-1 min-h-[400px] relative">
-                {equityData.length < 2 ? (
+                {equityData.length < 1 ? (
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center space-y-4">
                     <div className="w-12 h-12 rounded-2xl bg-surface-muted flex items-center justify-center">
                       <TrendingUp className="w-6 h-6 text-text-muted" />
                     </div>
-                    <p className="text-xs text-text-secondary font-bold max-w-[200px]">Close more trades to see your equity curve</p>
+                    <p className="text-xs text-text-secondary font-bold max-w-[200px]">Close more trades to see your {equityMode} curve</p>
                   </div>
                 ) : (
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={equityData}>
                       <defs>
                         <linearGradient id="colorPnL" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#10B981" stopOpacity={0.1}/>
-                          <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
+                          <stop offset="5%" stopColor={equityMode === 'equity' ? "#10B981" : "#EF4444"} stopOpacity={0.1}/>
+                          <stop offset="95%" stopColor={equityMode === 'equity' ? "#10B981" : "#EF4444"} stopOpacity={0}/>
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
@@ -529,7 +616,7 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
                         contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
                         labelStyle={{ display: 'none' }}
                       />
-                      <Area type="monotone" dataKey="pnl" stroke="#10B981" strokeWidth={3} fillOpacity={1} fill="url(#colorPnL)" />
+                      <Area type="monotone" dataKey="pnl" stroke={equityMode === 'equity' ? "#10B981" : "#EF4444"} strokeWidth={3} fillOpacity={1} fill="url(#colorPnL)" />
                     </AreaChart>
                   </ResponsiveContainer>
                 )}
@@ -753,24 +840,35 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
                 if (day.isWeekly) {
                   const isProfit = day.pnl >= 0;
                   return (
-                    <div key={`weekly-${i}`} className={cn(
-                      "rounded-xl border p-3 flex flex-col items-center justify-center text-center",
-                      isProfit ? "bg-status-success/10 border-status-success/20" : "bg-status-danger/10 border-status-danger/20"
-                    )}>
+                    <motion.div 
+                      key={`weekly-${i}`}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: i * 0.01 }}
+                      className={cn(
+                        "rounded-xl border p-3 flex flex-col items-center justify-center text-center",
+                        isProfit ? "bg-status-success/10 border-status-success/20" : "bg-status-danger/10 border-status-danger/20"
+                      )}
+                    >
                       <p className={cn("text-[8px] font-black uppercase mb-1", isProfit ? "text-status-success" : "text-status-danger")}>Weekly</p>
                       <p className={cn("text-[10px] font-black", isProfit ? "text-status-success" : "text-status-danger")}>
                         {isProfit ? '+' : ''}{formatCurrency(day.pnl)}
                       </p>
                       <p className={cn("text-[8px] font-bold mt-0.5", isProfit ? "text-status-success/60" : "text-status-danger/60")}>Traded Days {day.tradedDays}</p>
-                    </div>
+                    </motion.div>
                   );
                 }
 
                 if (!day.date) return <div key={`empty-${i}`} className="aspect-square" />;
 
                 return (
-                  <button 
+                  <motion.button 
                     key={day.date}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: i * 0.01 }}
+                    whileHover={{ scale: 1.05, zIndex: 10 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => setSelectedCalendarDay(day.date)}
                     className={cn(
                       "aspect-square rounded-xl border p-2 flex flex-col transition-all group relative overflow-hidden",
@@ -787,7 +885,7 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
                         <p className="text-[8px] font-bold text-text-secondary opacity-60">{day.trades} trade</p>
                       </div>
                     )}
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
@@ -909,17 +1007,17 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card className="p-6 bg-surface border-border shadow-sm">
               <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">Best Month</p>
-              <p className="text-2xl font-black text-status-success">{formatCurrency(stats.totalPnL)}</p>
-              <p className="text-[9px] font-bold text-text-secondary mt-1">Apr 2026</p>
+              <p className="text-2xl font-black text-status-success">{formatCurrency(stats.bestMonth.pnl)}</p>
+              <p className="text-[9px] font-bold text-text-secondary mt-1">{stats.bestMonth.name}</p>
             </Card>
             <Card className="p-6 bg-surface border-border shadow-sm">
               <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">Worst Month</p>
-              <p className="text-2xl font-black text-status-danger">{formatCurrency(stats.totalPnL)}</p>
-              <p className="text-[9px] font-bold text-text-secondary mt-1">Apr 2026</p>
+              <p className="text-2xl font-black text-status-danger">{formatCurrency(stats.worstMonth.pnl)}</p>
+              <p className="text-[9px] font-bold text-text-secondary mt-1">{stats.worstMonth.name}</p>
             </Card>
             <Card className="p-6 bg-surface border-border shadow-sm">
               <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest mb-1">Average</p>
-              <p className="text-2xl font-black text-brand-primary">{formatCurrency(stats.totalPnL)}</p>
+              <p className="text-2xl font-black text-brand-primary">{formatCurrency(stats.avgMonthPnL)}</p>
               <p className="text-[9px] font-bold text-text-secondary mt-1">per Month</p>
             </Card>
           </div>
@@ -930,22 +1028,22 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
                 <tbody className="divide-y divide-gray-800">
                   {[
                     { label: 'Total P&L', value: formatCurrency(stats.totalPnL) },
-                    { label: 'Average daily volume', value: '1.00' },
+                    { label: 'Average daily volume', value: (stats.totalVolume / (filteredTrades.length || 1)).toFixed(2) },
                     { label: 'Average winning trade', value: formatCurrency(stats.avgWin) },
                     { label: 'Average losing trade', value: formatCurrency(stats.avgLoss) },
                     { label: 'Total number of trades', value: filteredTrades.length },
                     { label: 'Number of winning trades', value: stats.winCount },
                     { label: 'Number of losing trades', value: stats.lossCount },
-                    { label: 'Number of break even trades', value: '0' },
+                    { label: 'Number of break even trades', value: filteredTrades.length - stats.winCount - stats.lossCount },
                     { label: 'Max consecutive wins', value: stats.maxWinStreak },
                     { label: 'Max consecutive losses', value: stats.maxLossStreak },
                     { label: 'Total commissions', value: '$0.00' },
                     { label: 'Total swap', value: '$0.00' },
                     { label: 'Largest profit', value: formatCurrency(stats.largestWin) },
                     { label: 'Largest loss', value: formatCurrency(stats.largestLoss) },
-                    { label: 'Avg hold time (All)', value: '5d 1h' },
-                    { label: 'Avg hold time (Winners)', value: '5d 1h' },
-                    { label: 'Avg hold time (Losers)', value: '-' },
+                    { label: 'Avg hold time (All)', value: '—' },
+                    { label: 'Avg hold time (Winners)', value: '—' },
+                    { label: 'Avg hold time (Losers)', value: '—' },
                   ].map((row, idx) => (
                     <tr key={idx} className="hover:bg-surface-muted transition-colors">
                       <td className="px-6 py-3 text-[9px] font-black text-text-secondary uppercase tracking-widest">{row.label}</td>
@@ -960,21 +1058,21 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
               <table className="w-full text-left">
                 <tbody className="divide-y divide-gray-800">
                   {[
-                    { label: 'Open trades', value: '0' },
-                    { label: 'Total trading days', value: '1' },
-                    { label: 'Winning days', value: '1' },
-                    { label: 'Losing days', value: '0' },
-                    { label: 'Breakeven days', value: '0' },
-                    { label: 'Max consecutive winning days', value: '1' },
-                    { label: 'Max consecutive losing days', value: '0' },
-                    { label: 'Average daily P&L', value: formatCurrency(stats.totalPnL) },
-                    { label: 'Average winning day P&L', value: formatCurrency(stats.totalPnL) },
-                    { label: 'Average losing day P&L', value: '$0.00' },
-                    { label: 'Largest profitable day', value: formatCurrency(stats.totalPnL) },
-                    { label: 'Largest losing day', value: '$0.00' },
+                    { label: 'Open trades', value: tradesList.filter(t => !t.exitPrice).length },
+                    { label: 'Total trading days', value: stats.dayOfWeekStats.reduce((acc, d) => acc + (d.trades > 0 ? 1 : 0), 0) },
+                    { label: 'Winning days', value: stats.dayOfWeekStats.filter(d => d.pnl > 0).length },
+                    { label: 'Losing days', value: stats.dayOfWeekStats.filter(d => d.pnl < 0).length },
+                    { label: 'Breakeven days', value: stats.dayOfWeekStats.filter(d => d.trades > 0 && d.pnl === 0).length },
+                    { label: 'Max consecutive winning days', value: '—' },
+                    { label: 'Max consecutive losing days', value: '—' },
+                    { label: 'Average daily P&L', value: formatCurrency(stats.totalPnL / (stats.dayOfWeekStats.filter(d => d.trades > 0).length || 1)) },
+                    { label: 'Average winning day P&L', value: formatCurrency(stats.totalWins / (stats.dayOfWeekStats.filter(d => d.pnl > 0).length || 1)) },
+                    { label: 'Average losing day P&L', value: formatCurrency(stats.totalLosses / (stats.dayOfWeekStats.filter(d => d.pnl < 0).length || 1)) },
+                    { label: 'Largest profitable day', value: formatCurrency(Math.max(...stats.dayOfWeekStats.map(d => d.pnl), 0)) },
+                    { label: 'Largest losing day', value: formatCurrency(Math.min(...stats.dayOfWeekStats.map(d => d.pnl), 0)) },
                     { label: 'Trade expectancy', value: formatCurrency(stats.expectancy) },
-                    { label: 'Max drawdown', value: '$0.00' },
-                    { label: 'Max drawdown %', value: '0%' },
+                    { label: 'Max drawdown', value: formatCurrency(Math.min(...equityData.map(d => d.pnl), 0)) },
+                    { label: 'Max drawdown %', value: '—' },
                   ].map((row, idx) => (
                     <tr key={idx} className="hover:bg-surface-muted transition-colors">
                       <td className="px-6 py-3 text-[9px] font-black text-text-secondary uppercase tracking-widest">{row.label}</td>

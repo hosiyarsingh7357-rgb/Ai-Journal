@@ -56,8 +56,30 @@ export default function App() {
     setTheme(isDark ? 'dark' : 'light');
   }, [setTheme]);
 
+  // Ensure sidebar is closed on mobile by default
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        setSidebarOpen(false);
+      } else {
+        setSidebarOpen(true);
+      }
+    };
+
+    // Run once on mount
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [setSidebarOpen]);
+
   useEffect(() => {
     if (user) {
+      // Close sidebar on mobile when user logs in
+      if (window.innerWidth < 1024) {
+        setSidebarOpen(false);
+      }
+
       // Fetch user data from Firestore
       const fetchUserData = async () => {
         try {
@@ -228,7 +250,7 @@ export default function App() {
       <div className="flex items-center justify-center h-screen bg-background text-text-primary">
         <BackgroundAnimation />
         <Card className="p-8 flex flex-col items-center gap-6 w-full max-w-sm relative z-10 text-center" hoverable={false}>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">Ai Journal</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-brand-primary to-emerald-500 bg-clip-text text-transparent">Ai Journal</h1>
           <p className="text-text-secondary">
             {verificationEmailSent 
               ? `We have sent you a verification email. Please verify it and log in. (Check your Spam folder if you don't see it)`

@@ -281,7 +281,7 @@ export const Dashboard = ({ isConnected = false, onNavigate }: { isConnected?: b
                           stats.totalPnL >= 0 ? "bg-status-success/10 text-status-success" : "bg-status-danger/10 text-status-danger"
                         )}>
                           <ArrowUpRight className={cn("w-3 h-3", stats.totalPnL < 0 && "rotate-180")} /> 
-                          {Math.abs((stats.totalPnL / 1000) * 100).toFixed(1)}%
+                          {stats.totalTrades > 0 ? Math.abs((stats.totalPnL / (stats.totalTrades * 100)) * 100).toFixed(1) : '0.0'}%
                         </span>
                       </div>
                     </div>

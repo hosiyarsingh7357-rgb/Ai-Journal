@@ -108,7 +108,7 @@ export const TradesPage = ({
 
     tradesList.forEach(trade => {
       // Volume/Size parsing
-      const sizeVal = parseFloat(trade.size?.replace(/[^0-9.]/g, '') || trade.volume?.replace(/[^0-9.]/g, '') || '0');
+      const sizeVal = parseFloat(trade.size?.replace(/[^0-9.]/g, '') || trade.volume?.replace(/[^0-9.]/g, '') || '0') || 0;
       totalVol += sizeVal;
 
       // PnL parsing
@@ -133,7 +133,30 @@ export const TradesPage = ({
   }, [tradesList]);
 
   const processedTrades = useMemo(() => {
-    return tradesList.map(trade => {
+    let filtered = [...tradesList];
+
+    if (dateRange.start || dateRange.end) {
+      const start = dateRange.start ? new Date(dateRange.start) : null;
+      const end = dateRange.end ? new Date(dateRange.end) : null;
+      if (end) end.setHours(23, 59, 59, 999);
+
+      filtered = filtered.filter(t => {
+        const tradeDate = new Date(t.entryDate || t.exitDate || '');
+        if (start && tradeDate < start) return false;
+        if (end && tradeDate > end) return false;
+        return true;
+      });
+    } else if (timeframe === 'Last 30 Days') {
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - 30);
+      filtered = filtered.filter(t => new Date(t.entryDate || t.exitDate || '') >= cutoff);
+    } else if (timeframe === 'Last 7 Days') {
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - 7);
+      filtered = filtered.filter(t => new Date(t.entryDate || t.exitDate || '') >= cutoff);
+    }
+
+    return filtered.map(trade => {
       const pnlValue = parsePnL(trade.pnl);
       const isWinner = trade.isWinner !== undefined ? trade.isWinner : pnlValue > 0;
       
@@ -151,14 +174,14 @@ export const TradesPage = ({
         isWinner
       };
     });
-  }, [tradesList]);
+  }, [tradesList, dateRange, timeframe]);
 
   const handleSaveTrade = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Saving trade, editingTrade:", editingTrade);
     
-    const entryPrice = parseFloat(formData.entry);
-    const exitPrice = parseFloat(formData.exit);
+    const entryPrice = parseFloat(formData.entry) || 0;
+    const exitPrice = parseFloat(formData.exit) || 0;
     const sizeVal = parseFloat(formData.size.replace(/[^0-9.]/g, '')) || 0;
     
     // Automatic P&L Calculation
@@ -171,7 +194,7 @@ export const TradesPage = ({
     else if (formData.entry.includes('.') && formData.entry.split('.')[1].length >= 4) multiplier = 100000;
 
     let pnlValue = 0;
-    if (!isNaN(entryPrice) && !isNaN(exitPrice)) {
+    if (entryPrice !== 0 && exitPrice !== 0) {
       if (formData.type === 'BUY') {
         pnlValue = (exitPrice - entryPrice) * sizeVal * multiplier;
       } else {
@@ -182,13 +205,13 @@ export const TradesPage = ({
     const isWinner = pnlValue > 0;
     
     // Auto-calculate Duration (in days)
-    const entryDate = new Date(formData.entryDate);
-    const exitDate = new Date(formData.exitDate);
+    const entryDate = formData.entryDate ? new Date(formData.entryDate) : new Date();
+    const exitDate = formData.exitDate ? new Date(formData.exitDate) : new Date();
     const durationDays = Math.max(0, Math.ceil((exitDate.getTime() - entryDate.getTime()) / (1000 * 60 * 60 * 24)));
     
     // Auto-calculate RR (simplified: PnL / Risk, assuming risk is 1% of entry for this example)
     const risk = entryPrice * 0.01; 
-    const rr = risk !== 0 ? (Math.abs(pnlValue) / risk).toFixed(2) : '0.00';
+    const rr = (risk !== 0 && !isNaN(pnlValue)) ? (Math.abs(pnlValue) / risk).toFixed(2) : '0.00';
 
     const newTrade = {
       date: formData.entryDate ? new Date(formData.entryDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
@@ -404,6 +427,25 @@ export const TradesPage = ({
           <p className="text-text-secondary mt-1">Review and manage your institutional execution history.</p>
         </div>
         <div className="flex flex-wrap items-center gap-2 lg:gap-3">
+          <div className="flex bg-surface border border-border p-1 rounded-xl">
+            {['All', 'Last 7 Days', 'Last 30 Days'].map((t) => (
+              <button
+                key={t}
+                onClick={() => {
+                  setTimeframe(t);
+                  setDateRange({ start: '', end: '' });
+                }}
+                className={cn(
+                  "px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all",
+                  timeframe === t && !dateRange.start
+                    ? "bg-brand-primary text-text-primary shadow-sm"
+                    : "text-text-secondary hover:text-text-primary"
+                )}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
           <Button 
             onClick={() => {
               setEditingTrade(null);
@@ -681,12 +723,12 @@ export const TradesPage = ({
             <div className="relative z-10">
               <div className="flex items-center gap-2 mb-2">
                 <Sparkles className="w-5 h-5 text-brand-primary" />
-                <span className="text-xs font-black text-brand-primary tracking-widest uppercase">AI Momentum Alert</span>
+                <span className="text-xs font-black text-brand-primary tracking-widest uppercase">AI Advice</span>
               </div>
               {isAnalyzing ? (
                 <div className="flex items-center gap-2 text-text-secondary">
                   <div className="w-4 h-4 border-2 border-border border-t-brand-primary rounded-full animate-spin" />
-                  <span className="text-sm font-medium animate-pulse">Analyzing patterns...</span>
+                  <span className="text-sm font-medium animate-pulse">Aapke trades analyze ho rahe hain...</span>
                 </div>
               ) : analysisError ? (
                 <p className="text-sm font-semibold text-status-danger leading-relaxed">
@@ -694,7 +736,7 @@ export const TradesPage = ({
                 </p>
               ) : (
                 <p className="text-sm font-semibold text-text-primary leading-relaxed">
-                  {report?.summary || "Analyzing your trading patterns to provide real-time momentum alerts and risk warnings..."}
+                  {report?.summary || "Aapke trades ko analyze karke yahan simple tips aur warnings dikhayi jayengi..."}
                 </p>
               )}
             </div>

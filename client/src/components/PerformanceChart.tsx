@@ -42,12 +42,18 @@ export const PerformanceChart = ({ trades, timePeriod = 'ALL' }: { trades: any[]
       new Date(a.entryDate || '').getTime() - new Date(b.entryDate || '').getTime()
     );
 
-    return sortedTrades.map((trade: any, index: number) => {
+    // Group by date
+    const dailyData: Record<string, number> = {};
+    sortedTrades.forEach(trade => {
+      const dateKey = new Date(trade.entryDate || '').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       const pnl = parsePnL(trade.pnl);
-      cumulative += pnl;
+      dailyData[dateKey] = (dailyData[dateKey] || 0) + pnl;
+    });
 
+    return Object.entries(dailyData).map(([date, dailyPnL]) => {
+      cumulative += dailyPnL;
       return {
-        name: new Date(trade.entryDate || '').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        name: date,
         pnl: cumulative
       };
     });

@@ -68,7 +68,7 @@ const NewsCard: React.FC<{ event: any }> = ({ event }) => {
         </div>
         <div className="flex-1 font-bold text-text-primary text-sm flex items-center gap-2">
           {event.title}
-          {event.impact === 'high' && <span className="px-1.5 py-0.5 rounded bg-blue-950 text-blue-300 text-[10px] font-black flex items-center gap-0.5"><Sparkles className="w-2 h-2" /> AI</span>}
+          {event.impact === 'high' && <span className="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 text-[10px] font-black flex items-center gap-0.5"><Sparkles className="w-2 h-2" /> AI</span>}
         </div>
         <div className="w-20 text-right">
           <div className="text-[10px] text-text-muted font-bold uppercase">Actual</div>
@@ -164,8 +164,8 @@ export const MarketPage = () => {
         </div>
 
         {/* Free Plan Banner */}
-        <div className="bg-blue-950 border border-blue-900 rounded-lg p-3 flex items-center gap-2 text-blue-200 text-xs mb-6">
-          <AlertCircle className="w-4 h-4 text-blue-400" />
+        <div className="bg-emerald-950 border border-emerald-900 rounded-lg p-3 flex items-center gap-2 text-emerald-200 text-xs mb-6">
+          <AlertCircle className="w-4 h-4 text-emerald-400" />
           <p className="font-bold">Free plan: Limited to today's US events (High & Medium impact).</p>
         </div>
 

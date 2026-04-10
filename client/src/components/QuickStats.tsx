@@ -17,28 +17,29 @@ export const QuickStats = ({ isConnected = false, trades = [] }: { isConnected?:
     let winCount = 0;
 
     closedTrades.forEach(t => {
-      const pnl = parseFloat((t.pnl || "0").replace(/[$,+]/g, ''));
-      if (!isNaN(pnl)) {
-        if (pnl > 0) {
-          totalWins += pnl;
-          winCount++;
-        } else {
-          totalLosses += Math.abs(pnl);
-        }
+      const pnl = parseFloat((t.pnl || "0").replace(/[$,+]/g, '')) || 0;
+      if (pnl > 0) {
+        totalWins += pnl;
+        winCount++;
+      } else if (pnl < 0) {
+        totalLosses += Math.abs(pnl);
       }
 
       if (t.entryDate && t.exitDate) {
         const duration = new Date(t.exitDate).getTime() - new Date(t.entryDate).getTime();
-        totalDuration += duration;
+        if (!isNaN(duration)) {
+          totalDuration += duration;
+        }
       }
     });
 
-    const pf = totalLosses === 0 ? (totalWins > 0 ? '9.99' : '0.00') : (totalWins / totalLosses).toFixed(2);
+    const pfVal = totalLosses === 0 ? (totalWins > 0 ? 9.99 : 0) : totalWins / totalLosses;
+    const pf = pfVal.toFixed(2);
     const avgDuration = (totalDuration / closedTrades.length / (1000 * 60 * 60)).toFixed(1);
     const winRate = (winCount / closedTrades.length * 100).toFixed(1);
 
     return {
-      rr: `1:${(parseFloat(pf) * 1.2).toFixed(2)}`, // Simplified R:R estimation
+      rr: `1:${(pfVal * 1.2).toFixed(2)}`, // Simplified R:R estimation
       pf,
       duration: `${avgDuration}h`,
       totalTrades: closedTrades.length

@@ -120,8 +120,8 @@ export const AnalysisPage = ({
         return new Date(b.entryDate || 0).getTime() - new Date(a.entryDate || 0).getTime();
       }
       if (sortBy === 'By P&L') {
-        const pnlA = parseFloat(a.pnl?.replace(/[^0-9.-]+/g, "") || "0");
-        const pnlB = parseFloat(b.pnl?.replace(/[^0-9.-]+/g, "") || "0");
+        const pnlA = parseFloat(a.pnl?.replace(/[^0-9.-]+/g, "") || "0") || 0;
+        const pnlB = parseFloat(b.pnl?.replace(/[^0-9.-]+/g, "") || "0") || 0;
         return pnlB - pnlA;
       }
       if (sortBy === 'By Symbol') {
@@ -141,9 +141,9 @@ export const AnalysisPage = ({
   // Helper: Calculate Price Move %
   const priceMove = useMemo(() => {
     if (!selectedTrade?.entryPrice || !selectedTrade?.exitPrice) return '0.00%';
-    const entry = parseFloat(selectedTrade.entryPrice);
-    const exit = parseFloat(selectedTrade.exitPrice);
-    if (isNaN(entry) || isNaN(exit)) return '0.00%';
+    const entry = parseFloat(selectedTrade.entryPrice) || 0;
+    const exit = parseFloat(selectedTrade.exitPrice) || 0;
+    if (entry === 0 || isNaN(entry) || isNaN(exit)) return '0.00%';
     
     let move = 0;
     if (selectedTrade.type === 'BUY') {
@@ -183,7 +183,7 @@ export const AnalysisPage = ({
     if (!selectedTrade) return { profitability: 0, execution: 0, journal: 0, rating: 0, total: 0 };
     
     // 1. Profitability (30 pts)
-    const pnlValue = parseFloat(selectedTrade.pnl?.replace(/[^0-9.-]+/g, "") || "0");
+    const pnlValue = parseFloat(selectedTrade.pnl?.replace(/[^0-9.-]+/g, "") || "0") || 0;
     const profitability = selectedTrade.isWinner ? 30 : (pnlValue === 0 ? 15 : 0);
     
     // 2. Execution (40 pts) - Proportional to checklist completion

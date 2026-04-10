@@ -33,12 +33,10 @@ export const MonthlyPnL = ({ isConnected = false, trades = [] }: { isConnected?:
     let net = 0;
 
     currentMonthTrades.forEach(t => {
-      const pnl = parseFloat((t.pnl || "0").replace(/[$,+]/g, ''));
-      if (!isNaN(pnl)) {
-        net += pnl;
-        if (pnl > 0) wins += pnl;
-        else losses += Math.abs(pnl);
-      }
+      const pnl = parseFloat((t.pnl || "0").replace(/[$,+]/g, '')) || 0;
+      net += pnl;
+      if (pnl > 0) wins += pnl;
+      else if (pnl < 0) losses += Math.abs(pnl);
     });
 
     return {
