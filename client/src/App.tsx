@@ -16,6 +16,7 @@ import { TradesPage } from './pages/TradesPage';
 import { LandingPage } from './pages/LandingPage';
 import { AuthPage } from './pages/AuthPage';
 import { MT5LoginModal } from './components/MT5LoginModal';
+import { VoiceAssistant } from './components/VoiceAssistant';
 import { BackgroundAnimation } from './components/BackgroundAnimation';
 import { useTrades } from './context/TradeContext';
 import { motion } from 'motion/react';
@@ -334,6 +335,7 @@ export default function App() {
           onClose={() => setIsLoginModalOpen(false)} 
           onSuccess={handleConnectAccount}
         />
+        <VoiceAssistant />
       </div>
     </div>
   );

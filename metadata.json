@@ -1,5 +1,5 @@
 {
   "name": "AJ Ai Journal",
   "description": "The first AI-powered trading companion that analyzes your thoughts, entries, and exits to uncover the psychological patterns holding you back from consistent profitability.",
-  "requestFramePermissions": []
+  "requestFramePermissions": ["microphone"]
 }

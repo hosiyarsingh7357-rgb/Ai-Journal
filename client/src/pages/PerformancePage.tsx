@@ -208,7 +208,7 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
     });
 
     const winRate = filteredTrades.length > 0 ? (winCount / filteredTrades.length) * 100 : 0;
-    const pf = totalLosses === 0 ? (totalWins > 0 ? 99 : 0) : totalWins / totalLosses;
+    const pf = totalLosses === 0 ? (totalWins > 0 ? 9.99 : 0) : totalWins / totalLosses;
     const expectancy = filteredTrades.length > 0 ? totalPnL / filteredTrades.length : 0;
 
     // Monthly stats for "Your Stats"
@@ -224,11 +224,15 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
     const worstMonth = months[months.length - 1] || ['None', 0];
     const avgMonthPnL = months.length > 0 ? totalPnL / months.length : 0;
 
+    const safeWinRate = isNaN(winRate) ? 0 : winRate;
+    const safePf = isNaN(pf) ? 0 : pf;
+    const safeExpectancy = isNaN(expectancy) ? 0 : expectancy;
+
     return {
       totalPnL,
-      winRate,
-      pf,
-      expectancy,
+      winRate: safeWinRate,
+      pf: safePf,
+      expectancy: safeExpectancy,
       avgWin: winCount > 0 ? totalWins / winCount : 0,
       avgLoss: lossCount > 0 ? totalLosses / lossCount : 0,
       largestWin,
@@ -243,6 +247,8 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
       sessions,
       grossProfit: totalWins,
       grossLoss: totalLosses,
+      winCount,
+      lossCount,
       bestMonth: { name: bestMonth[0], pnl: bestMonth[1] },
       worstMonth: { name: worstMonth[0], pnl: worstMonth[1] },
       avgMonthPnL
@@ -729,7 +735,7 @@ export const PerformancePage = ({ onNavigate }: { onNavigate: (id: string, trade
                       </div>
                       <div>
                         <p className="text-xs font-black text-text-primary">{symbol}</p>
-                        <p className="text-[9px] text-text-secondary font-bold">{data.trades} trades • {((data.wins/data.trades)*100).toFixed(0)}% win</p>
+                        <p className="text-[9px] text-text-secondary font-bold">{data.trades} trades • {data.trades > 0 ? ((data.wins/data.trades)*100).toFixed(0) : 0}% win</p>
                       </div>
                     </div>
                     <p className={cn("text-xs font-black", data.pnl >= 0 ? "text-status-success" : "text-status-danger")}>

@@ -210,8 +210,15 @@ export const AnalysisPage = ({
     const rating = (selectedTrade.journal?.rating || 0);
     
     const total = profitability + execution + journalScore + rating;
+    const safeTotal = isNaN(total) ? 0 : Math.round(total);
     
-    return { profitability, execution, journal: journalScore, rating, total };
+    return { 
+      profitability: isNaN(profitability) ? 0 : profitability, 
+      execution: isNaN(execution) ? 0 : execution, 
+      journal: isNaN(journalScore) ? 0 : journalScore, 
+      rating: isNaN(rating) ? 0 : rating, 
+      total: safeTotal 
+    };
   }, [selectedTrade]);
 
   // Helper: Execution Score %
@@ -219,7 +226,8 @@ export const AnalysisPage = ({
     // Discipline score: (Execution + Journal + Rating) / 70 * 100
     const disciplinePoints = qualityMetrics.execution + qualityMetrics.journal + qualityMetrics.rating;
     const score = (disciplinePoints / 70) * 100;
-    return `${Math.round(score)}%`;
+    const safeScore = isNaN(score) ? 0 : Math.round(score);
+    return `${safeScore}%`;
   }, [qualityMetrics]);
 
   // AI Insights Generation with Caching and Debouncing
@@ -684,10 +692,10 @@ export const AnalysisPage = ({
                       <div className="relative w-24 h-24 shrink-0">
                         <svg className="w-full h-full transform -rotate-90">
                           <circle cx="48" cy="48" r="42" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-surface-muted" />
-                          <circle cx="48" cy="48" r="42" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray={264} strokeDashoffset={264 - (264 * qualityMetrics.total / 100)} className="text-status-success transition-all duration-1000" />
+                          <circle cx="48" cy="48" r="42" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray={264} strokeDashoffset={264 - (264 * (isNaN(qualityMetrics.total) ? 0 : qualityMetrics.total) / 100)} className="text-status-success transition-all duration-1000" />
                         </svg>
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-2xl font-black text-text-primary">{qualityMetrics.total}</span>
+                          <span className="text-2xl font-black text-text-primary">{isNaN(qualityMetrics.total) ? 0 : qualityMetrics.total}</span>
                         </div>
                       </div>
 

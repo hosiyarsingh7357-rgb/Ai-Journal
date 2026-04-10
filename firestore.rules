@@ -72,6 +72,13 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
+    function isAdmin() {
+      return isAuthenticated() &&
+        ((exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin') ||
+          (request.auth.token.email == "hosiyarsingh7357@gmail.com" && request.auth.token.email_verified == true));
+    }
+
     function isValidEmail(email) {
       return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     }
@@ -104,7 +111,7 @@ service cloud.firestore {
       return (!('email' in data) || isValidEmail(data.email)) &&
              (!('createdAt' in data) || isValidDateTimeString(data.createdAt)) &&
              (!('mt5Credentials' in data) || data.mt5Credentials is map) &&
-             hasOnlyAllowedFields(data, ['uid', 'username', 'email', 'createdAt', 'firstName', 'lastName', 'mt5Credentials', 'displayName', 'photoURL', 'theme', 'currency', 'language', 'name', 'role']);
+             hasOnlyAllowedFields(data, ['uid', 'username', 'email', 'createdAt', 'firstName', 'lastName', 'mt5Credentials', 'displayName', 'photoURL', 'theme', 'currency', 'language', 'name', 'role', 'lastLogin', 'emailVerified', 'providerId', 'metadata']);
     }
 
     function isValidBrokerAccount(data) {
@@ -190,42 +197,42 @@ service cloud.firestore {
     // ===============================================================
 
     match /users/{userId} {
-      allow read: if isOwner(userId);
+      allow read: if isOwner(userId) || isAdmin();
       allow create: if isOwner(userId) && isValidUser(request.resource.data);
-      allow update: if isOwner(userId) && isValidUser(request.resource.data);
-      allow delete: if isOwner(userId);
+      allow update: if (isOwner(userId) || isAdmin()) && isValidUser(request.resource.data);
+      allow delete: if isAdmin();
 
       match /brokerAccounts/{accountId} {
-        allow read: if isOwner(userId);
+        allow read: if isOwner(userId) || isAdmin();
         allow create: if isOwner(userId) && isValidBrokerAccount(request.resource.data);
-        allow update: if isOwner(userId) && isValidBrokerAccount(request.resource.data);
-        allow delete: if isOwner(userId);
+        allow update: if (isOwner(userId) || isAdmin()) && isValidBrokerAccount(request.resource.data);
+        allow delete: if isOwner(userId) || isAdmin();
       }
 
       match /trades/{tradeId} {
-        allow read: if isOwner(userId);
+        allow read: if isOwner(userId) || isAdmin();
         allow create: if isOwner(userId) && 
                       hasRequiredFields(request.resource.data, ['userId', 'symbol', 'type', 'size', 'entryPrice', 'createdAt']) &&
                       isValidTrade(request.resource.data);
-        allow update: if isOwner(userId);
-        allow delete: if isOwner(userId);
+        allow update: if isOwner(userId) || isAdmin();
+        allow delete: if isOwner(userId) || isAdmin();
       }
 
       match /journals/{journalId} {
-        allow read: if isOwner(userId);
+        allow read: if isOwner(userId) || isAdmin();
         allow create: if isOwner(userId) && 
                       hasRequiredFields(request.resource.data, ['userId', 'title', 'instrument', 'tradeType', 'volume', 'pnl', 'entryPrice', 'exitPrice', 'entryDate', 'exitDate', 'date', 'time', 'status', 'createdAt']) &&
                       isValidJournalEntry(request.resource.data);
-        allow update: if isOwner(userId) && isValidJournalEntry(request.resource.data);
-        allow delete: if isOwner(userId);
+        allow update: if (isOwner(userId) || isAdmin()) && isValidJournalEntry(request.resource.data);
+        allow delete: if isOwner(userId) || isAdmin();
       }
-      
-      match /trades/{tradeId}/screenshots/{screenshotId} {
-        allow read: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidTradeScreenshot(request.resource.data);
-        allow update: if isOwner(userId) && isValidTradeScreenshot(request.resource.data);
-        allow delete: if isOwner(userId);
-      }
+    }
+
+    match /trades/{tradeId}/screenshots/{screenshotId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && isValidTradeScreenshot(request.resource.data);
+      allow update: if isAuthenticated() && isValidTradeScreenshot(request.resource.data);
+      allow delete: if isAuthenticated();
     }
 
     // Default deny

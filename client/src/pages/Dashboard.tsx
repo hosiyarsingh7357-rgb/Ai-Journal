@@ -81,9 +81,11 @@ export const Dashboard = ({ isConnected = false, onNavigate }: { isConnected?: b
     });
 
     const winRate = closedTrades > 0 ? (wins / closedTrades) * 100 : 0;
+    const safeWinRate = isNaN(winRate) ? 0 : winRate;
     const avgWin = wins > 0 ? totalWinAmount / wins : 0;
     const avgLoss = (closedTrades - wins) > 0 ? totalLossAmount / (closedTrades - wins) : 0;
     const profitFactor = totalLossAmount > 0 ? totalWinAmount / totalLossAmount : totalWinAmount > 0 ? 9.99 : 0;
+    const safeProfitFactor = isNaN(profitFactor) ? 0 : profitFactor;
 
     const topPerformers = Object.entries(symbolStats)
       .map(([symbol, pnl]) => ({ symbol, pnl }))
@@ -94,7 +96,7 @@ export const Dashboard = ({ isConnected = false, onNavigate }: { isConnected?: b
       totalPnL,
       unrealizedPnL,
       realizedPnL,
-      winRate,
+      winRate: safeWinRate,
       totalTrades: trades.length,
       openTrades,
       closedTrades,
@@ -102,7 +104,7 @@ export const Dashboard = ({ isConnected = false, onNavigate }: { isConnected?: b
       avgLoss,
       bestTrade: bestTrade === -Infinity ? 0 : bestTrade,
       worstTrade: worstTrade === Infinity ? 0 : worstTrade,
-      profitFactor,
+      profitFactor: safeProfitFactor,
       topPerformers
     };
   }, [trades]);
@@ -190,7 +192,7 @@ export const Dashboard = ({ isConnected = false, onNavigate }: { isConnected?: b
                 { label: 'Total P&L', value: stats.totalPnL, trades: stats.totalTrades, icon: ArrowUpRight, color: 'status-success', type: 'Total' },
                 { label: 'Unrealized', value: stats.unrealizedPnL, trades: stats.openTrades, icon: Clock, color: 'yellow-600', type: 'Open' },
                 { label: 'Realized', value: stats.realizedPnL, trades: stats.closedTrades, icon: PieChart, color: 'status-success', type: 'Closed' },
-                { label: 'Win Rate', value: `${stats.winRate.toFixed(0)}%`, progress: stats.winRate, icon: PieChart, color: 'status-success', type: 'Rate' }
+                { label: 'Win Rate', value: `${(stats.winRate || 0).toFixed(0)}%`, progress: stats.winRate || 0, icon: PieChart, color: 'status-success', type: 'Rate' }
               ].map((kpi, i) => (
                 <motion.div
                   key={i}

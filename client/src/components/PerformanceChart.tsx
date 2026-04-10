@@ -95,7 +95,7 @@ export const PerformanceChart = ({ trades, timePeriod = 'ALL' }: { trades: any[]
             axisLine={false}
             tickLine={false}
             tick={{ fill: '#94A3B8', fontSize: 10, fontWeight: 600 }}
-            tickFormatter={(value) => `$${(value / 1000).toFixed(1)}K`}
+            tickFormatter={(value) => isNaN(value) ? '$0K' : `$${(value / 1000).toFixed(1)}K`}
           />
           <Tooltip 
             contentStyle={{ 
