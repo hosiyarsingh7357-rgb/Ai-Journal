@@ -1,11 +1,11 @@
 import React from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { Logo } from '../components/Logo';
-import dashboardImg from '/dashboard.png';
-import executionHistoryImg from '/execution-history.png';
-import performanceAnalyticsImg from '/performance-analytics.png';
-import aiIntelligenceImg from '/ai-intelligence.png';
-import analysisImg from '/analysis.png';
+import dashboardImg from '../assets/dashboard.png';
+import executionHistoryImg from '../assets/execution-history.png';
+import performanceAnalyticsImg from '../assets/performance-analytics.png';
+import aiIntelligenceImg from '../assets/ai-intelligence.png';
+import analysisImg from '../assets/analysis.png';
 import { 
   BrainCircuit, 
   ArrowRight, 
