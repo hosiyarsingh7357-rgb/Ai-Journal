@@ -7,6 +7,8 @@ import { createServer as createViteServer } from "vite";
 import path from "path";
 import mongoose from "mongoose";
 import tradeRoutes from "./routes/tradeRoutes.js";
+import mt5Routes from "./routes/mt5Routes.js";
+import geminiRoutes from "./routes/geminiRoutes.js";
 import { connectDatabase } from "./config/database.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
@@ -36,7 +38,8 @@ async function startServer() {
   });
 
   app.use("/api/trades", tradeRoutes);
-  app.use("/api/trade", tradeRoutes);
+  app.use("/api/mt5", mt5Routes);
+  app.use("/api/ai", geminiRoutes);
 
   // Error Handler
   app.use(errorHandler);

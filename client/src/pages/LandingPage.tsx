@@ -1,6 +1,11 @@
 import React from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { Logo } from '../components/Logo';
+import dashboardImg from '/dashboard.png';
+import executionHistoryImg from '/execution-history.png';
+import performanceAnalyticsImg from '/performance-analytics.png';
+import aiIntelligenceImg from '/ai-intelligence.png';
+import analysisImg from '/analysis.png';
 import { 
   BrainCircuit, 
   ArrowRight, 
@@ -175,7 +180,7 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
           <div className="absolute inset-0 bg-brand-primary/10 blur-[100px] rounded-full" />
           <TiltCard className="relative bg-surface border border-border rounded-xl md:rounded-[2rem] p-2 md:p-4 shadow-2xl overflow-hidden">
             <img 
-              src="/dashboard.png" 
+              src={dashboardImg} 
               alt="Dashboard" 
               className="w-full h-auto rounded-lg md:rounded-2xl border border-border object-cover"
               onError={(e) => {
@@ -205,7 +210,7 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
               {/* Trades Page Mockup */}
               <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
                 <img 
-                  src="/execution-history.png" 
+                  src={executionHistoryImg} 
                   alt="Execution History" 
                   className="w-full h-full object-cover rounded-xl border border-border"
                   onError={(e) => {
@@ -267,7 +272,7 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
               {/* Performance Analytics Mockup */}
               <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
                 <img 
-                  src="/performance-analytics.png" 
+                  src={performanceAnalyticsImg} 
                   alt="Performance Analytics" 
                   className="w-full h-full object-cover rounded-xl border border-border"
                   onError={(e) => {
@@ -342,7 +347,7 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
               {/* Journal Mockup */}
               <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
                 <img 
-                  src="/analysis.png" 
+                  src={analysisImg} 
                   alt="Trade Analysis" 
                   className="w-full h-full object-cover rounded-xl border border-border"
                   onError={(e) => {
