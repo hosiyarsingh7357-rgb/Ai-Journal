@@ -1,11 +1,11 @@
 import React from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { Logo } from '../components/Logo';
-import dashboardImg from '../assets/dashboard.png';
-import executionHistoryImg from '../assets/execution-history.png';
-import performanceAnalyticsImg from '../assets/performance-analytics.png';
-import aiIntelligenceImg from '../assets/ai-intelligence.png';
-import analysisImg from '../assets/analysis.png';
+import heroPreviewImg from '../assets/hero-preview.png';
+import tradesPreviewImg from '../assets/trades-preview.png';
+import statsPreviewImg from '../assets/stats-preview.png';
+import reportPreviewImg from '../assets/report-preview.png';
+import journalPreviewImg from '../assets/journal-preview.png';
 import { 
   BrainCircuit, 
   ArrowRight, 
@@ -180,7 +180,7 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
           <div className="absolute inset-0 bg-brand-primary/10 blur-[100px] rounded-full" />
           <TiltCard className="relative bg-surface border border-border rounded-xl md:rounded-[2rem] p-2 md:p-4 shadow-2xl overflow-hidden">
             <img 
-              src={dashboardImg} 
+              src={heroPreviewImg} 
               alt="Dashboard" 
               className="w-full h-auto rounded-lg md:rounded-2xl border border-border object-cover"
             />
@@ -206,7 +206,7 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
               {/* Trades Page Mockup */}
               <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
                 <img 
-                  src={executionHistoryImg} 
+                  src={tradesPreviewImg} 
                   alt="Execution History" 
                   className="w-full h-full object-cover rounded-xl border border-border"
                 />
@@ -264,7 +264,7 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
               {/* Performance Analytics Mockup */}
               <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
                 <img 
-                  src={performanceAnalyticsImg} 
+                  src={statsPreviewImg} 
                   alt="Performance Analytics" 
                   className="w-full h-full object-cover rounded-xl border border-border"
                 />
@@ -314,7 +314,7 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
           {/* AI Report Mockup */}
           <TiltCard className="max-w-4xl mx-auto bg-background border border-border rounded-[2.5rem] p-4 md:p-8 shadow-2xl relative overflow-hidden flex items-center justify-center">
             <img 
-              src={aiIntelligenceImg} 
+              src={reportPreviewImg} 
               alt="AI Intelligence" 
               className="w-full h-auto object-cover rounded-xl border border-border"
             />
@@ -331,7 +331,7 @@ export const LandingPage = ({ onGetStarted }: { onGetStarted: () => void }) => {
               {/* Journal Mockup */}
               <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
                 <img 
-                  src={analysisImg} 
+                  src={journalPreviewImg} 
                   alt="Trade Analysis" 
                   className="w-full h-full object-cover rounded-xl border border-border"
                 />

@@ -21,7 +21,7 @@ export default defineConfig(({mode}) => {
       },
     },
     build: {
-      outDir: 'dist',
+      outDir: '../dist',
       emptyOutDir: true,
       publicDir: 'public',
       chunkSizeWarningLimit: 1000,
